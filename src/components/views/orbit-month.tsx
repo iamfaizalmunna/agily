@@ -24,12 +24,14 @@ export function OrbitMonth({
   year,
   month,
   items,
+  extra,
 }: {
   slug: string;
   projectSlug: string;
   year: number;
   month: number;
   items: OrbitItem[];
+  extra?: Record<string, string>;
 }) {
   const grid = monthGrid(year, month);
   const prev = shiftMonth(year, month, -1);
@@ -45,6 +47,7 @@ export function OrbitMonth({
             projectSlug,
             "orbit",
             formatYearMonth(prev.year, prev.month),
+            extra,
           )}
           className="min-h-11 text-sm text-copper"
         >
@@ -59,6 +62,7 @@ export function OrbitMonth({
             projectSlug,
             "orbit",
             formatYearMonth(next.year, next.month),
+            extra,
           )}
           className="min-h-11 text-sm text-copper"
         >

@@ -17,18 +17,20 @@ export function ViewSwitcher({
   projectSlug,
   view,
   yearMonth,
+  extra,
 }: {
   slug: string;
   projectSlug: string;
   view: BoardView;
   yearMonth?: string;
+  extra?: Record<string, string>;
 }) {
   return (
     <nav className="flex flex-wrap gap-2" aria-label="Board views">
       {BOARD_VIEWS.map((name) => (
         <Link
           key={name}
-          href={boardViewHref(slug, projectSlug, name, yearMonth)}
+          href={boardViewHref(slug, projectSlug, name, yearMonth, extra)}
           className={cn(
             "inline-flex min-h-11 items-center rounded-full px-4 text-sm",
             view === name

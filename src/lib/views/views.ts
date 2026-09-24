@@ -22,10 +22,16 @@ export function boardViewHref(
   projectSlug: string,
   view: BoardView,
   yearMonth?: string,
+  extra?: Record<string, string | undefined>,
 ) {
   const params = new URLSearchParams();
   if (view !== "ledger") params.set("view", view);
   if (view === "orbit" && yearMonth) params.set("ym", yearMonth);
+  if (extra) {
+    for (const [key, value] of Object.entries(extra)) {
+      if (value) params.set(key, value);
+    }
+  }
   const q = params.toString();
   return q
     ? `/t/${slug}/p/${projectSlug}?${q}`

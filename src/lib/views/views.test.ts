@@ -57,6 +57,10 @@ describe("phase 5 views", () => {
       boardViewHref("n", "p", "orbit", "2026-09"),
       "/t/n/p/p?view=orbit&ym=2026-09",
     );
+    assert.equal(
+      boardViewHref("n", "p", "flow", undefined, { q: "mine", empty: "" }),
+      "/t/n/p/p?view=flow&q=mine",
+    );
   });
 
   it("marks overdue only before today and not done", () => {
