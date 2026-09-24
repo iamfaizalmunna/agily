@@ -2,16 +2,22 @@
   "name": "agily",
   "version": "0.1.0",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
   "scripts": {
-    "dev": "next dev -H 127.0.0.1 -p 43123",
+    "dev": "concurrently -k -n web,api -c cyan,magenta \"next dev -H 127.0.0.1 -p 43123\" \"npm run dev -w @agily/api\"",
+    "dev:web": "next dev -H 127.0.0.1 -p 43123",
+    "dev:api": "npm run dev -w @agily/api",
     "build": "next build",
     "start": "next start -H 127.0.0.1 -p 43123",
     "lint": "eslint",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
-    "test": "tsx --test \"src/**/*.test.ts\"",
-    "test:coverage": "c8 tsx --test \"src/**/*.test.ts\""
+    "test": "tsx --test \"src/**/*.test.ts\" \"packages/lens/src/**/*.test.ts\"",
+    "test:coverage": "c8 tsx --test \"src/**/*.test.ts\" \"packages/lens/src/**/*.test.ts\""
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -21,7 +27,8 @@
     "react": "19.2.8",
     "react-dom": "19.2.8",
     "tailwind-merge": "^3.7.0",
-    "zod": "^4.6.5"
+    "zod": "^4.6.5",
+    "zustand": "^5.0.8"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
@@ -30,11 +37,13 @@
     "@types/react": "^19",
     "@types/react-dom": "^19",
     "c8": "^12.0.0",
+    "concurrently": "^9.2.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "prisma": "^6.19.3",
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
+    "turbo": "^2.5.8",
     "typescript": "^5"
   }
 }

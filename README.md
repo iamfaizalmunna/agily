@@ -1,18 +1,18 @@
 # Agily
 
 [![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
-[![Phase](https://img.shields.io/badge/phase-8%2F10-c9844a)](docs/phases/README.md)
+[![Phase](https://img.shields.io/badge/phase-9%2F10-c9844a)](docs/phases/README.md)
 [![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
 [![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** own-DB auth, invites, boards, assignees, four views, lenses, focus, in-app bell.  
-**Later:** Lens + Ollama on this machine.
+**Now:** own-DB auth, invites, boards, assignees, four views, lenses, focus, in-app bell, Lens on this machine.  
+**Later:** keyboard chrome and Playwright.
 
 ## Main
 
-Phases **1–8 are merged on `main`** through feature branches (Phase 8: `phase-8-in-app-bell` → PR → merge).
+Phases **1–9 are merged on `main`** through feature branches (Phase 9: `phase-9-lens-turbo` → PR → merge).
 
 Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)
 
@@ -35,7 +35,9 @@ npm test
 npm run dev
 ```
 
-App: [http://127.0.0.1:43123](http://127.0.0.1:43123)
+App: [http://127.0.0.1:43123](http://127.0.0.1:43123) · Lens API: [http://127.0.0.1:43124/v1/health](http://127.0.0.1:43124/v1/health)
+
+`npm run dev` starts Next and Express together. Optional: `ollama pull llama3.2:3b` then leave Ollama on `127.0.0.1:11434`. If it is down, Lens still answers from `/kb` and board counts.
 
 **Signup:** Owner names a studio. Member / Viewer wait for a `/join/[token]` link. Admin is granted by an owner.
 
@@ -51,9 +53,20 @@ App: [http://127.0.0.1:43123](http://127.0.0.1:43123)
 | 6 Filter lenses | merged via PR | [docs/phases/06-lenses.md](docs/phases/06-lenses.md) |
 | 7 Focus + notes | merged via PR | [docs/phases/07-focus.md](docs/phases/07-focus.md) |
 | 8 In-app bell | merged via PR | [docs/phases/08-bell.md](docs/phases/08-bell.md) |
-| 9–10 | not started | [docs/phases/README.md](docs/phases/README.md) |
+| 9 Lens + turbo | merged via PR | [docs/phases/09-lens.md](docs/phases/09-lens.md) |
+| 10 | not started | [docs/phases/README.md](docs/phases/README.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
+
+## Lens (phase 9)
+
+Turborepo around the existing Next app. Express at `apps/api`. Helpers in `@agily/lens`.
+
+- Panel on the rail / phone header (Zustand). Same `agily_session` cookie — not JWT
+- Next rewrites `/lens-api/*` to `127.0.0.1:43124`
+- Ollama only on loopback. Non-loopback `OLLAMA_BASE_URL` is rejected
+- `/kb` is bundled markdown. GitHub gets that source, never model weights
+- If Ollama is down: extractive answers from board counts and KB snippets
 
 ## Bell (phase 8)
 
@@ -106,10 +119,10 @@ npm test              # node:test, Prisma-free pack
 npm run test:coverage # c8, 100% lines / statements on that pack
 ```
 
-Playwright is **not** installed. We add it when phases 9–10 are done, not now.
+Playwright is **not** installed. We add it in phase 10, not now.
 
 ## Stack
 
-Next.js App Router, TypeScript, Tailwind, Prisma + SQLite, bcrypt, httpOnly `agily_session`. Fonts in `/public/fonts`.
+Turborepo workspaces (`apps/*`, `packages/*`). Next.js App Router at the repo root, Express Lens API, TypeScript, Tailwind, Prisma + SQLite, bcrypt, httpOnly `agily_session`, Zustand for the Lens panel. Fonts in `/public/fonts`.
 
 Architecture: [PLAN.md](PLAN.md)

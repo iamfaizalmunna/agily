@@ -1,10 +1,11 @@
 "use client";
 
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NoticeBell } from "@/components/chrome/notice-bell";
 import { SignOutButton } from "@/components/chrome/sign-out-button";
+import { LensPanel, LensTrigger } from "@/components/lens/lens-panel";
 import { cn } from "@/lib/cn";
 import { studioMark, teamSlugFromPath } from "@/lib/nav/studio";
 import type { TeamRole } from "@/lib/rbac/roles";
@@ -48,6 +49,7 @@ export function StudioShell({
         <p className="min-w-0 flex-1 truncate text-sm text-paper/70">
           {current?.name ?? "Agily"}
         </p>
+        <LensTrigger />
         <NoticeBell href={noticesHref} count={unread} on={onBell} compact />
         <SignOutButton />
       </header>
@@ -84,6 +86,7 @@ export function StudioShell({
           {slug ? (
             <NoticeBell href={noticesHref} count={unread} on={onBell} compact />
           ) : null}
+          <LensTrigger />
         </nav>
         <SignOutButton />
       </aside>
@@ -130,6 +133,9 @@ export function StudioShell({
         <NoticeBell href={noticesHref} count={unread} on={onBell} />
         <span className="hidden">{userName}</span>
       </nav>
+      <Suspense fallback={null}>
+        <LensPanel slug={slug} />
+      </Suspense>
     </div>
   );
 }
