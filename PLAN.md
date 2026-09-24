@@ -1,6 +1,6 @@
 # Agily — plan
 
-Local agile planner. **Phases 1–4 are complete.** No cloud host, email SaaS, or paid LLM.
+Local agile planner. **Phases 1–4 are complete and merged on `main`.** No pending Phase 4 commit. No cloud host, email SaaS, or paid LLM.
 
 | Document | Open |
 |----------|------|

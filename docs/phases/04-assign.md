@@ -1,6 +1,6 @@
 # Phase 4 — People + assign
 
-**Status:** complete for phase 4.  
+**Status:** complete and **merged on `main`** (`11252be`). No pending commit.  
 **Who it is for:** anyone who writes a ticket.  
 **What it unlocks:** named people on the same `Item` row. No extra ticket copies.
 

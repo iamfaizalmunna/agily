@@ -7,8 +7,14 @@
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** own-DB auth, four access levels, copy-link invites, boards, assignees.  
+**Now (merged on `main`):** own-DB auth, four access levels, copy-link invites, boards, assignees.  
 **Later:** Ledger / Flow / Orbit / Pulse, lenses, focus stage, Lens + Ollama on this machine.
+
+## Main
+
+Phases **1–4 are merged on `main`**. The earlier local-only Phase 4 commit (`11252be` — *Add ticket assignees on the same Item rows.*) is on GitHub. There is no pending branch.
+
+Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)
 
 ## Hard rules
 
@@ -20,9 +26,11 @@ Local agile planner: Jira capability, Monday boards, Notion-like writing — **o
 ## Run
 
 ```bash
+git clone https://github.com/iamfaizalmunna/agily.git
+cd agily
 cp .env.example .env
-npx prisma migrate dev
 npm install
+npx prisma migrate dev
 npm test
 npm run dev
 ```
@@ -33,24 +41,34 @@ App: [http://127.0.0.1:43123](http://127.0.0.1:43123)
 
 ## Phases
 
-| Phase | Status | Story |
-|------:|:-------|:------|
-| 1 Auth | done | [docs/phases/01-auth.md](docs/phases/01-auth.md) |
-| 2 Teams + invites | done | [docs/phases/02-teams.md](docs/phases/02-teams.md) |
-| 3 Projects / groups / items | done | [docs/phases/03-projects.md](docs/phases/03-projects.md) |
-| 4 People + assign | done | [docs/phases/04-assign.md](docs/phases/04-assign.md) |
-| 5–10 | next | [docs/phases/README.md](docs/phases/README.md) |
+| Phase | Status on `main` | Story |
+|------:|:-----------------|:------|
+| 1 Auth | merged | [docs/phases/01-auth.md](docs/phases/01-auth.md) |
+| 2 Teams + invites | merged | [docs/phases/02-teams.md](docs/phases/02-teams.md) |
+| 3 Projects / groups / items | merged | [docs/phases/03-projects.md](docs/phases/03-projects.md) |
+| 4 People + assign | merged | [docs/phases/04-assign.md](docs/phases/04-assign.md) |
+| 5–10 | not started | [docs/phases/README.md](docs/phases/README.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
+
+## Assign (phase 4)
+
+People sit on the **same `Item` row** via `ItemAssignee`. No second ticket for kanban.
+
+- Board: check teammates, or **Assign me** / **Unassign me**
+- New ticket: optional **Assign me**
+- Only studio members can be assigned
+- People page shows ticket counts
+- Viewer: initials only
 
 ## Tests
 
 ```bash
 npm test              # node:test, Prisma-free pack
-npm run test:coverage # c8, 100% lines / funcs / branches on that pack
+npm run test:coverage # c8, 100% lines / statements on that pack
 ```
 
-Playwright is **not** installed. We add it when phases 4–10 are done, not now.
+Playwright is **not** installed. We add it when phases 5–10 are done, not now.
 
 ## Stack
 

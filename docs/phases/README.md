@@ -2,6 +2,8 @@
 
 Each story starts with **who it is for**, **what you see**, and **how it works**. Open a row on GitHub. Open the gallery for the colour map.
 
+Phases **1–4 are merged on `main`**. The Phase 4 assignee commit is on GitHub — nothing left pending locally.
+
 | | Phase | In one sentence | Story |
 |:--:|:------|:----------------|:------|
 | [![01](https://img.shields.io/badge/01-c9844a?style=flat-square)](01-auth.md) | Own-DB auth | Email + password in our SQLite; httpOnly session cookie. | [Read](01-auth.md) |
