@@ -1,18 +1,18 @@
 # Agily
 
 [![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
-[![Phase](https://img.shields.io/badge/phase-5%2F10-c9844a)](docs/phases/README.md)
+[![Phase](https://img.shields.io/badge/phase-6%2F10-c9844a)](docs/phases/README.md)
 [![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
 [![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** own-DB auth, invites, boards, assignees, four views.  
-**Later:** lenses, focus stage, Lens + Ollama on this machine.
+**Now:** own-DB auth, invites, boards, assignees, four views, saved lenses.  
+**Later:** focus stage, Lens + Ollama on this machine.
 
 ## Main
 
-Phases **1–5 are merged on `main`** through feature branches (Phase 5: `phase-5-four-views` → PR → merge). No pending Phase 4 commit.
+Phases **1–6 are merged on `main`** through feature branches (Phase 6: `phase-6-filter-lenses` → PR → merge).
 
 Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)
 
@@ -48,9 +48,18 @@ App: [http://127.0.0.1:43123](http://127.0.0.1:43123)
 | 3 Projects / groups / items | merged | [docs/phases/03-projects.md](docs/phases/03-projects.md) |
 | 4 People + assign | merged | [docs/phases/04-assign.md](docs/phases/04-assign.md) |
 | 5 Four views | merged via PR | [docs/phases/05-views.md](docs/phases/05-views.md) |
-| 6–10 | not started | [docs/phases/README.md](docs/phases/README.md) |
+| 6 Filter lenses | merged via PR | [docs/phases/06-lenses.md](docs/phases/06-lenses.md) |
+| 7–10 | not started | [docs/phases/README.md](docs/phases/README.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
+
+## Lenses (phase 6)
+
+One-tap chips on Ledger, Flow, and Orbit. Same tickets.
+
+- Built-in: **Mine**, **Overdue**, **Unassigned**, **This week**, a person, a status
+- Stack chips, then **Keep** to save your own name in SQLite (`FilterLens`)
+- Query stays on the board: `?q=mine&status=doing` or `?lens=`
 
 ## Views (phase 5)
 
@@ -78,7 +87,7 @@ npm test              # node:test, Prisma-free pack
 npm run test:coverage # c8, 100% lines / statements on that pack
 ```
 
-Playwright is **not** installed. We add it when phases 6–10 are done, not now.
+Playwright is **not** installed. We add it when phases 7–10 are done, not now.
 
 ## Stack
 

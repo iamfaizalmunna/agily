@@ -1,6 +1,6 @@
 # Agily — plan
 
-Local agile planner. **Phases 1–5 are complete.** Phase 5 merged from `phase-5-four-views`. No cloud host, email SaaS, or paid LLM.
+Local agile planner. **Phases 1–6 are complete.** Phase 6 merged from `phase-6-filter-lenses`. No cloud host, email SaaS, or paid LLM.
 
 | Document | Open |
 |----------|------|
@@ -13,7 +13,7 @@ Local agile planner. **Phases 1–5 are complete.** Phase 5 merged from `phase-5
 
 ## Product
 
-One person starts a **studio**, invites by **email identity + copyable join link**, and plans work on **one ticket model**. Pulse, Ledger, Flow, and Orbit read those same rows.
+One person starts a **studio**, invites by **email identity + copyable join link**, and plans work on **one ticket model**. Pulse, Ledger, Flow, and Orbit read those same rows. Filter lenses are chips saved per person.
 
 **Out of scope.** SMTP, OAuth, S3, paid OpenAI, Gantt, automations, a Notion wiki as a second product.
 
