@@ -1,0 +1,21 @@
+{
+  "all": true,
+  "check-coverage": true,
+  "lines": 100,
+  "statements": 100,
+  "include": [
+    "src/lib/auth/identity.ts",
+    "src/lib/auth/cookie-options.ts",
+    "src/lib/rbac/roles.ts",
+    "src/lib/teams/tokens.ts",
+    "src/lib/items/status.ts",
+    "src/lib/items/permissions.ts",
+    "src/lib/items/defaults.ts",
+    "src/lib/items/validate.ts",
+    "src/lib/nav/studio.ts",
+    "src/lib/cn.ts"
+  ],
+  "exclude": ["**/*.test.ts", "**/node_modules/**"],
+  "reporter": ["text", "text-summary", "lcov", "html"],
+  "reportsDir": "coverage"
+}

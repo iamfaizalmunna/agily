@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Agily phases</title>
+    <style>
+      :root { --ink:#12100e; --paper:#f4efe6; --copper:#c9844a; --mute:#8a8176; }
+      * { box-sizing: border-box; }
+      body { margin:0; min-height:100dvh; background:var(--ink); color:var(--paper); font-family:Georgia,"Iowan Old Style",serif; padding:2rem 1.25rem 4rem; }
+      h1 { font-weight:400; font-size:clamp(2rem,6vw,3.4rem); margin:0 0 0.4rem; }
+      p.lead { color:var(--mute); max-width:36rem; line-height:1.5; }
+      ol { list-style:none; padding:0; margin:2.5rem 0 0; display:grid; gap:0.75rem; }
+      a.card { display:block; text-decoration:none; color:inherit; border:1px solid rgba(244,239,230,0.12); border-radius:1.25rem; padding:1rem 1.15rem; }
+      a.card.done { border-color:rgba(201,132,74,0.55); }
+      a.card span.num { color:var(--copper); font-size:0.75rem; letter-spacing:0.16em; text-transform:uppercase; }
+      a.card strong { display:block; margin:0.35rem 0 0.2rem; font-weight:400; font-size:1.25rem; }
+      a.card em { color:var(--mute); font-style:normal; font-size:0.95rem; }
+    </style>
+  </head>
+  <body>
+    <p class="lead" style="color:var(--copper);letter-spacing:0.2em;text-transform:uppercase;font-size:0.75rem;">Agily</p>
+    <h1>Ten phases</h1>
+    <p class="lead">Phases 1–3 are live. One ticket model. Playwright waits until the rest ships.</p>
+    <ol>
+      <li><a class="card done" href="https://github.com/iamfaizalmunna/agily/blob/main/docs/phases/01-auth.md"><span class="num">01 done</span><strong>Own-DB auth</strong><em>Email + password. httpOnly session.</em></a></li>
+      <li><a class="card done" href="https://github.com/iamfaizalmunna/agily/blob/main/docs/phases/02-teams.md"><span class="num">02 done</span><strong>Teams + copy-link invites</strong><em>Owner / admin / member / viewer. No mail.</em></a></li>
+      <li><a class="card done" href="https://github.com/iamfaizalmunna/agily/blob/main/docs/phases/03-projects.md"><span class="num">03 done</span><strong>Projects, groups, items</strong><em>Now / Next / Later. One Item row.</em></a></li>
+      <li><a class="card" href="https://github.com/iamfaizalmunna/agily/blob/main/docs/phases/README.md"><span class="num">04–10 soon</span><strong>Assign, views, lenses, Lens</strong><em>Same Item rows. Local Ollama last.</em></a></li>
+    </ol>
+  </body>
+</html>

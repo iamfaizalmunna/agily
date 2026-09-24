@@ -33,6 +33,7 @@ model Team {
   createdAt DateTime     @default(now())
   members   TeamMember[]
   invites   Invite[]
+  projects  Project[]
 }
 
 model TeamMember {
@@ -55,4 +56,42 @@ model Invite {
   expiresAt DateTime
   createdAt DateTime @default(now())
   team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+}
+
+model Project {
+  id        String   @id @default(cuid())
+  teamId    String
+  name      String
+  slug      String
+  archived  Boolean  @default(false)
+  createdAt DateTime @default(now())
+  team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  groups    Group[]
+  items     Item[]
+
+  @@unique([teamId, slug])
+}
+
+model Group {
+  id        String   @id @default(cuid())
+  projectId String
+  name      String
+  position  Int
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  items     Item[]
+}
+
+model Item {
+  id        String    @id @default(cuid())
+  projectId String
+  groupId   String
+  title     String
+  body      String    @default("")
+  status    String
+  dueOn     DateTime?
+  position  Int
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
 }

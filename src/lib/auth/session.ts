@@ -4,9 +4,11 @@ import { prisma } from "@/lib/db/prisma";
 import {
   clearSessionCookie,
   readSessionToken,
-  SESSION_DAYS,
   writeSessionCookie,
 } from "@/lib/auth/cookies";
+import { isSessionFresh, sessionExpiry } from "@/lib/auth/identity";
+
+export { normalizeEmail, sessionExpiry } from "@/lib/auth/identity";
 
 export type SessionUser = {
   id: string;
@@ -16,12 +18,6 @@ export type SessionUser = {
 
 function newToken() {
   return randomBytes(32).toString("hex");
-}
-
-export function sessionExpiry(from = new Date()) {
-  const expiresAt = new Date(from);
-  expiresAt.setDate(expiresAt.getDate() + SESSION_DAYS);
-  return expiresAt;
 }
 
 export async function createSession(userId: string) {
@@ -51,7 +47,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
   });
 
   if (!session) return null;
-  if (session.expiresAt < new Date()) {
+  if (!isSessionFresh(session.expiresAt)) {
     await prisma.session.delete({ where: { id: session.id } });
     await clearSessionCookie();
     return null;
@@ -70,6 +66,3 @@ export async function requireUser(): Promise<SessionUser> {
   return user;
 }
 
-export function normalizeEmail(email: string) {
-  return email.trim().toLowerCase();
-}

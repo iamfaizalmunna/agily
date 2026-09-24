@@ -1,17 +1,9 @@
 import { cookies } from "next/headers";
+import { sessionCookieOptions } from "@/lib/auth/cookie-options";
+import { SESSION_COOKIE } from "@/lib/auth/identity";
 
-export const SESSION_COOKIE = "agily_session";
-export const SESSION_DAYS = 30;
-
-export function sessionCookieOptions(expiresAt: Date) {
-  return {
-    httpOnly: true,
-    sameSite: "lax" as const,
-    path: "/",
-    secure: process.env.NODE_ENV === "production",
-    expires: expiresAt,
-  };
-}
+export { SESSION_COOKIE, SESSION_DAYS } from "@/lib/auth/identity";
+export { sessionCookieOptions };
 
 export async function readSessionToken(): Promise<string | undefined> {
   return (await cookies()).get(SESSION_COOKIE)?.value;

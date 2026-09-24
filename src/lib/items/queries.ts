@@ -1,0 +1,23 @@
+import { prisma } from "@/lib/db/prisma";
+
+export async function listProjects(teamId: string, includeArchived = false) {
+  return prisma.project.findMany({
+    where: includeArchived ? { teamId } : { teamId, archived: false },
+    orderBy: { createdAt: "asc" },
+    include: { _count: { select: { items: true } } },
+  });
+}
+
+export async function getProjectBoard(teamId: string, projectSlug: string) {
+  return prisma.project.findFirst({
+    where: { teamId, slug: projectSlug },
+    include: {
+      groups: {
+        orderBy: { position: "asc" },
+        include: {
+          items: { orderBy: { position: "asc" } },
+        },
+      },
+    },
+  });
+}

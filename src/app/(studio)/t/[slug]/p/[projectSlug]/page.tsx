@@ -1,0 +1,86 @@
+import { notFound } from "next/navigation";
+import { CreateGroupForm } from "@/components/items/create-group-form";
+import { CreateItemForm } from "@/components/items/create-item-form";
+import { ItemRow } from "@/components/items/item-row";
+import { Button } from "@/components/ui/button";
+import { requireUser } from "@/lib/auth/session";
+import { archiveProjectAction } from "@/lib/items/actions";
+import { canArchiveProject, canWriteBoard } from "@/lib/items/permissions";
+import { getProjectBoard } from "@/lib/items/queries";
+import { getMembership } from "@/lib/teams/queries";
+
+export default async function ProjectBoardPage({
+  params,
+}: {
+  params: Promise<{ slug: string; projectSlug: string }>;
+}) {
+  const { slug, projectSlug } = await params;
+  const user = await requireUser();
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) notFound();
+
+  const project = await getProjectBoard(ctx.team.id, projectSlug);
+  if (!project) notFound();
+
+  const writable = canWriteBoard(ctx.role) && !project.archived;
+  const mayArchive = canArchiveProject(ctx.role) && !project.archived;
+
+  return (
+    <section className="flex flex-col gap-8">
+      <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+        <div>
+          <p className="font-display text-xs tracking-[0.22em] text-copper uppercase">
+            Ledger
+          </p>
+          <h1 className="mt-3 font-display text-3xl text-paper sm:text-4xl">
+            {project.name}
+          </h1>
+          {project.archived ? (
+            <p className="mt-2 text-sm text-paper/45">This board is archived.</p>
+          ) : null}
+        </div>
+        {mayArchive ? (
+          <form action={archiveProjectAction}>
+            <input type="hidden" name="slug" value={slug} />
+            <input type="hidden" name="projectSlug" value={projectSlug} />
+            <Button type="submit" variant="quiet">
+              Archive
+            </Button>
+          </form>
+        ) : null}
+      </div>
+
+      {project.groups.map((group) => (
+        <section key={group.id} className="flex flex-col gap-3">
+          <h2 className="font-display text-xl text-paper">{group.name}</h2>
+          {group.items.length ? (
+            <ul className="flex flex-col gap-2">
+              {group.items.map((item) => (
+                <ItemRow
+                  key={item.id}
+                  slug={slug}
+                  projectSlug={projectSlug}
+                  item={item}
+                  readOnly={!writable}
+                />
+              ))}
+            </ul>
+          ) : (
+            <p className="text-sm text-paper/40">Empty section.</p>
+          )}
+          {writable ? (
+            <CreateItemForm
+              slug={slug}
+              projectSlug={projectSlug}
+              groupId={group.id}
+            />
+          ) : null}
+        </section>
+      ))}
+
+      {writable ? (
+        <CreateGroupForm slug={slug} projectSlug={projectSlug} />
+      ) : null}
+    </section>
+  );
+}

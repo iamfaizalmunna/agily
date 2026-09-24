@@ -1,6 +1,6 @@
 # Phase 1 — Own-DB auth
 
-**Status:** complete for phase 1.  
+**Status:** complete. Unit pack covers session identity + cookie flags.  
 **Who it is for:** anyone who opens Agily.  
 **What it unlocks:** a signed-in session. No teams until phase 2.
 
