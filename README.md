@@ -1,36 +1,34 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Agily
 
-## Getting Started
+Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-First, run the development server:
+Phases 1–2: own-DB auth, four access levels, teams, copy-link invites. Later: tickets, four views, Lens + **Ollama on this machine**.
+
+## Hard rules
+
+- Identity lives in `User` + `Session` in SQLite. Email is a unique login key, not a mailbox we send to.
+- No Auth0, Clerk, NextAuth OAuth, Google/GitHub/Apple sign-in.
+- No OpenAI / Anthropic / Gemini / SMTP / analytics SDKs.
+- GitHub gets source + `/kb` + README. Never `.env`, `*.db`, `.ollama/`, `*.gguf`.
+
+## Run
 
 ```bash
+cp .env.example .env
+npx prisma migrate dev
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+App: [http://127.0.0.1:43123](http://127.0.0.1:43123) (phone: same host on your LAN if you bind it; default is loopback).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+**Signup:** pick Owner (name a studio), Member, or Viewer. Admin is granted by an owner — you cannot self-select it. Invites are copied `/join/[token]` links. Nothing is emailed.
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Stack
 
-## Learn More
+Next.js App Router, TypeScript, Tailwind, Prisma + SQLite, bcrypt, httpOnly `agily_session` cookie. Fonts ship in `/public/fonts`.
 
-To learn more about Next.js, take a look at the following resources:
+## Later
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Projects, Ledger / Flow / Orbit / Pulse, filter lenses, in-app bell, Lens + Ollama (`127.0.0.1:11434`). After Ollama is installed: `ollama pull llama3.2:3b`.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Phase stories: [docs/phases](docs/phases/README.md).

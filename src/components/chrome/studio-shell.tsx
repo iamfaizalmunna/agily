@@ -1,0 +1,115 @@
+"use client";
+
+import type { ReactNode } from "react";
+import Link from "next/link";
+import { usePathname } from "next/navigation";
+import { SignOutButton } from "@/components/chrome/sign-out-button";
+import { cn } from "@/lib/cn";
+import type { TeamRole } from "@/lib/rbac/roles";
+
+type TeamMark = {
+  name: string;
+  slug: string;
+  role: TeamRole;
+};
+
+export function StudioShell({
+  userName,
+  userEmail,
+  teams,
+  children,
+}: {
+  userName: string;
+  userEmail: string;
+  teams: TeamMark[];
+  children: ReactNode;
+}) {
+  const path = usePathname();
+  const match = path.match(/^\/t\/([^/]+)/);
+  const slug = match?.[1] ?? teams[0]?.slug;
+  const current = teams.find((t) => t.slug === slug) ?? teams[0];
+
+  return (
+    <div className="flex min-h-dvh flex-1 flex-col md:flex-row">
+      <header className="flex items-center justify-between gap-3 border-b border-paper/8 px-4 py-3 md:hidden">
+        <Link
+          href={current ? `/t/${current.slug}` : "/home"}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-copper/20 font-display text-sm text-copper"
+        >
+          {current?.name.slice(0, 1).toUpperCase() ?? "A"}
+        </Link>
+        <p className="min-w-0 flex-1 truncate text-sm text-paper/70">
+          {current?.name ?? "Agily"}
+        </p>
+        <SignOutButton />
+      </header>
+
+      <aside className="hidden w-[4.5rem] flex-col items-center gap-6 border-r border-paper/8 py-6 md:flex">
+        <Link
+          href={current ? `/t/${current.slug}` : "/home"}
+          className="flex h-10 w-10 items-center justify-center rounded-full bg-copper/20 font-display text-sm text-copper"
+          title={current?.name ?? "Agily"}
+        >
+          {current?.name.slice(0, 1).toUpperCase() ?? "A"}
+        </Link>
+        <nav className="flex flex-1 flex-col items-center gap-5 text-[0.65rem] uppercase tracking-[0.18em] text-paper/35">
+          <Link
+            href={current ? `/t/${current.slug}` : "/home"}
+            className={cn(
+              "hover:text-paper",
+              path === "/home" || path === `/t/${slug}` ? "text-paper" : "",
+            )}
+          >
+            Pulse
+          </Link>
+          {slug ? (
+            <Link
+              href={`/t/${slug}/people`}
+              className={cn(
+                "hover:text-paper",
+                path.endsWith("/people") ? "text-paper" : "",
+              )}
+            >
+              People
+            </Link>
+          ) : null}
+        </nav>
+        <SignOutButton />
+      </aside>
+
+      <div className="flex min-h-0 flex-1 flex-col">
+        <div className="hidden items-center justify-between px-8 py-5 md:flex">
+          <p className="text-sm text-paper/45">
+            {userEmail}
+            {current ? ` · ${current.role}` : ""}
+          </p>
+        </div>
+        <div className="flex-1 px-4 pb-24 pt-4 md:px-8 md:pb-10 md:pt-0">
+          {children}
+        </div>
+      </div>
+
+      <nav className="fixed inset-x-0 bottom-0 z-20 flex border-t border-paper/10 bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
+        <Link
+          href={current ? `/t/${current.slug}` : "/home"}
+          className="flex min-h-14 flex-1 items-center justify-center text-xs uppercase tracking-[0.16em] text-paper/50"
+        >
+          Pulse
+        </Link>
+        {slug ? (
+          <Link
+            href={`/t/${slug}/people`}
+            className="flex min-h-14 flex-1 items-center justify-center text-xs uppercase tracking-[0.16em] text-paper/50"
+          >
+            People
+          </Link>
+        ) : (
+          <span className="flex min-h-14 flex-1 items-center justify-center text-xs uppercase tracking-[0.16em] text-paper/25">
+            People
+          </span>
+        )}
+        <span className="hidden">{userName}</span>
+      </nav>
+    </div>
+  );
+}

@@ -1,0 +1,89 @@
+"use server";
+
+import { redirect } from "next/navigation";
+import { z } from "zod";
+import { prisma } from "@/lib/db/prisma";
+import { hashPassword, verifyPassword } from "@/lib/auth/password";
+import {
+  createSession,
+  getCurrentUser,
+  normalizeEmail,
+} from "@/lib/auth/session";
+import { isTeamRole } from "@/lib/rbac/roles";
+
+export type JoinFormState = { error?: string };
+
+const joinSchema = z.object({
+  token: z.string().min(1),
+  name: z.string().trim().max(80).optional(),
+  password: z.string().min(1, "Password is required"),
+});
+
+export async function acceptInviteAction(
+  _prev: JoinFormState,
+  formData: FormData,
+): Promise<JoinFormState> {
+  const parsed = joinSchema.safeParse({
+    token: formData.get("token"),
+    name: formData.get("name") || undefined,
+    password: formData.get("password"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message };
+  }
+
+  const invite = await prisma.invite.findUnique({
+    where: { token: parsed.data.token },
+    include: { team: true },
+  });
+  if (!invite || invite.expiresAt < new Date()) {
+    return { error: "This join link is expired or unknown" };
+  }
+  if (!isTeamRole(invite.role) || invite.role === "owner") {
+    return { error: "This invite is broken" };
+  }
+
+  const email = normalizeEmail(invite.email);
+  let user = await prisma.user.findUnique({ where: { email } });
+  const sessionUser = await getCurrentUser();
+
+  if (sessionUser && sessionUser.email !== email) {
+    return {
+      error: `This link is for ${email}. Sign out, then join with that email.`,
+    };
+  }
+
+  if (!user) {
+    const name = parsed.data.name?.trim();
+    if (!name) return { error: "Name is required for a new account" };
+    if (parsed.data.password.length < 8) {
+      return { error: "Password must be at least 8 characters" };
+    }
+    user = await prisma.user.create({
+      data: {
+        email,
+        name,
+        passwordHash: await hashPassword(parsed.data.password),
+      },
+    });
+  } else {
+    const ok = await verifyPassword(parsed.data.password, user.passwordHash);
+    if (!ok) return { error: "Password is wrong for that email" };
+  }
+
+  if (!sessionUser || sessionUser.id !== user.id) {
+    await createSession(user.id);
+  }
+
+  const existing = await prisma.teamMember.findUnique({
+    where: { teamId_userId: { teamId: invite.teamId, userId: user.id } },
+  });
+  if (!existing) {
+    await prisma.teamMember.create({
+      data: { teamId: invite.teamId, userId: user.id, role: invite.role },
+    });
+  }
+
+  await prisma.invite.delete({ where: { id: invite.id } });
+  redirect(`/t/${invite.team.slug}`);
+}
