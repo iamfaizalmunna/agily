@@ -1,6 +1,6 @@
 # Agily — plan
 
-Local agile planner. **Phases 1–8 are complete.** Phase 8 merged from `phase-8-in-app-bell`. No cloud host, email SaaS, or paid LLM.
+Local agile planner. **Phases 1–9 are complete.** Phase 9 merged from `phase-9-lens-turbo`. No cloud host, email SaaS, or paid LLM.
 
 | Document | Open |
 |----------|------|
@@ -15,7 +15,7 @@ Local agile planner. **Phases 1–8 are complete.** Phase 8 merged from `phase-8
 
 One person starts a **studio**, invites by **email identity + copyable join link**, and plans work on **one ticket model**. Pulse, Ledger, Flow, and Orbit read those same rows. Filter lenses are chips. A focus stage opens one ticket with notes. The bell is rows in our DB.
 
-**Out of scope.** SMTP, OAuth, S3, paid OpenAI, Gantt, automations, a Notion wiki as a second product.
+**Out of scope.** SMTP, OAuth, S3, paid OpenAI, Gantt, automations, a Notion wiki as a second product. Lens is Ollama on loopback plus `/kb`.
 
 ## Roles
 
@@ -23,8 +23,8 @@ Owner → Admin → Member → Viewer. Team-scoped. Admin is never a signup pick
 
 ## Auth
 
-Opaque session token in SQLite + httpOnly `agily_session`. Not JWT in localStorage.
+Opaque session token in SQLite + httpOnly `agily_session`. Express Lens reads the same cookie. Not JWT in localStorage.
 
 ## Tests
 
-`src/lib/**/*.test.ts` via `node:test` + c8. Playwright is **not** in this pack — we add it when the product is complete.
+`src/lib/**/*.test.ts` and `packages/lens` via `node:test` + c8. Playwright is **not** in this pack — we add it in phase 10.

@@ -2,7 +2,7 @@
 
 Each story starts with **who it is for**, **what you see**, and **how it works**. Open a row on GitHub. Open the gallery for the colour map.
 
-Phases **1–8 land on `main` through branches.** Phase 8 is `phase-8-in-app-bell` then merge.
+Phases **1–9 land on `main` through branches.** Phase 9 is `phase-9-lens-turbo` then merge.
 
 | | Phase | In one sentence | Story |
 |:--:|:------|:----------------|:------|
@@ -14,7 +14,7 @@ Phases **1–8 land on `main` through branches.** Phase 8 is `phase-8-in-app-bel
 | [![06](https://img.shields.io/badge/06-c9844a?style=flat-square)](06-lenses.md) | Filter lenses | Saved chips per user per team. | [Read](06-lenses.md) |
 | [![07](https://img.shields.io/badge/07-c9844a?style=flat-square)](07-focus.md) | Focus stage + comments | Desktop stage, mobile drawer. | [Read](07-focus.md) |
 | [![08](https://img.shields.io/badge/08-c9844a?style=flat-square)](08-bell.md) | In-app bell | Notification rows. No email. | [Read](08-bell.md) |
-| [![09](https://img.shields.io/badge/09-64748b?style=flat-square)](#) | Lens AI | Ollama on loopback + `/kb`. | Soon |
+| [![09](https://img.shields.io/badge/09-c9844a?style=flat-square)](09-lens.md) | Lens AI | Ollama on loopback + `/kb` + Express. | [Read](09-lens.md) |
 | [![10](https://img.shields.io/badge/10-64748b?style=flat-square)](#) | Ship chrome | Keyboard, Playwright, empty/error. | Soon |
 
 **Gallery:** [index.html](index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)

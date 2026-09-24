@@ -18,7 +18,11 @@
     "src/lib/lenses/lenses.ts",
     "src/lib/focus/focus.ts",
     "src/lib/notices/notices.ts",
-    "src/lib/cn.ts"
+    "src/lib/cn.ts",
+    "packages/lens/src/loopback.ts",
+    "packages/lens/src/kb.ts",
+    "packages/lens/src/extract.ts",
+    "packages/lens/src/index.ts"
   ],
   "exclude": ["**/*.test.ts", "**/node_modules/**"],
   "reporter": ["text", "text-summary", "lcov", "html"],
