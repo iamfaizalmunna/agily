@@ -17,6 +17,7 @@
     "src/lib/views/views.ts",
     "src/lib/lenses/lenses.ts",
     "src/lib/focus/focus.ts",
+    "src/lib/notices/notices.ts",
     "src/lib/cn.ts"
   ],
   "exclude": ["**/*.test.ts", "**/node_modules/**"],
