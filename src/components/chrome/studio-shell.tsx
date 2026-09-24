@@ -3,6 +3,7 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NoticeBell } from "@/components/chrome/notice-bell";
 import { SignOutButton } from "@/components/chrome/sign-out-button";
 import { cn } from "@/lib/cn";
 import { studioMark, teamSlugFromPath } from "@/lib/nav/studio";
@@ -18,17 +19,22 @@ export function StudioShell({
   userName,
   userEmail,
   teams,
+  unreadBySlug,
   children,
 }: {
   userName: string;
   userEmail: string;
   teams: TeamMark[];
+  unreadBySlug: Record<string, number>;
   children: ReactNode;
 }) {
   const path = usePathname();
   const slug = teamSlugFromPath(path) ?? teams[0]?.slug;
   const current = teams.find((t) => t.slug === slug) ?? teams[0];
   const mark = studioMark(current?.name);
+  const unread = current ? (unreadBySlug[current.slug] ?? 0) : 0;
+  const noticesHref = current ? `/t/${current.slug}/notices` : "/home";
+  const onBell = path.endsWith("/notices");
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col md:flex-row">
@@ -42,6 +48,7 @@ export function StudioShell({
         <p className="min-w-0 flex-1 truncate text-sm text-paper/70">
           {current?.name ?? "Agily"}
         </p>
+        <NoticeBell href={noticesHref} count={unread} on={onBell} compact />
         <SignOutButton />
       </header>
 
@@ -73,6 +80,9 @@ export function StudioShell({
             >
               People
             </Link>
+          ) : null}
+          {slug ? (
+            <NoticeBell href={noticesHref} count={unread} on={onBell} compact />
           ) : null}
         </nav>
         <SignOutButton />
@@ -117,6 +127,7 @@ export function StudioShell({
             People
           </span>
         )}
+        <NoticeBell href={noticesHref} count={unread} on={onBell} />
         <span className="hidden">{userName}</span>
       </nav>
     </div>

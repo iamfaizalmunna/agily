@@ -1,18 +1,18 @@
 # Agily
 
 [![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
-[![Phase](https://img.shields.io/badge/phase-7%2F10-c9844a)](docs/phases/README.md)
+[![Phase](https://img.shields.io/badge/phase-8%2F10-c9844a)](docs/phases/README.md)
 [![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
 [![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** own-DB auth, invites, boards, assignees, four views, lenses, focus stage.  
-**Later:** in-app bell, Lens + Ollama on this machine.
+**Now:** own-DB auth, invites, boards, assignees, four views, lenses, focus, in-app bell.  
+**Later:** Lens + Ollama on this machine.
 
 ## Main
 
-Phases **1–7 are merged on `main`** through feature branches (Phase 7: `phase-7-focus-stage` → PR → merge).
+Phases **1–8 are merged on `main`** through feature branches (Phase 8: `phase-8-in-app-bell` → PR → merge).
 
 Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)
 
@@ -50,9 +50,18 @@ App: [http://127.0.0.1:43123](http://127.0.0.1:43123)
 | 5 Four views | merged via PR | [docs/phases/05-views.md](docs/phases/05-views.md) |
 | 6 Filter lenses | merged via PR | [docs/phases/06-lenses.md](docs/phases/06-lenses.md) |
 | 7 Focus + notes | merged via PR | [docs/phases/07-focus.md](docs/phases/07-focus.md) |
-| 8–10 | not started | [docs/phases/README.md](docs/phases/README.md) |
+| 8 In-app bell | merged via PR | [docs/phases/08-bell.md](docs/phases/08-bell.md) |
+| 9–10 | not started | [docs/phases/README.md](docs/phases/README.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
+
+## Bell (phase 8)
+
+Assign and notes write `Notification` rows. No email.
+
+- Bell on the rail, phone header, and `/t/[studio]/notices`
+- Tap a row to mark it read and open `?focus=`
+- Unread badge, Mark all read
 
 ## Focus (phase 7)
 
@@ -97,7 +106,7 @@ npm test              # node:test, Prisma-free pack
 npm run test:coverage # c8, 100% lines / statements on that pack
 ```
 
-Playwright is **not** installed. We add it when phases 8–10 are done, not now.
+Playwright is **not** installed. We add it when phases 9–10 are done, not now.
 
 ## Stack
 

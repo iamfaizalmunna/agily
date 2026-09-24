@@ -18,6 +18,7 @@ model User {
   assignments  ItemAssignee[]
   lenses       FilterLens[]
   updates      ItemUpdate[]
+  notices      Notification[]
 }
 
 model Session {
@@ -38,6 +39,7 @@ model Team {
   invites   Invite[]
   projects  Project[]
   lenses    FilterLens[]
+  notices   Notification[]
 }
 
 model TeamMember {
@@ -134,4 +136,18 @@ model ItemUpdate {
   createdAt DateTime @default(now())
   item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Notification {
+  id        String    @id @default(cuid())
+  teamId    String
+  userId    String
+  kind      String
+  title     String
+  body      String
+  href      String
+  readAt    DateTime?
+  createdAt DateTime  @default(now())
+  team      Team      @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

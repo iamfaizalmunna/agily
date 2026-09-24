@@ -22,6 +22,7 @@ import {
   filterAssignableIds,
   toggleAssignee,
 } from "@/lib/items/assign";
+import { writeNotices } from "@/lib/notices/write";
 import { safeStudioNext } from "@/lib/views/views";
 
 function boardNext(slug: string, projectSlug: string, formData: FormData) {
@@ -166,10 +167,13 @@ export async function updateItemAction(
       id: itemId,
       project: { teamId: ctx.team.id, slug: projectSlug },
     },
+    include: { assignees: true },
   });
   if (!item) return { error: "Ticket not found" };
   const teamIds = ctx.team.members.map((m) => m.userId);
   const nextIds = filterAssignableIds(collectAssigneeIds(formData), teamIds);
+  const current = item.assignees.map((row) => row.userId);
+  const added = nextIds.filter((id) => !current.includes(id));
   await prisma.$transaction([
     prisma.item.update({
       where: { id: item.id },
@@ -185,6 +189,17 @@ export async function updateItemAction(
       prisma.itemAssignee.create({ data: { itemId: item.id, userId } }),
     ),
   ]);
+  await writeNotices({
+    teamId: ctx.team.id,
+    slug,
+    projectSlug,
+    itemId: item.id,
+    itemTitle: titleParsed.title,
+    actorId: user.id,
+    actorName: user.name,
+    kind: "assigned",
+    userIds: added,
+  });
   redirect(boardNext(slug, projectSlug, formData));
 }
 
@@ -253,10 +268,22 @@ export async function addCommentAction(
       id: itemId,
       project: { teamId: ctx.team.id, slug: projectSlug },
     },
+    include: { assignees: true },
   });
   if (!item) return { error: "Ticket not found" };
   await prisma.itemUpdate.create({
     data: { itemId: item.id, userId: user.id, body: note.body },
+  });
+  await writeNotices({
+    teamId: ctx.team.id,
+    slug,
+    projectSlug,
+    itemId: item.id,
+    itemTitle: item.title,
+    actorId: user.id,
+    actorName: user.name,
+    kind: "note",
+    userIds: item.assignees.map((row) => row.userId),
   });
   redirect(boardNext(slug, projectSlug, formData));
 }
