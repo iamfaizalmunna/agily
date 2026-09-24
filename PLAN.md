@@ -1,6 +1,6 @@
 # Agily — plan
 
-Local agile planner. **Phases 1–9 are complete.** Phase 9 merged from `phase-9-lens-turbo`. No cloud host, email SaaS, or paid LLM.
+Local agile planner. **All 10 phases are complete.** Phase 10 merged from `phase-10-ship-chrome`. No cloud host, email SaaS, or paid LLM.
 
 | Document | Open |
 |----------|------|
@@ -27,4 +27,4 @@ Opaque session token in SQLite + httpOnly `agily_session`. Express Lens reads th
 
 ## Tests
 
-`src/lib/**/*.test.ts` and `packages/lens` via `node:test` + c8. Playwright is **not** in this pack — we add it in phase 10.
+`src/lib/**/*.test.ts` and `packages/lens` via `node:test` + c8. Playwright smoke in `e2e/` on `prisma/e2e.db`.

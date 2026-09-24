@@ -15,6 +15,8 @@ const eslintConfig = defineConfig([
     "coverage/**",
     "apps/**",
     "packages/**",
+    "e2e/**",
+    "playwright.config.ts",
   ]),
 ]);
 

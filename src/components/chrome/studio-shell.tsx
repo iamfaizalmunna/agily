@@ -5,6 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { NoticeBell } from "@/components/chrome/notice-bell";
 import { SignOutButton } from "@/components/chrome/sign-out-button";
+import { KeyboardProvider } from "@/components/chrome/keyboard-provider";
 import { LensPanel, LensTrigger } from "@/components/lens/lens-panel";
 import { cn } from "@/lib/cn";
 import { studioMark, teamSlugFromPath } from "@/lib/nav/studio";
@@ -134,6 +135,7 @@ export function StudioShell({
         <span className="hidden">{userName}</span>
       </nav>
       <Suspense fallback={null}>
+        <KeyboardProvider slug={slug} />
         <LensPanel slug={slug} />
       </Suspense>
     </div>

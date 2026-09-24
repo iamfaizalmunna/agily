@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import { EmptyState } from "@/components/chrome/empty-state";
 import { Button } from "@/components/ui/button";
 import { requireUser } from "@/lib/auth/session";
 import { formatCommentAt } from "@/lib/focus/focus";
@@ -69,7 +70,10 @@ export default async function NoticesPage({
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-paper/40">No notices yet.</p>
+        <EmptyState
+          title="Quiet bell"
+          body="Assign someone or leave a note on a ticket. Rows show up here — never in email."
+        />
       )}
     </section>
   );

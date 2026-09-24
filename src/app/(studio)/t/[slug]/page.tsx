@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { EmptyState } from "@/components/chrome/empty-state";
 import { CreateProjectForm } from "@/components/items/create-project-form";
 import { TicketChip } from "@/components/views/ticket-chip";
 import { requireUser } from "@/lib/auth/session";
@@ -115,7 +116,10 @@ export default async function TeamHomePage({
           ))}
         </ul>
       ) : (
-        <p className="text-sm text-paper/45">No boards yet.</p>
+        <EmptyState
+          title="No boards yet"
+          body="Open a board to add Now / Next / Later sections and tickets."
+        />
       )}
 
       <Link
