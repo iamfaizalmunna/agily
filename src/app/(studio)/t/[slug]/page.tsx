@@ -41,7 +41,7 @@ export default async function TeamHomePage({
     if (!item) return null;
     return (
       <TicketChip
-        href={`/t/${slug}/p/${item.project.slug}#item-${item.id}`}
+        href={`/t/${slug}/p/${item.project.slug}?focus=${item.id}`}
         title={item.title}
         status={item.status}
         dueOn={item.dueOn}

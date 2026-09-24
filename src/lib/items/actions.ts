@@ -6,9 +6,11 @@ import { prisma } from "@/lib/db/prisma";
 import { requireUser } from "@/lib/auth/session";
 import { getMembership } from "@/lib/teams/queries";
 import { parseTeamSettings } from "@/lib/rbac/roles";
+import { parseCommentBody } from "@/lib/focus/focus";
 import {
   canArchiveProject,
   canAssign,
+  canComment,
   canCreateProject,
   canWriteBoard,
 } from "@/lib/items/permissions";
@@ -229,6 +231,32 @@ export async function moveItemStatusAction(formData: FormData) {
       project: { teamId: ctx.team.id, slug: projectSlug },
     },
     data: { status },
+  });
+  redirect(boardNext(slug, projectSlug, formData));
+}
+
+export async function addCommentAction(
+  _prev: BoardFormState,
+  formData: FormData,
+): Promise<BoardFormState> {
+  const user = await requireUser();
+  const slug = String(formData.get("slug") ?? "");
+  const projectSlug = String(formData.get("projectSlug") ?? "");
+  const itemId = String(formData.get("itemId") ?? "");
+  const note = parseCommentBody(String(formData.get("body") ?? ""));
+  if ("error" in note) return { error: note.error };
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) return { error: "Studio not found" };
+  if (!canComment(ctx.role)) return { error: "Read only" };
+  const item = await prisma.item.findFirst({
+    where: {
+      id: itemId,
+      project: { teamId: ctx.team.id, slug: projectSlug },
+    },
+  });
+  if (!item) return { error: "Ticket not found" };
+  await prisma.itemUpdate.create({
+    data: { itemId: item.id, userId: user.id, body: note.body },
   });
   redirect(boardNext(slug, projectSlug, formData));
 }
