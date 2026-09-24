@@ -1,11 +1,13 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { CreateProjectForm } from "@/components/items/create-project-form";
+import { TicketChip } from "@/components/views/ticket-chip";
 import { requireUser } from "@/lib/auth/session";
 import { canCreateProject } from "@/lib/items/permissions";
-import { listProjects } from "@/lib/items/queries";
+import { listProjects, listTeamItems } from "@/lib/items/queries";
 import { parseTeamSettings } from "@/lib/rbac/roles";
 import { getMembership } from "@/lib/teams/queries";
+import { pulseBuckets } from "@/lib/views/views";
 
 export default async function TeamHomePage({
   params,
@@ -20,6 +22,33 @@ export default async function TeamHomePage({
   const settings = parseTeamSettings(ctx.team.settings);
   const mayCreate = canCreateProject(ctx.role, settings);
   const projects = await listProjects(ctx.team.id);
+  const rows = await listTeamItems(ctx.team.id);
+  const buckets = pulseBuckets(
+    rows.map((item) => ({
+      id: item.id,
+      title: item.title,
+      status: item.status,
+      dueOn: item.dueOn,
+      updatedAt: item.updatedAt,
+      assigneeIds: item.assignees.map((row) => row.userId),
+    })),
+    user.id,
+    new Date(),
+  );
+
+  const chip = (id: string) => {
+    const item = rows.find((row) => row.id === id);
+    if (!item) return null;
+    return (
+      <TicketChip
+        href={`/t/${slug}/p/${item.project.slug}#item-${item.id}`}
+        title={item.title}
+        status={item.status}
+        dueOn={item.dueOn}
+        people={item.assignees.map((row) => row.user)}
+      />
+    );
+  };
 
   return (
     <section className="flex flex-col gap-8">
@@ -31,10 +60,43 @@ export default async function TeamHomePage({
           {ctx.team.name}
         </h1>
         <p className="mt-4 max-w-md text-sm leading-relaxed text-paper/50 sm:text-base">
-          You are {ctx.role}. Boards share one ticket model. Four views come in
-          phase 5 — this is the same rows, sparse.
+          Morning stream from the same tickets. Ledger, Flow, and Orbit live on
+          each board.
         </p>
       </div>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-display text-xl text-paper">Mine</h2>
+        {buckets.mine.length ? (
+          buckets.mine.map((item) => (
+            <div key={item.id}>{chip(item.id)}</div>
+          ))
+        ) : (
+          <p className="text-sm text-paper/40">Nothing assigned to you.</p>
+        )}
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-display text-xl text-paper">Overdue</h2>
+        {buckets.overdue.length ? (
+          buckets.overdue.map((item) => (
+            <div key={item.id}>{chip(item.id)}</div>
+          ))
+        ) : (
+          <p className="text-sm text-paper/40">Nothing late.</p>
+        )}
+      </section>
+
+      <section className="flex flex-col gap-3">
+        <h2 className="font-display text-xl text-paper">Recently assigned</h2>
+        {buckets.recent.length ? (
+          buckets.recent.map((item) => (
+            <div key={item.id}>{chip(item.id)}</div>
+          ))
+        ) : (
+          <p className="text-sm text-paper/40">No recent assigns.</p>
+        )}
+      </section>
 
       {projects.length ? (
         <ul className="flex flex-col gap-2">
@@ -56,14 +118,12 @@ export default async function TeamHomePage({
         <p className="text-sm text-paper/45">No boards yet.</p>
       )}
 
-      <div className="flex flex-col gap-4 sm:flex-row">
-        <Link
-          href={`/t/${slug}/people`}
-          className="inline-flex min-h-12 items-center justify-center rounded-full border border-paper/15 px-5 text-sm text-paper"
-        >
-          People
-        </Link>
-      </div>
+      <Link
+        href={`/t/${slug}/people`}
+        className="inline-flex min-h-12 items-center justify-center rounded-full border border-paper/15 px-5 text-sm text-paper"
+      >
+        People
+      </Link>
 
       {mayCreate ? (
         <div>

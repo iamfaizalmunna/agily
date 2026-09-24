@@ -93,14 +93,22 @@ export function StudioShell({
       <nav className="fixed inset-x-0 bottom-0 z-20 flex border-t border-paper/10 bg-ink/95 pb-[env(safe-area-inset-bottom)] backdrop-blur md:hidden">
         <Link
           href={current ? `/t/${current.slug}` : "/home"}
-          className="flex min-h-14 flex-1 items-center justify-center text-xs uppercase tracking-[0.16em] text-paper/50"
+          className={cn(
+            "flex min-h-14 flex-1 items-center justify-center text-xs uppercase tracking-[0.16em]",
+            path === "/home" || path === `/t/${slug}`
+              ? "text-paper"
+              : "text-paper/50",
+          )}
         >
           Pulse
         </Link>
         {slug ? (
           <Link
             href={`/t/${slug}/people`}
-            className="flex min-h-14 flex-1 items-center justify-center text-xs uppercase tracking-[0.16em] text-paper/50"
+            className={cn(
+              "flex min-h-14 flex-1 items-center justify-center text-xs uppercase tracking-[0.16em]",
+              path.endsWith("/people") ? "text-paper" : "text-paper/50",
+            )}
           >
             People
           </Link>

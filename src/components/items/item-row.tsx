@@ -45,7 +45,7 @@ export function ItemRow({
 
   if (readOnly) {
     return (
-      <li className="rounded-2xl border border-paper/10 px-4 py-3">
+      <li id={`item-${item.id}`} className="rounded-2xl border border-paper/10 px-4 py-3">
         <p className="text-paper">{item.title}</p>
         <p className="mt-1 text-xs uppercase tracking-[0.14em] text-paper/40">
           {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
@@ -59,7 +59,7 @@ export function ItemRow({
   }
 
   return (
-    <li className="rounded-2xl border border-paper/10 p-4">
+    <li id={`item-${item.id}`} className="rounded-2xl border border-paper/10 p-4">
       <form action={action} className="flex flex-col gap-3">
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="projectSlug" value={projectSlug} />

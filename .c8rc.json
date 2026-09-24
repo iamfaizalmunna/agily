@@ -14,6 +14,7 @@
     "src/lib/items/validate.ts",
     "src/lib/items/assign.ts",
     "src/lib/nav/studio.ts",
+    "src/lib/views/views.ts",
     "src/lib/cn.ts"
   ],
   "exclude": ["**/*.test.ts", "**/node_modules/**"],

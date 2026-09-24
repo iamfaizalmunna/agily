@@ -20,6 +20,15 @@ import {
   filterAssignableIds,
   toggleAssignee,
 } from "@/lib/items/assign";
+import { safeStudioNext } from "@/lib/views/views";
+
+function boardNext(slug: string, projectSlug: string, formData: FormData) {
+  return safeStudioNext(
+    slug,
+    `/t/${slug}/p/${projectSlug}`,
+    String(formData.get("next") ?? ""),
+  );
+}
 
 export type BoardFormState = { error?: string };
 
@@ -130,7 +139,7 @@ export async function createItemAction(
       assignees: assignMe ? { create: { userId: user.id } } : undefined,
     },
   });
-  redirect(`/t/${slug}/p/${projectSlug}`);
+  redirect(boardNext(slug, projectSlug, formData));
 }
 
 export async function updateItemAction(
@@ -174,7 +183,7 @@ export async function updateItemAction(
       prisma.itemAssignee.create({ data: { itemId: item.id, userId } }),
     ),
   ]);
-  redirect(`/t/${slug}/p/${projectSlug}`);
+  redirect(boardNext(slug, projectSlug, formData));
 }
 
 export async function assignToMeAction(formData: FormData) {
@@ -201,5 +210,25 @@ export async function assignToMeAction(formData: FormData) {
       data: next.map((userId) => ({ itemId: item.id, userId })),
     });
   }
-  redirect(`/t/${slug}/p/${projectSlug}`);
+  redirect(boardNext(slug, projectSlug, formData));
+}
+
+export async function moveItemStatusAction(formData: FormData) {
+  const user = await requireUser();
+  const slug = String(formData.get("slug") ?? "");
+  const projectSlug = String(formData.get("projectSlug") ?? "");
+  const itemId = String(formData.get("itemId") ?? "");
+  const status = String(formData.get("status") ?? "");
+  if (!isItemStatus(status)) return;
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) redirect("/home");
+  if (!canWriteBoard(ctx.role)) return;
+  await prisma.item.updateMany({
+    where: {
+      id: itemId,
+      project: { teamId: ctx.team.id, slug: projectSlug },
+    },
+    data: { status },
+  });
+  redirect(boardNext(slug, projectSlug, formData));
 }
