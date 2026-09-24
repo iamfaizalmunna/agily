@@ -24,6 +24,10 @@ export default async function ProjectBoardPage({
 
   const writable = canWriteBoard(ctx.role) && !project.archived;
   const mayArchive = canArchiveProject(ctx.role) && !project.archived;
+  const people = ctx.team.members.map((member) => ({
+    id: member.user.id,
+    name: member.user.name,
+  }));
 
   return (
     <section className="flex flex-col gap-8">
@@ -60,6 +64,8 @@ export default async function ProjectBoardPage({
                   key={item.id}
                   slug={slug}
                   projectSlug={projectSlug}
+                  currentUserId={user.id}
+                  people={people}
                   item={item}
                   readOnly={!writable}
                 />

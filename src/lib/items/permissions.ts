@@ -13,3 +13,7 @@ export function canWriteBoard(role: TeamRole) {
 export function canArchiveProject(role: TeamRole) {
   return role === "owner" || role === "admin";
 }
+
+export function canAssign(role: TeamRole) {
+  return canWriteBoard(role);
+}

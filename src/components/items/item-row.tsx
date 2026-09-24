@@ -1,32 +1,47 @@
 "use client";
 
 import { useActionState } from "react";
+import { AssigneeMarks } from "@/components/items/assignee-marks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { updateItemAction, type BoardFormState } from "@/lib/items/actions";
+import {
+  assignToMeAction,
+  updateItemAction,
+  type BoardFormState,
+} from "@/lib/items/actions";
+import { isAssigned } from "@/lib/items/assign";
 import { ITEM_STATUSES, STATUS_LABEL, type ItemStatus } from "@/lib/items/status";
 import { formatDueOn } from "@/lib/items/validate";
 
 const initial: BoardFormState = {};
 
+type Person = { id: string; name: string };
+
 export function ItemRow({
   slug,
   projectSlug,
+  currentUserId,
+  people,
   item,
   readOnly,
 }: {
   slug: string;
   projectSlug: string;
+  currentUserId: string;
+  people: Person[];
   item: {
     id: string;
     title: string;
     body: string;
     status: string;
     dueOn: Date | null;
+    assignees: { user: Person }[];
   };
   readOnly: boolean;
 }) {
   const [state, action, pending] = useActionState(updateItemAction, initial);
+  const assignedIds = item.assignees.map((row) => row.user.id);
+  const assignedPeople = item.assignees.map((row) => row.user);
 
   if (readOnly) {
     return (
@@ -36,6 +51,9 @@ export function ItemRow({
           {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
           {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
         </p>
+        <div className="mt-2">
+          <AssigneeMarks people={assignedPeople} />
+        </div>
       </li>
     );
   }
@@ -61,6 +79,25 @@ export function ItemRow({
           </select>
           <Input name="dueOn" type="date" defaultValue={formatDueOn(item.dueOn)} />
         </div>
+        <fieldset>
+          <legend className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-paper/50">
+            People
+          </legend>
+          <div className="flex flex-col gap-2">
+            {people.map((person) => (
+              <label key={person.id} className="flex min-h-11 items-center gap-3 text-sm">
+                <input
+                  type="checkbox"
+                  name="assigneeIds"
+                  value={person.id}
+                  defaultChecked={isAssigned(assignedIds, person.id)}
+                  className="h-4 w-4 accent-copper"
+                />
+                {person.name}
+              </label>
+            ))}
+          </div>
+        </fieldset>
         <textarea
           name="body"
           defaultValue={item.body}
@@ -75,6 +112,14 @@ export function ItemRow({
         ) : null}
         <Button className="min-h-12 w-full sm:w-auto" disabled={pending} variant="ghost">
           {pending ? "Saving…" : "Save"}
+        </Button>
+      </form>
+      <form action={assignToMeAction} className="mt-2">
+        <input type="hidden" name="slug" value={slug} />
+        <input type="hidden" name="projectSlug" value={projectSlug} />
+        <input type="hidden" name="itemId" value={item.id} />
+        <Button type="submit" variant="quiet">
+          {isAssigned(assignedIds, currentUserId) ? "Unassign me" : "Assign me"}
         </Button>
       </form>
     </li>

@@ -15,6 +15,7 @@ model User {
   createdAt    DateTime     @default(now())
   sessions     Session[]
   memberships  TeamMember[]
+  assignments  ItemAssignee[]
 }
 
 model Session {
@@ -93,5 +94,16 @@ model Item {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
-  group     Group     @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  group      Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  assignees  ItemAssignee[]
+}
+
+model ItemAssignee {
+  id     String @id @default(cuid())
+  itemId String
+  userId String
+  item   Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, userId])
 }

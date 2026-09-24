@@ -3,6 +3,7 @@ import { describe, it } from "node:test";
 import { DEFAULT_TEAM_SETTINGS } from "@/lib/rbac/roles";
 import {
   canArchiveProject,
+  canAssign,
   canCreateProject,
   canWriteBoard,
 } from "@/lib/items/permissions";
@@ -30,5 +31,7 @@ describe("phase 3 board permissions", () => {
     assert.equal(canArchiveProject("owner"), true);
     assert.equal(canArchiveProject("member"), false);
     assert.equal(canArchiveProject("viewer"), false);
+    assert.equal(canAssign("member"), true);
+    assert.equal(canAssign("viewer"), false);
   });
 });

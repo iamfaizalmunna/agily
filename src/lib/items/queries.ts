@@ -8,6 +8,15 @@ export async function listProjects(teamId: string, includeArchived = false) {
   });
 }
 
+export async function assignmentCounts(teamId: string) {
+  const rows = await prisma.itemAssignee.groupBy({
+    by: ["userId"],
+    where: { item: { project: { teamId } } },
+    _count: { userId: true },
+  });
+  return Object.fromEntries(rows.map((row) => [row.userId, row._count.userId]));
+}
+
 export async function getProjectBoard(teamId: string, projectSlug: string) {
   return prisma.project.findFirst({
     where: { teamId, slug: projectSlug },
@@ -15,7 +24,12 @@ export async function getProjectBoard(teamId: string, projectSlug: string) {
       groups: {
         orderBy: { position: "asc" },
         include: {
-          items: { orderBy: { position: "asc" } },
+          items: {
+            orderBy: { position: "asc" },
+            include: {
+              assignees: { include: { user: true } },
+            },
+          },
         },
       },
     },

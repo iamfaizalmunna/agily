@@ -25,6 +25,10 @@ export function CreateItemForm({
       <input type="hidden" name="groupId" value={groupId} />
       <Input name="title" required placeholder="New ticket" />
       <Input name="dueOn" type="date" />
+      <label className="flex min-h-11 items-center gap-3 text-sm text-paper/70">
+        <input type="checkbox" name="assignMe" className="h-4 w-4 accent-copper" />
+        Assign me
+      </label>
       {state.error ? (
         <p className="text-sm text-copper" role="alert">
           {state.error}

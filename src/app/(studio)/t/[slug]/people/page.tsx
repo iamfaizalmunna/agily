@@ -17,6 +17,7 @@ import {
   removeMemberAction,
   revokeInviteAction,
 } from "@/lib/teams/actions";
+import { assignmentCounts } from "@/lib/items/queries";
 import { appOrigin, getMembership } from "@/lib/teams/queries";
 
 export default async function PeoplePage({
@@ -33,6 +34,7 @@ export default async function PeoplePage({
   const mayInvite = canInvite(ctx.role, settings);
   const roles = inviteRolesFor(ctx.role);
   const origin = await appOrigin();
+  const counts = await assignmentCounts(ctx.team.id);
 
   return (
     <section className="flex flex-col gap-10">
@@ -56,7 +58,10 @@ export default async function PeoplePage({
             >
               <div className="min-w-0">
                 <p className="truncate text-paper">{member.user.name}</p>
-                <p className="truncate text-xs text-paper/40">{member.user.email}</p>
+                <p className="truncate text-xs text-paper/40">
+                  {member.user.email}
+                  {` · ${counts[member.userId] ?? 0} tickets`}
+                </p>
               </div>
               <div className="flex flex-wrap items-center gap-2">
                 {canChangeMemberRole(ctx.role, role, role) ? (

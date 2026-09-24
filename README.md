@@ -1,13 +1,13 @@
 # Agily
 
 [![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
-[![Phase](https://img.shields.io/badge/phase-3%2F10-c9844a)](docs/phases/README.md)
+[![Phase](https://img.shields.io/badge/phase-4%2F10-c9844a)](docs/phases/README.md)
 [![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
 [![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** own-DB auth, four access levels, copy-link invites, boards with groups and tickets.  
+**Now:** own-DB auth, four access levels, copy-link invites, boards, assignees.  
 **Later:** Ledger / Flow / Orbit / Pulse, lenses, focus stage, Lens + Ollama on this machine.
 
 ## Hard rules
@@ -38,7 +38,8 @@ App: [http://127.0.0.1:43123](http://127.0.0.1:43123)
 | 1 Auth | done | [docs/phases/01-auth.md](docs/phases/01-auth.md) |
 | 2 Teams + invites | done | [docs/phases/02-teams.md](docs/phases/02-teams.md) |
 | 3 Projects / groups / items | done | [docs/phases/03-projects.md](docs/phases/03-projects.md) |
-| 4–10 | next | [docs/phases/README.md](docs/phases/README.md) |
+| 4 People + assign | done | [docs/phases/04-assign.md](docs/phases/04-assign.md) |
+| 5–10 | next | [docs/phases/README.md](docs/phases/README.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
 

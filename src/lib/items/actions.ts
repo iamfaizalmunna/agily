@@ -8,12 +8,18 @@ import { getMembership } from "@/lib/teams/queries";
 import { parseTeamSettings } from "@/lib/rbac/roles";
 import {
   canArchiveProject,
+  canAssign,
   canCreateProject,
   canWriteBoard,
 } from "@/lib/items/permissions";
 import { createProjectForTeam } from "@/lib/items/create";
 import { isItemStatus } from "@/lib/items/status";
 import { parseDueOn, parseItemTitle } from "@/lib/items/validate";
+import {
+  collectAssigneeIds,
+  filterAssignableIds,
+  toggleAssignee,
+} from "@/lib/items/assign";
 
 export type BoardFormState = { error?: string };
 
@@ -111,6 +117,7 @@ export async function createItemAction(
     where: { groupId: group.id },
     _max: { position: true },
   });
+  const assignMe = formData.get("assignMe") === "on";
   await prisma.item.create({
     data: {
       projectId: group.projectId,
@@ -120,6 +127,7 @@ export async function createItemAction(
       status: "backlog",
       dueOn: due.dueOn,
       position: (last._max.position ?? -1) + 1,
+      assignees: assignMe ? { create: { userId: user.id } } : undefined,
     },
   });
   redirect(`/t/${slug}/p/${projectSlug}`);
@@ -149,14 +157,49 @@ export async function updateItemAction(
     },
   });
   if (!item) return { error: "Ticket not found" };
-  await prisma.item.update({
-    where: { id: item.id },
-    data: {
-      title: titleParsed.title,
-      status,
-      dueOn: due.dueOn,
-      body: String(formData.get("body") ?? item.body),
+  const teamIds = ctx.team.members.map((m) => m.userId);
+  const nextIds = filterAssignableIds(collectAssigneeIds(formData), teamIds);
+  await prisma.$transaction([
+    prisma.item.update({
+      where: { id: item.id },
+      data: {
+        title: titleParsed.title,
+        status,
+        dueOn: due.dueOn,
+        body: String(formData.get("body") ?? item.body),
+      },
+    }),
+    prisma.itemAssignee.deleteMany({ where: { itemId: item.id } }),
+    ...nextIds.map((userId) =>
+      prisma.itemAssignee.create({ data: { itemId: item.id, userId } }),
+    ),
+  ]);
+  redirect(`/t/${slug}/p/${projectSlug}`);
+}
+
+export async function assignToMeAction(formData: FormData) {
+  const user = await requireUser();
+  const slug = String(formData.get("slug") ?? "");
+  const projectSlug = String(formData.get("projectSlug") ?? "");
+  const itemId = String(formData.get("itemId") ?? "");
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) redirect("/home");
+  if (!canAssign(ctx.role)) return;
+  const item = await prisma.item.findFirst({
+    where: {
+      id: itemId,
+      project: { teamId: ctx.team.id, slug: projectSlug },
     },
+    include: { assignees: true },
   });
+  if (!item) return;
+  const current = item.assignees.map((row) => row.userId);
+  const next = toggleAssignee(current, user.id);
+  await prisma.itemAssignee.deleteMany({ where: { itemId: item.id } });
+  if (next.length) {
+    await prisma.itemAssignee.createMany({
+      data: next.map((userId) => ({ itemId: item.id, userId })),
+    });
+  }
   redirect(`/t/${slug}/p/${projectSlug}`);
 }
