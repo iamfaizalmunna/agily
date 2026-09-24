@@ -29,6 +29,26 @@ export async function listTeamItems(teamId: string) {
   });
 }
 
+export async function getItemFocus(
+  teamId: string,
+  projectSlug: string,
+  itemId: string,
+) {
+  return prisma.item.findFirst({
+    where: {
+      id: itemId,
+      project: { teamId, slug: projectSlug },
+    },
+    include: {
+      assignees: { include: { user: true } },
+      updates: {
+        orderBy: { createdAt: "asc" },
+        include: { user: true },
+      },
+    },
+  });
+}
+
 export async function getProjectBoard(teamId: string, projectSlug: string) {
   return prisma.project.findFirst({
     where: { teamId, slug: projectSlug },
@@ -40,6 +60,7 @@ export async function getProjectBoard(teamId: string, projectSlug: string) {
             orderBy: { position: "asc" },
             include: {
               assignees: { include: { user: true } },
+              _count: { select: { updates: true } },
             },
           },
         },

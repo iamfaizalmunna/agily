@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { CommentThread } from "@/components/focus/comment-thread";
+import { FocusStage } from "@/components/focus/focus-stage";
 import { CreateGroupForm } from "@/components/items/create-group-form";
 import { CreateItemForm } from "@/components/items/create-item-form";
 import { ItemRow } from "@/components/items/item-row";
@@ -8,9 +10,14 @@ import { FlowRiver } from "@/components/views/flow-river";
 import { OrbitMonth } from "@/components/views/orbit-month";
 import { ViewSwitcher } from "@/components/views/view-switcher";
 import { requireUser } from "@/lib/auth/session";
+import { parseFocusId, withFocus } from "@/lib/focus/focus";
 import { archiveProjectAction } from "@/lib/items/actions";
-import { canArchiveProject, canWriteBoard } from "@/lib/items/permissions";
-import { getProjectBoard } from "@/lib/items/queries";
+import {
+  canArchiveProject,
+  canComment,
+  canWriteBoard,
+} from "@/lib/items/permissions";
+import { getItemFocus, getProjectBoard } from "@/lib/items/queries";
 import { getLens, listLenses } from "@/lib/lenses/queries";
 import {
   itemMatchesLens,
@@ -21,6 +28,7 @@ import {
 } from "@/lib/lenses/lenses";
 import { getMembership } from "@/lib/teams/queries";
 import {
+  boardViewHref,
   flattenBoardItems,
   formatYearMonth,
   parseBoardView,
@@ -39,6 +47,7 @@ export default async function ProjectBoardPage({
     status?: string;
     who?: string;
     lens?: string;
+    focus?: string;
   }>;
 }) {
   const { slug, projectSlug } = await params;
@@ -66,10 +75,32 @@ export default async function ProjectBoardPage({
     : parseLensQuery(query);
   const savedId = pinned?.id;
   const lensExtra = lensQueryRecord(spec, savedId);
+  const focusId = parseFocusId(query.focus);
+  const focused = focusId
+    ? await getItemFocus(ctx.team.id, projectSlug, focusId)
+    : null;
+  const closeHref = boardViewHref(
+    slug,
+    projectSlug,
+    view,
+    formatYearMonth(year, month),
+    lensExtra,
+  );
+  const focusHref = focused
+    ? boardViewHref(
+        slug,
+        projectSlug,
+        view,
+        formatYearMonth(year, month),
+        withFocus(lensExtra, focused.id),
+      )
+    : closeHref;
   const now = new Date();
   const matchCtx = { userId: user.id, now };
 
+  const yearMonth = formatYearMonth(year, month);
   const writable = canWriteBoard(ctx.role) && !project.archived;
+  const mayNote = canComment(ctx.role) && !project.archived;
   const mayArchive = canArchiveProject(ctx.role) && !project.archived;
   const people = ctx.team.members.map((member) => ({
     id: member.user.id,
@@ -94,7 +125,13 @@ export default async function ProjectBoardPage({
     .filter(visible)
     .map((item) => ({
       ...item,
-      href: `/t/${slug}/p/${projectSlug}#item-${item.id}`,
+      href: boardViewHref(
+        slug,
+        projectSlug,
+        view,
+        yearMonth,
+        withFocus(lensExtra, item.id),
+      ),
       people: item.assignees.map((row) => row.user),
     }));
 
@@ -127,7 +164,7 @@ export default async function ProjectBoardPage({
         slug={slug}
         projectSlug={projectSlug}
         view={view}
-        yearMonth={formatYearMonth(year, month)}
+        yearMonth={yearMonth}
         extra={lensExtra}
       />
 
@@ -135,7 +172,7 @@ export default async function ProjectBoardPage({
         slug={slug}
         projectSlug={projectSlug}
         view={view}
-        yearMonth={formatYearMonth(year, month)}
+        yearMonth={yearMonth}
         spec={spec}
         savedId={savedId}
         saved={saved}
@@ -168,15 +205,24 @@ export default async function ProjectBoardPage({
                 {rows.length ? (
                   <ul className="flex flex-col gap-2">
                     {rows.map((item) => (
-                      <ItemRow
-                        key={item.id}
-                        slug={slug}
-                        projectSlug={projectSlug}
-                        currentUserId={user.id}
-                        people={people}
-                        item={item}
-                        readOnly={!writable}
-                      />
+                    <ItemRow
+                      key={item.id}
+                      slug={slug}
+                      projectSlug={projectSlug}
+                      currentUserId={user.id}
+                      people={people}
+                      item={item}
+                      readOnly={!writable}
+                      compact
+                      openHref={boardViewHref(
+                        slug,
+                        projectSlug,
+                        view,
+                        yearMonth,
+                        withFocus(lensExtra, item.id),
+                      )}
+                      noteCount={item._count.updates}
+                    />
                     ))}
                   </ul>
                 ) : (
@@ -198,6 +244,30 @@ export default async function ProjectBoardPage({
             <CreateGroupForm slug={slug} projectSlug={projectSlug} />
           ) : null}
         </>
+      ) : null}
+
+      {focused ? (
+        <FocusStage closeHref={closeHref}>
+          <ul>
+            <ItemRow
+              slug={slug}
+              projectSlug={projectSlug}
+              currentUserId={user.id}
+              people={people}
+              item={focused}
+              readOnly={!writable}
+              next={focusHref}
+            />
+          </ul>
+          <CommentThread
+            slug={slug}
+            projectSlug={projectSlug}
+            itemId={focused.id}
+            next={focusHref}
+            notes={focused.updates}
+            canWrite={mayNote}
+          />
+        </FocusStage>
       ) : null}
     </section>
   );

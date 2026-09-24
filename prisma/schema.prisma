@@ -17,6 +17,7 @@ model User {
   memberships  TeamMember[]
   assignments  ItemAssignee[]
   lenses       FilterLens[]
+  updates      ItemUpdate[]
 }
 
 model Session {
@@ -98,6 +99,7 @@ model Item {
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   group      Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
   assignees  ItemAssignee[]
+  updates    ItemUpdate[]
 }
 
 model ItemAssignee {
@@ -122,4 +124,14 @@ model FilterLens {
   user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 
   @@unique([teamId, userId, name])
+}
+
+model ItemUpdate {
+  id        String   @id @default(cuid())
+  itemId    String
+  userId    String
+  body      String
+  createdAt DateTime @default(now())
+  item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }

@@ -1,9 +1,11 @@
 "use client";
 
 import { useActionState } from "react";
+import Link from "next/link";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { noteLabel } from "@/lib/focus/focus";
 import {
   assignToMeAction,
   updateItemAction,
@@ -24,6 +26,10 @@ export function ItemRow({
   people,
   item,
   readOnly,
+  compact = false,
+  openHref,
+  next,
+  noteCount = 0,
 }: {
   slug: string;
   projectSlug: string;
@@ -38,10 +44,30 @@ export function ItemRow({
     assignees: { user: Person }[];
   };
   readOnly: boolean;
+  compact?: boolean;
+  openHref?: string;
+  next?: string;
+  noteCount?: number;
 }) {
   const [state, action, pending] = useActionState(updateItemAction, initial);
   const assignedIds = item.assignees.map((row) => row.user.id);
   const assignedPeople = item.assignees.map((row) => row.user);
+
+  if (compact && openHref) {
+    return (
+      <li id={`item-${item.id}`} className="rounded-2xl border border-paper/10">
+        <Link href={openHref} className="flex flex-col gap-1 px-4 py-3">
+          <p className="text-paper">{item.title}</p>
+          <p className="text-xs uppercase tracking-[0.14em] text-paper/40">
+            {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
+            {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
+            {` · ${noteLabel(noteCount)}`}
+          </p>
+          <AssigneeMarks people={assignedPeople} />
+        </Link>
+      </li>
+    );
+  }
 
   if (readOnly) {
     return (
@@ -64,6 +90,7 @@ export function ItemRow({
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="projectSlug" value={projectSlug} />
         <input type="hidden" name="itemId" value={item.id} />
+        {next ? <input type="hidden" name="next" value={next} /> : null}
         <Input name="title" defaultValue={item.title} required />
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
           <select
@@ -118,6 +145,7 @@ export function ItemRow({
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="projectSlug" value={projectSlug} />
         <input type="hidden" name="itemId" value={item.id} />
+        {next ? <input type="hidden" name="next" value={next} /> : null}
         <Button type="submit" variant="quiet">
           {isAssigned(assignedIds, currentUserId) ? "Unassign me" : "Assign me"}
         </Button>

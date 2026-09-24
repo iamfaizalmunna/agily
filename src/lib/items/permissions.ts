@@ -17,3 +17,7 @@ export function canArchiveProject(role: TeamRole) {
 export function canAssign(role: TeamRole) {
   return canWriteBoard(role);
 }
+
+export function canComment(role: TeamRole) {
+  return canWriteBoard(role);
+}

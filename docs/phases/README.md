@@ -2,7 +2,7 @@
 
 Each story starts with **who it is for**, **what you see**, and **how it works**. Open a row on GitHub. Open the gallery for the colour map.
 
-Phases **1–6 land on `main` through branches.** Phase 6 is `phase-6-filter-lenses` then merge.
+Phases **1–7 land on `main` through branches.** Phase 7 is `phase-7-focus-stage` then merge.
 
 | | Phase | In one sentence | Story |
 |:--:|:------|:----------------|:------|
@@ -12,7 +12,7 @@ Phases **1–6 land on `main` through branches.** Phase 6 is `phase-6-filter-len
 | [![04](https://img.shields.io/badge/04-c9844a?style=flat-square)](04-assign.md) | People + assign | Assignees on the same item. | [Read](04-assign.md) |
 | [![05](https://img.shields.io/badge/05-c9844a?style=flat-square)](05-views.md) | Four views | Ledger / Flow / Orbit / Pulse on the same rows. | [Read](05-views.md) |
 | [![06](https://img.shields.io/badge/06-c9844a?style=flat-square)](06-lenses.md) | Filter lenses | Saved chips per user per team. | [Read](06-lenses.md) |
-| [![07](https://img.shields.io/badge/07-64748b?style=flat-square)](#) | Focus stage + comments | Desktop stage, mobile drawer. | Soon |
+| [![07](https://img.shields.io/badge/07-c9844a?style=flat-square)](07-focus.md) | Focus stage + comments | Desktop stage, mobile drawer. | [Read](07-focus.md) |
 | [![08](https://img.shields.io/badge/08-64748b?style=flat-square)](#) | In-app bell | Notification rows. No email. | Soon |
 | [![09](https://img.shields.io/badge/09-64748b?style=flat-square)](#) | Lens AI | Ollama on loopback + `/kb`. | Soon |
 | [![10](https://img.shields.io/badge/10-64748b?style=flat-square)](#) | Ship chrome | Keyboard, Playwright, empty/error. | Soon |
