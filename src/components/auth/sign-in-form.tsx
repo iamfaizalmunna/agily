@@ -19,6 +19,7 @@ export function SignInForm() {
         <Input
           id="email"
           name="email"
+          data-testid="signin-email"
           type="email"
           autoComplete="email"
           inputMode="email"
@@ -31,6 +32,7 @@ export function SignInForm() {
         <Input
           id="password"
           name="password"
+          data-testid="signin-password"
           type="password"
           autoComplete="current-password"
           required
@@ -41,7 +43,7 @@ export function SignInForm() {
           {state.error}
         </p>
       ) : null}
-      <Button className="min-h-12 w-full" disabled={pending}>
+      <Button className="min-h-12 w-full" disabled={pending} data-testid="signin-submit">
         {pending ? "Signing in…" : "Enter"}
       </Button>
       <p className="text-center text-sm text-paper/45">

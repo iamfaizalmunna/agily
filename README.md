@@ -1,18 +1,18 @@
 # Agily
 
 [![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
-[![Phase](https://img.shields.io/badge/phase-9%2F10-c9844a)](docs/phases/README.md)
+[![Phase](https://img.shields.io/badge/phase-10%2F10-c9844a)](docs/phases/README.md)
 [![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
 [![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** own-DB auth, invites, boards, assignees, four views, lenses, focus, in-app bell, Lens on this machine.  
-**Later:** keyboard chrome and Playwright.
+**Now:** full local studio — auth through Lens, keyboard chrome, Playwright smoke.  
+**Later:** optional cloud deploy (out of scope for this repo).
 
 ## Main
 
-Phases **1–9 are merged on `main`** through feature branches (Phase 9: `phase-9-lens-turbo` → PR → merge).
+All **10 phases are merged on `main`** through feature branches (Phase 10: `phase-10-ship-chrome` → PR → merge).
 
 Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)
 
@@ -54,9 +54,16 @@ App: [http://127.0.0.1:43123](http://127.0.0.1:43123) · Lens API: [http://127.0
 | 7 Focus + notes | merged via PR | [docs/phases/07-focus.md](docs/phases/07-focus.md) |
 | 8 In-app bell | merged via PR | [docs/phases/08-bell.md](docs/phases/08-bell.md) |
 | 9 Lens + turbo | merged via PR | [docs/phases/09-lens.md](docs/phases/09-lens.md) |
-| 10 | not started | [docs/phases/README.md](docs/phases/README.md) |
+| 10 Ship chrome | merged via PR | [docs/phases/10-ship.md](docs/phases/10-ship.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
+
+## Ship chrome (phase 10)
+
+Keyboard sheet (`?`), Lens toggle (`/`), studio navigation (`g` chords), view digits on boards. Empty states on bell and boards. `not-found`, `error`, and `global-error` pages. Playwright smoke on `prisma/e2e.db`.
+
+- `npm run test:e2e` — sign-in, Pulse, board, shortcuts, 404
+- CI: `.github/workflows/e2e.yml`
 
 ## Lens (phase 9)
 
@@ -117,9 +124,8 @@ People sit on the **same `Item` row** via `ItemAssignee`. No second ticket for k
 ```bash
 npm test              # node:test, Prisma-free pack
 npm run test:coverage # c8, 100% lines / statements on that pack
+npm run test:e2e      # Playwright on prisma/e2e.db
 ```
-
-Playwright is **not** installed. We add it in phase 10, not now.
 
 ## Stack
 

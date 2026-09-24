@@ -17,7 +17,13 @@
     "db:migrate": "prisma migrate dev",
     "db:push": "prisma db push",
     "test": "tsx --test \"src/**/*.test.ts\" \"packages/lens/src/**/*.test.ts\"",
-    "test:coverage": "c8 tsx --test \"src/**/*.test.ts\" \"packages/lens/src/**/*.test.ts\""
+    "test:coverage": "c8 tsx --test \"src/**/*.test.ts\" \"packages/lens/src/**/*.test.ts\"",
+    "db:e2e": "DATABASE_URL=file:./prisma/e2e.db npx prisma migrate deploy && DATABASE_URL=file:./prisma/e2e.db npx prisma db seed",
+    "test:e2e": "lsof -tiTCP:43123 -sTCP:LISTEN | xargs kill -9 2>/dev/null; lsof -tiTCP:43124 -sTCP:LISTEN | xargs kill -9 2>/dev/null; npm run db:e2e && CI=true DATABASE_URL=file:./prisma/e2e.db playwright test",
+    "test:e2e:ui": "npm run db:e2e && DATABASE_URL=file:./prisma/e2e.db playwright test --ui"
+  },
+  "prisma": {
+    "seed": "tsx prisma/seed.ts"
   },
   "dependencies": {
     "@prisma/client": "^6.19.3",
@@ -38,6 +44,7 @@
     "@types/react-dom": "^19",
     "c8": "^12.0.0",
     "concurrently": "^9.2.1",
+    "@playwright/test": "^1.55.1",
     "eslint": "^9",
     "eslint-config-next": "16.3.6",
     "prisma": "^6.19.3",

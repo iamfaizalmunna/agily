@@ -13,6 +13,11 @@
 # testing
 /coverage
 *.lcov
+/test-results/
+/playwright-report/
+/blob-report/
+/prisma/e2e.db
+/prisma/e2e.db-journal
 
 # next.js
 /.next/

@@ -2,7 +2,7 @@
 
 Each story starts with **who it is for**, **what you see**, and **how it works**. Open a row on GitHub. Open the gallery for the colour map.
 
-Phases **1–9 land on `main` through branches.** Phase 9 is `phase-9-lens-turbo` then merge.
+All **10 phases land on `main` through branches.** Phase 10 is `phase-10-ship-chrome` then merge.
 
 | | Phase | In one sentence | Story |
 |:--:|:------|:----------------|:------|
@@ -15,7 +15,7 @@ Phases **1–9 land on `main` through branches.** Phase 9 is `phase-9-lens-turbo
 | [![07](https://img.shields.io/badge/07-c9844a?style=flat-square)](07-focus.md) | Focus stage + comments | Desktop stage, mobile drawer. | [Read](07-focus.md) |
 | [![08](https://img.shields.io/badge/08-c9844a?style=flat-square)](08-bell.md) | In-app bell | Notification rows. No email. | [Read](08-bell.md) |
 | [![09](https://img.shields.io/badge/09-c9844a?style=flat-square)](09-lens.md) | Lens AI | Ollama on loopback + `/kb` + Express. | [Read](09-lens.md) |
-| [![10](https://img.shields.io/badge/10-64748b?style=flat-square)](#) | Ship chrome | Keyboard, Playwright, empty/error. | Soon |
+| [![10](https://img.shields.io/badge/10-c9844a?style=flat-square)](10-ship.md) | Ship chrome | Keyboard, Playwright, empty/error. | [Read](10-ship.md) |
 
 **Gallery:** [index.html](index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
 
@@ -24,6 +24,6 @@ Phases **1–9 land on `main` through branches.** Phase 9 is `phase-9-lens-turbo
 | Architecture | [PLAN.md](../../PLAN.md) |
 | Product README | [../../README.md](../../README.md) |
 
-Unit pack: `npm test` (100% on the Prisma-free files). Playwright waits until the product is complete.
+Unit pack: `npm test` (100% on the Prisma-free files). Playwright: `npm run test:e2e`.
 
 Not in this product: cloud sign-in, SMTP, paid LLM APIs, Gantt, automations, file hosting, billing.
