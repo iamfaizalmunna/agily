@@ -9,6 +9,7 @@ import { LabelBadges } from "@/components/labels/label-badges";
 import type { LabelChip } from "@/lib/labels/labels";
 import { formatSubtaskProgress, subtaskProgress } from "@/lib/subtasks/subtasks";
 import { formatIssueKey } from "@/lib/items/issue-key";
+import { ISSUE_TYPE_LABEL, parseIssueType } from "@/lib/items/issue-type";
 import { PRIORITY_LABEL, type ItemPriority } from "@/lib/items/priority";
 import { formatDueOn } from "@/lib/items/validate";
 import { priorityTone } from "@/lib/ui/priority-tone";
@@ -25,6 +26,7 @@ export type TicketCardData = {
   projectSlug: string;
   labels?: LabelChip[];
   subtasks?: { done: boolean }[];
+  type?: string;
 };
 
 export function TicketCard({
@@ -71,6 +73,9 @@ export function TicketCard({
           <div className="flex items-center gap-2 text-[0.65rem] font-medium uppercase tracking-wide text-muted-foreground">
             <span className={cn("h-2 w-2 rounded-full", tone.dot)} />
             <span>{key}</span>
+            <span className="normal-case">
+              {ISSUE_TYPE_LABEL[parseIssueType(ticket.type)]}
+            </span>
             <span className={tone.label}>
               {PRIORITY_LABEL[priority] ?? ticket.priority}
             </span>

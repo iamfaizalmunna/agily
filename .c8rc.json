@@ -25,6 +25,8 @@
     "src/lib/board/kanban.ts",
     "src/lib/labels/labels.ts",
     "src/lib/subtasks/subtasks.ts",
+    "src/lib/items/issue-type.ts",
+    "src/lib/items/hierarchy.ts",
     "packages/lens/src/loopback.ts",
     "packages/lens/src/kb.ts",
     "packages/lens/src/extract.ts",

@@ -10,6 +10,8 @@ export type SummaryRow = {
   id: string;
   title: string;
   status: string;
+  type?: string;
+  parentId?: string | null;
   priority?: string;
   dueOn: Date | null;
   updatedAt: Date;

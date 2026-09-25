@@ -9,6 +9,7 @@ import {
   LENS_KIND_LABEL,
   LENS_KINDS,
   lensQueryRecord,
+  pickEpicFilter,
   pickLensKind,
   pickLensPerson,
   pickLensPriority,
@@ -77,6 +78,7 @@ export function FilterBar({
   saved,
   people,
   teamLabels,
+  epics,
 }: {
   slug: string;
   projectSlug: string;
@@ -87,6 +89,7 @@ export function FilterBar({
   saved: SavedLens[];
   people: Person[];
   teamLabels: LabelChip[];
+  epics: { id: string; title: string }[];
 }) {
   const hrefFor = (next: LensSpec, id?: string) =>
     boardViewHref(slug, projectSlug, view, yearMonth, lensQueryRecord(next, id));
@@ -162,6 +165,26 @@ export function FilterBar({
           </FilterChip>
         ))}
       </FilterRow>
+
+      {epics.length ? (
+        <FilterRow label="Epic">
+          <FilterChip
+            href={hrefFor(pickEpicFilter(spec))}
+            active={!savedId && !spec.parentId}
+          >
+            All
+          </FilterChip>
+          {epics.map((epic) => (
+            <FilterChip
+              key={epic.id}
+              href={hrefFor(pickEpicFilter(spec, epic.id))}
+              active={!savedId && spec.parentId === epic.id}
+            >
+              {epic.title}
+            </FilterChip>
+          ))}
+        </FilterRow>
+      ) : null}
 
       {teamLabels.length ? (
         <FilterRow label="Labels">

@@ -4,6 +4,7 @@ import {
   parseLabelIdsQuery,
   toggleLabelFilter,
 } from "@/lib/labels/labels";
+import { itemUnderEpic } from "@/lib/items/hierarchy";
 import { hasOpenSubtasks } from "@/lib/subtasks/subtasks";
 import { isItemPriority, type ItemPriority } from "@/lib/items/priority";
 import { isItemStatus, type ItemStatus } from "@/lib/items/status";
@@ -33,6 +34,7 @@ export type LensSpec = {
   priority?: ItemPriority;
   find?: string;
   labelIds?: string[];
+  parentId?: string;
 };
 
 export type LensItem = {
@@ -43,6 +45,7 @@ export type LensItem = {
   assigneeIds: string[];
   labelIds: string[];
   subtasks: { done: boolean }[];
+  parentId: string | null;
 };
 
 export function isLensKind(value: string | undefined | null): value is LensKind {
@@ -71,6 +74,9 @@ export function sanitizeLensSpec(raw: Partial<LensSpec> | null | undefined): Len
       .slice(0, 12);
     if (labelIds.length) spec.labelIds = labelIds;
   }
+  if (raw && typeof raw.parentId === "string" && raw.parentId.trim()) {
+    spec.parentId = raw.parentId.trim();
+  }
   return spec;
 }
 
@@ -95,7 +101,8 @@ export function isEmptyLens(spec: LensSpec) {
     !clean.personId &&
     !clean.priority &&
     !clean.find &&
-    !clean.labelIds?.length
+    !clean.labelIds?.length &&
+    !clean.parentId
   );
 }
 
@@ -108,7 +115,8 @@ export function sameLensSpec(a: LensSpec, b: LensSpec) {
     left.personId === right.personId &&
     left.priority === right.priority &&
     left.find === right.find &&
-    JSON.stringify(left.labelIds ?? []) === JSON.stringify(right.labelIds ?? [])
+    JSON.stringify(left.labelIds ?? []) === JSON.stringify(right.labelIds ?? []) &&
+    left.parentId === right.parentId
   );
 }
 
@@ -126,6 +134,7 @@ export function parseLensQuery(input: {
   priority?: string | undefined;
   find?: string | undefined;
   labels?: string | undefined;
+  epic?: string | undefined;
 }): LensSpec {
   return sanitizeLensSpec({
     kind: isLensKind(input.q) ? input.q : undefined,
@@ -134,6 +143,7 @@ export function parseLensQuery(input: {
     priority: input.priority as ItemPriority | undefined,
     find: input.find,
     labelIds: parseLabelIdsQuery(input.labels),
+    parentId: input.epic?.trim() || undefined,
   });
 }
 
@@ -151,7 +161,12 @@ export function lensQueryRecord(
   if (clean.find) out.find = clean.find;
   const labels = labelIdsQueryValue(clean.labelIds);
   if (labels) out.labels = labels;
+  if (clean.parentId) out.epic = clean.parentId;
   return out;
+}
+
+export function pickEpicFilter(spec: LensSpec, epicId?: string): LensSpec {
+  return sanitizeLensSpec({ ...spec, parentId: epicId });
 }
 
 export function toggleLensKind(spec: LensSpec, kind: LensKind): LensSpec {
@@ -262,6 +277,7 @@ export function itemMatchesLens(
   if (clean.priority && item.priority !== clean.priority) return false;
   if (clean.find && !titleMatchesFind(item.title, clean.find)) return false;
   if (!itemMatchesLabelFilter(item.labelIds, clean.labelIds)) return false;
+  if (clean.parentId && !itemUnderEpic(item, clean.parentId)) return false;
   return true;
 }
 

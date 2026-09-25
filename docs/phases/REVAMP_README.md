@@ -20,7 +20,7 @@ This track is **Revamp v2**: Jira / Monday / Notion / GitHub parity on top of th
 | R1 | Board excellence | **complete** | [revamp-01-board.md](revamp-01-board.md) |
 | R2 | Labels & taxonomy | **complete** | [revamp-02-labels.md](revamp-02-labels.md) |
 | R3 | Subtasks & checklists | **complete** | [revamp-03-subtasks.md](revamp-03-subtasks.md) |
-| R4 | Hierarchy & issue types | planned | [revamp-04-hierarchy.md](revamp-04-hierarchy.md) |
+| R4 | Hierarchy & issue types | **complete** | [revamp-04-hierarchy.md](revamp-04-hierarchy.md) |
 | R5 | Comments & activity | planned | [revamp-05-activity.md](revamp-05-activity.md) |
 | R6 | Analytics & charts | planned | [revamp-06-analytics.md](revamp-06-analytics.md) |
 | R7 | Timeline & dependencies | planned | [revamp-07-timeline.md](revamp-07-timeline.md) |

@@ -373,6 +373,47 @@ async function seedChecklistsOnExisting(
   }
 }
 
+async function seedEpicHierarchy(
+  prisma: PrismaClient,
+  projectId: string,
+  groupId: string,
+) {
+  const epicTitle = "Revamp v2 delivery";
+  let epic = await prisma.item.findFirst({
+    where: { projectId, title: epicTitle },
+  });
+  if (!epic) {
+    epic = await prisma.item.create({
+      data: {
+        projectId,
+        groupId,
+        title: epicTitle,
+        type: "epic",
+        status: "doing",
+        priority: "major",
+        position: 99,
+      },
+    });
+  } else {
+    epic = await prisma.item.update({
+      where: { id: epic.id },
+      data: { type: "epic", parentId: null },
+    });
+  }
+  const children: { title: string; type: string }[] = [
+    { title: "Redesign sprint board filters", type: "story" },
+    { title: "Drag-and-drop on Flow board", type: "story" },
+    { title: "List view split-pane detail", type: "bug" },
+    { title: "OAuth login spike", type: "task" },
+  ];
+  for (const child of children) {
+    await prisma.item.updateMany({
+      where: { projectId, title: child.title },
+      data: { parentId: epic.id, type: child.type },
+    });
+  }
+}
+
 export async function seedDemoStudio(
   prisma: PrismaClient,
   users: Map<TeamRole, string>,
@@ -416,6 +457,10 @@ export async function seedDemoStudio(
 
   await seedTickets(prisma, atlas.id, atlas.groups, users, ATLAS_TICKETS, base, labelIds);
   await seedChecklistsOnExisting(prisma, atlas.id, ATLAS_TICKETS);
+  const atlasEpicGroup = atlas.groups.find((group) => group.name === "Now") ?? atlas.groups[0];
+  if (atlasEpicGroup) {
+    await seedEpicHierarchy(prisma, atlas.id, atlasEpicGroup.id);
+  }
   await seedTickets(
     prisma,
     platform.id,
