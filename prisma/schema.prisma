@@ -40,6 +40,7 @@ model Team {
   projects  Project[]
   lenses    FilterLens[]
   notices   Notification[]
+  labels    Label[]
 }
 
 model TeamMember {
@@ -103,6 +104,28 @@ model Item {
   group      Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
   assignees  ItemAssignee[]
   updates    ItemUpdate[]
+  labels     ItemLabel[]
+}
+
+model Label {
+  id     String      @id @default(cuid())
+  teamId String
+  name   String
+  color  String
+  team   Team        @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  items  ItemLabel[]
+
+  @@unique([teamId, name])
+}
+
+model ItemLabel {
+  id      String @id @default(cuid())
+  itemId  String
+  labelId String
+  item    Item   @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  label   Label  @relation(fields: [labelId], references: [id], onDelete: Cascade)
+
+  @@unique([itemId, labelId])
 }
 
 model ItemAssignee {

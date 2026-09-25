@@ -23,8 +23,27 @@ import {
   filterAssignableIds,
   toggleAssignee,
 } from "@/lib/items/assign";
+import { collectLabelIds } from "@/lib/labels/labels";
 import { writeNotices } from "@/lib/notices/write";
 import { safeStudioNext } from "@/lib/views/views";
+
+async function replaceItemLabels(
+  itemId: string,
+  teamId: string,
+  rawIds: string[],
+) {
+  const unique = [...new Set(rawIds)];
+  const allowed = await prisma.label.findMany({
+    where: { teamId, id: { in: unique } },
+    select: { id: true },
+  });
+  await prisma.$transaction([
+    prisma.itemLabel.deleteMany({ where: { itemId } }),
+    ...allowed.map((row) =>
+      prisma.itemLabel.create({ data: { itemId, labelId: row.id } }),
+    ),
+  ]);
+}
 
 function boardNext(slug: string, projectSlug: string, formData: FormData) {
   return safeStudioNext(
@@ -131,7 +150,7 @@ export async function createItemAction(
     _max: { position: true },
   });
   const assignMe = formData.get("assignMe") === "on";
-  await prisma.item.create({
+  const item = await prisma.item.create({
     data: {
       projectId: group.projectId,
       groupId: group.id,
@@ -144,6 +163,7 @@ export async function createItemAction(
       assignees: assignMe ? { create: { userId: user.id } } : undefined,
     },
   });
+  await replaceItemLabels(item.id, ctx.team.id, collectLabelIds(formData));
   redirect(boardNext(slug, projectSlug, formData));
 }
 
@@ -193,6 +213,7 @@ export async function updateItemAction(
       prisma.itemAssignee.create({ data: { itemId: item.id, userId } }),
     ),
   ]);
+  await replaceItemLabels(item.id, ctx.team.id, collectLabelIds(formData));
   await writeNotices({
     teamId: ctx.team.id,
     slug,

@@ -20,6 +20,7 @@ import {
   startOfUtcWeek,
   stringifyLensSpec,
   toggleLensKind,
+  toggleLensLabel,
   toggleLensPerson,
   toggleLensStatus,
   withLensFind,
@@ -34,6 +35,7 @@ function item(
     priority: string;
     dueOn: Date | null;
     assigneeIds: string[];
+    labelIds: string[];
   }>,
 ) {
   return {
@@ -42,6 +44,7 @@ function item(
     priority: "minor",
     dueOn: null as Date | null,
     assigneeIds: [] as string[],
+    labelIds: [] as string[],
     ...partial,
   };
 }
@@ -127,6 +130,8 @@ describe("phase 6 lenses", () => {
     assert.deepEqual(pickLensPriority({}, "major"), { priority: "major" });
     assert.deepEqual(withLensFind({}, "  auth "), { find: "auth" });
     assert.deepEqual(withLensFind({ find: "old" }, " "), {});
+    assert.deepEqual(toggleLensLabel({}, "l1"), { labelIds: ["l1"] });
+    assert.deepEqual(toggleLensLabel({ labelIds: ["l1"] }, "l1"), {});
   });
 
   it("marks this week from Sunday UTC", () => {
@@ -167,6 +172,9 @@ describe("phase 6 lenses", () => {
     assert.equal(itemMatchesLens(mine, { priority: "critical" }, ctx), false);
     assert.equal(itemMatchesLens(other, { find: "auth" }, ctx), true);
     assert.equal(itemMatchesLens(mine, { find: "auth" }, ctx), false);
+    const tagged = item({ labelIds: ["l1"] });
+    assert.equal(itemMatchesLens(tagged, { labelIds: ["l1"] }, ctx), true);
+    assert.equal(itemMatchesLens(tagged, { labelIds: ["l2"] }, ctx), false);
     assert.equal(
       itemMatchesLens(mine, { kind: "mine", status: "doing" }, ctx),
       true,

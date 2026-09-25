@@ -17,9 +17,21 @@ type TicketSeed = {
   priority: string;
   group: "Now" | "Next" | "Later";
   assignees: TeamRole[];
+  labels?: string[];
   dueDays?: number;
   comments?: { role: TeamRole; body: string }[];
 };
+
+const NORTHWIND_LABELS: { name: string; color: string }[] = [
+  { name: "Bug", color: "#ef4444" },
+  { name: "Feature", color: "#3b82f6" },
+  { name: "Design", color: "#8b5cf6" },
+  { name: "Tech debt", color: "#64748b" },
+  { name: "QA", color: "#22c55e" },
+  { name: "Docs", color: "#eab308" },
+  { name: "Performance", color: "#f97316" },
+  { name: "Security", color: "#ec4899" },
+];
 
 const ATLAS_TICKETS: TicketSeed[] = [
   {
@@ -27,6 +39,7 @@ const ATLAS_TICKETS: TicketSeed[] = [
     status: "doing",
     priority: "major",
     group: "Now",
+    labels: ["Feature", "Design"],
     assignees: ["member"],
     dueDays: 2,
     body: "Match Jira quick filters: priority, status, assignee, and text search.",
@@ -40,6 +53,7 @@ const ATLAS_TICKETS: TicketSeed[] = [
     status: "review",
     priority: "critical",
     group: "Now",
+    labels: ["Security", "Docs"],
     assignees: ["admin", "member"],
     dueDays: -2,
     body: "Out of scope for local-only build — document why we skip it.",
@@ -65,6 +79,7 @@ const ATLAS_TICKETS: TicketSeed[] = [
     status: "doing",
     priority: "major",
     group: "Now",
+    labels: ["Feature", "QA"],
     assignees: ["admin"],
     dueDays: 21,
   },
@@ -221,6 +236,19 @@ async function ensureProject(
   return project;
 }
 
+async function ensureTeamLabels(prisma: PrismaClient, teamId: string) {
+  const map = new Map<string, string>();
+  for (const def of NORTHWIND_LABELS) {
+    const row = await prisma.label.upsert({
+      where: { teamId_name: { teamId, name: def.name } },
+      update: { color: def.color },
+      create: { teamId, name: def.name, color: def.color },
+    });
+    map.set(def.name, row.id);
+  }
+  return map;
+}
+
 async function seedTickets(
   prisma: PrismaClient,
   projectId: string,
@@ -228,6 +256,7 @@ async function seedTickets(
   users: Map<TeamRole, string>,
   tickets: TicketSeed[],
   base: Date,
+  labelIds: Map<string, string>,
 ) {
   const existing = await prisma.item.count({ where: { projectId } });
   if (existing >= tickets.length) return;
@@ -272,6 +301,16 @@ async function seedTickets(
       });
     }
 
+    for (const name of ticket.labels ?? []) {
+      const labelId = labelIds.get(name);
+      if (!labelId) continue;
+      await prisma.itemLabel.upsert({
+        where: { itemId_labelId: { itemId: item.id, labelId } },
+        update: {},
+        create: { itemId: item.id, labelId },
+      });
+    }
+
     position += 1;
   }
 }
@@ -311,11 +350,13 @@ export async function seedDemoStudio(
     });
   }
 
+  const labelIds = await ensureTeamLabels(prisma, team.id);
+
   const atlas = await ensureProject(prisma, team.id, "Atlas", "atlas");
   const platform = await ensureProject(prisma, team.id, "Platform", "platform");
   const mobile = await ensureProject(prisma, team.id, "Mobile", "mobile");
 
-  await seedTickets(prisma, atlas.id, atlas.groups, users, ATLAS_TICKETS, base);
+  await seedTickets(prisma, atlas.id, atlas.groups, users, ATLAS_TICKETS, base, labelIds);
   await seedTickets(
     prisma,
     platform.id,
@@ -323,6 +364,7 @@ export async function seedDemoStudio(
     users,
     PLATFORM_TICKETS,
     base,
+    labelIds,
   );
   await seedTickets(
     prisma,
@@ -331,6 +373,7 @@ export async function seedDemoStudio(
     users,
     MOBILE_TICKETS,
     base,
+    labelIds,
   );
 
   const ownerUserId = users.get("owner");

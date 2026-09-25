@@ -13,11 +13,13 @@ import {
   pickLensPerson,
   pickLensPriority,
   pickLensStatus,
+  toggleLensLabel,
   sameLensSpec,
   type LensSpec,
 } from "@/lib/lenses/lenses";
 import { ITEM_PRIORITIES, PRIORITY_LABEL } from "@/lib/items/priority";
 import { ITEM_STATUSES, STATUS_LABEL } from "@/lib/items/status";
+import { labelContrastText, type LabelChip } from "@/lib/labels/labels";
 import { boardViewHref, type BoardView } from "@/lib/views/views";
 import { cn } from "@/lib/cn";
 
@@ -74,6 +76,7 @@ export function FilterBar({
   savedId,
   saved,
   people,
+  teamLabels,
 }: {
   slug: string;
   projectSlug: string;
@@ -83,6 +86,7 @@ export function FilterBar({
   savedId?: string;
   saved: SavedLens[];
   people: Person[];
+  teamLabels: LabelChip[];
 }) {
   const hrefFor = (next: LensSpec, id?: string) =>
     boardViewHref(slug, projectSlug, view, yearMonth, lensQueryRecord(next, id));
@@ -158,6 +162,29 @@ export function FilterBar({
           </FilterChip>
         ))}
       </FilterRow>
+
+      {teamLabels.length ? (
+        <FilterRow label="Labels">
+          {teamLabels.map((label) => {
+            const active = spec.labelIds?.includes(label.id) ?? false;
+            return (
+              <FilterChip
+                key={label.id}
+                href={hrefFor(toggleLensLabel(spec, label.id))}
+                active={!savedId && active}
+              >
+                <span
+                  className="mr-1 inline-block size-2 rounded-full"
+                  style={{ backgroundColor: label.color }}
+                />
+                <span style={{ color: active ? labelContrastText(label.color) : undefined }}>
+                  {label.name}
+                </span>
+              </FilterChip>
+            );
+          })}
+        </FilterRow>
+      ) : null}
 
       {people.length ? (
         <FilterRow label="Assignee">

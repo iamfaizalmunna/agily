@@ -5,6 +5,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Select } from "@/components/ui/select";
 import { createItemAction, type BoardFormState } from "@/lib/items/actions";
+import { LabelPicker } from "@/components/labels/label-picker";
+import type { LabelChip } from "@/lib/labels/labels";
 import {
   DEFAULT_ITEM_PRIORITY,
   ITEM_PRIORITIES,
@@ -17,10 +19,12 @@ export function CreateItemForm({
   slug,
   projectSlug,
   groupId,
+  teamLabels = [],
 }: {
   slug: string;
   projectSlug: string;
   groupId: string;
+  teamLabels?: LabelChip[];
 }) {
   const [state, action, pending] = useActionState(createItemAction, initial);
 
@@ -44,6 +48,7 @@ export function CreateItemForm({
         </Select>
         <Input name="dueOn" type="date" />
       </div>
+      <LabelPicker labels={teamLabels} />
       <label className="flex min-h-9 items-center gap-3 text-sm text-muted-foreground">
         <input type="checkbox" name="assignMe" className="h-4 w-4 accent-primary" />
         Assign me

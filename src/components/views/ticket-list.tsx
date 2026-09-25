@@ -1,5 +1,7 @@
 import Link from "next/link";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
+import { LabelBadges } from "@/components/labels/label-badges";
+import type { LabelChip } from "@/lib/labels/labels";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PRIORITY_LABEL, type ItemPriority } from "@/lib/items/priority";
@@ -21,6 +23,7 @@ export type TicketListItem = {
   projectSlug?: string;
   groupName?: string;
   active?: boolean;
+  labels?: LabelChip[];
 };
 
 export function TicketList({
@@ -65,6 +68,9 @@ export function TicketList({
                       <p className="mt-0.5 text-xs text-muted-foreground">
                         {item.groupName}
                       </p>
+                    ) : null}
+                    {item.labels?.length ? (
+                      <LabelBadges labels={item.labels} compact className="mt-1.5" />
                     ) : null}
                   </td>
                   <td className="px-4 py-3">

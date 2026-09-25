@@ -1,3 +1,9 @@
+import {
+  itemMatchesLabelFilter,
+  labelIdsQueryValue,
+  parseLabelIdsQuery,
+  toggleLabelFilter,
+} from "@/lib/labels/labels";
 import { isItemPriority, type ItemPriority } from "@/lib/items/priority";
 import { isItemStatus, type ItemStatus } from "@/lib/items/status";
 import { dueDayKey, isOverdue, startOfUtcDay } from "@/lib/views/views";
@@ -18,6 +24,7 @@ export type LensSpec = {
   personId?: string;
   priority?: ItemPriority;
   find?: string;
+  labelIds?: string[];
 };
 
 export type LensItem = {
@@ -26,6 +33,7 @@ export type LensItem = {
   priority: string;
   dueOn: Date | null;
   assigneeIds: string[];
+  labelIds: string[];
 };
 
 export function isLensKind(value: string | undefined | null): value is LensKind {
@@ -46,6 +54,13 @@ export function sanitizeLensSpec(raw: Partial<LensSpec> | null | undefined): Len
   }
   if (raw && typeof raw.find === "string" && raw.find.trim()) {
     spec.find = raw.find.trim().slice(0, 80);
+  }
+  if (raw && Array.isArray(raw.labelIds)) {
+    const labelIds = raw.labelIds
+      .filter((id): id is string => typeof id === "string" && Boolean(id.trim()))
+      .map((id) => id.trim())
+      .slice(0, 12);
+    if (labelIds.length) spec.labelIds = labelIds;
   }
   return spec;
 }
@@ -70,7 +85,8 @@ export function isEmptyLens(spec: LensSpec) {
     !clean.status &&
     !clean.personId &&
     !clean.priority &&
-    !clean.find
+    !clean.find &&
+    !clean.labelIds?.length
   );
 }
 
@@ -82,7 +98,8 @@ export function sameLensSpec(a: LensSpec, b: LensSpec) {
     left.status === right.status &&
     left.personId === right.personId &&
     left.priority === right.priority &&
-    left.find === right.find
+    left.find === right.find &&
+    JSON.stringify(left.labelIds ?? []) === JSON.stringify(right.labelIds ?? [])
   );
 }
 
@@ -99,6 +116,7 @@ export function parseLensQuery(input: {
   who?: string | undefined;
   priority?: string | undefined;
   find?: string | undefined;
+  labels?: string | undefined;
 }): LensSpec {
   return sanitizeLensSpec({
     kind: isLensKind(input.q) ? input.q : undefined,
@@ -106,6 +124,7 @@ export function parseLensQuery(input: {
     personId: input.who,
     priority: input.priority as ItemPriority | undefined,
     find: input.find,
+    labelIds: parseLabelIdsQuery(input.labels),
   });
 }
 
@@ -121,6 +140,8 @@ export function lensQueryRecord(
   if (clean.personId) out.who = clean.personId;
   if (clean.priority) out.priority = clean.priority;
   if (clean.find) out.find = clean.find;
+  const labels = labelIdsQueryValue(clean.labelIds);
+  if (labels) out.labels = labels;
   return out;
 }
 
@@ -162,6 +183,14 @@ export function pickLensPriority(
   priority?: ItemPriority,
 ): LensSpec {
   return sanitizeLensSpec({ ...spec, priority });
+}
+
+export function toggleLensLabel(spec: LensSpec, labelId: string): LensSpec {
+  const next = toggleLabelFilter(spec.labelIds, labelId);
+  return sanitizeLensSpec({
+    ...spec,
+    labelIds: next.length ? next : undefined,
+  });
 }
 
 export function withLensFind(spec: LensSpec, find: string): LensSpec {
@@ -220,6 +249,7 @@ export function itemMatchesLens(
   if (clean.personId && !item.assigneeIds.includes(clean.personId)) return false;
   if (clean.priority && item.priority !== clean.priority) return false;
   if (clean.find && !titleMatchesFind(item.title, clean.find)) return false;
+  if (!itemMatchesLabelFilter(item.labelIds, clean.labelIds)) return false;
   return true;
 }
 
