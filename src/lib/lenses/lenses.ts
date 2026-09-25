@@ -4,11 +4,18 @@ import {
   parseLabelIdsQuery,
   toggleLabelFilter,
 } from "@/lib/labels/labels";
+import { hasOpenSubtasks } from "@/lib/subtasks/subtasks";
 import { isItemPriority, type ItemPriority } from "@/lib/items/priority";
 import { isItemStatus, type ItemStatus } from "@/lib/items/status";
 import { dueDayKey, isOverdue, startOfUtcDay } from "@/lib/views/views";
 
-export const LENS_KINDS = ["mine", "overdue", "unassigned", "week"] as const;
+export const LENS_KINDS = [
+  "mine",
+  "overdue",
+  "unassigned",
+  "week",
+  "checklist",
+] as const;
 export type LensKind = (typeof LENS_KINDS)[number];
 
 export const LENS_KIND_LABEL: Record<LensKind, string> = {
@@ -16,6 +23,7 @@ export const LENS_KIND_LABEL: Record<LensKind, string> = {
   overdue: "Overdue",
   unassigned: "Unassigned",
   week: "This week",
+  checklist: "Open checklists",
 };
 
 export type LensSpec = {
@@ -34,6 +42,7 @@ export type LensItem = {
   dueOn: Date | null;
   assigneeIds: string[];
   labelIds: string[];
+  subtasks: { done: boolean }[];
 };
 
 export function isLensKind(value: string | undefined | null): value is LensKind {
@@ -243,6 +252,9 @@ export function itemMatchesLens(
     return false;
   }
   if (clean.kind === "week" && !isDueThisWeek(item.dueOn, ctx.now)) {
+    return false;
+  }
+  if (clean.kind === "checklist" && !hasOpenSubtasks(item.subtasks)) {
     return false;
   }
   if (clean.status && item.status !== clean.status) return false;

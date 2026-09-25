@@ -18,6 +18,7 @@ type TicketSeed = {
   group: "Now" | "Next" | "Later";
   assignees: TeamRole[];
   labels?: string[];
+  checklist?: { title: string; done?: boolean }[];
   dueDays?: number;
   comments?: { role: TeamRole; body: string }[];
 };
@@ -40,6 +41,11 @@ const ATLAS_TICKETS: TicketSeed[] = [
     priority: "major",
     group: "Now",
     labels: ["Feature", "Design"],
+    checklist: [
+      { title: "Wire filter chips", done: true },
+      { title: "Hook search to lens", done: false },
+      { title: "QA on mobile", done: false },
+    ],
     assignees: ["member"],
     dueDays: 2,
     body: "Match Jira quick filters: priority, status, assignee, and text search.",
@@ -80,6 +86,11 @@ const ATLAS_TICKETS: TicketSeed[] = [
     priority: "major",
     group: "Now",
     labels: ["Feature", "QA"],
+    checklist: [
+      { title: "Touch sensor tuning", done: true },
+      { title: "Persist column order", done: true },
+      { title: "Playwright drag test", done: false },
+    ],
     assignees: ["admin"],
     dueDays: 21,
   },
@@ -113,6 +124,10 @@ const ATLAS_TICKETS: TicketSeed[] = [
     status: "review",
     priority: "critical",
     group: "Now",
+    checklist: [
+      { title: "Desktop split pane", done: true },
+      { title: "Mobile focus drawer", done: false },
+    ],
     assignees: ["owner", "admin"],
     dueDays: 0,
     body: "Desktop shows inline detail; mobile keeps slide-over.",
@@ -311,7 +326,50 @@ async function seedTickets(
       });
     }
 
+    for (const [index, row] of (ticket.checklist ?? []).entries()) {
+      const exists = await prisma.subtask.findFirst({
+        where: { itemId: item.id, title: row.title },
+      });
+      if (exists) continue;
+      await prisma.subtask.create({
+        data: {
+          itemId: item.id,
+          title: row.title,
+          done: row.done ?? false,
+          position: index,
+        },
+      });
+    }
+
     position += 1;
+  }
+}
+
+async function seedChecklistsOnExisting(
+  prisma: PrismaClient,
+  projectId: string,
+  tickets: TicketSeed[],
+) {
+  for (const ticket of tickets) {
+    if (!ticket.checklist?.length) continue;
+    const item = await prisma.item.findFirst({
+      where: { projectId, title: ticket.title },
+    });
+    if (!item) continue;
+    for (const [index, row] of ticket.checklist.entries()) {
+      const exists = await prisma.subtask.findFirst({
+        where: { itemId: item.id, title: row.title },
+      });
+      if (exists) continue;
+      await prisma.subtask.create({
+        data: {
+          itemId: item.id,
+          title: row.title,
+          done: row.done ?? false,
+          position: index,
+        },
+      });
+    }
   }
 }
 
@@ -357,6 +415,7 @@ export async function seedDemoStudio(
   const mobile = await ensureProject(prisma, team.id, "Mobile", "mobile");
 
   await seedTickets(prisma, atlas.id, atlas.groups, users, ATLAS_TICKETS, base, labelIds);
+  await seedChecklistsOnExisting(prisma, atlas.id, ATLAS_TICKETS);
   await seedTickets(
     prisma,
     platform.id,

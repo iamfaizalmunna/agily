@@ -105,6 +105,16 @@ model Item {
   assignees  ItemAssignee[]
   updates    ItemUpdate[]
   labels     ItemLabel[]
+  subtasks   Subtask[]
+}
+
+model Subtask {
+  id       String  @id @default(cuid())
+  itemId   String
+  title    String
+  done     Boolean @default(false)
+  position Int
+  item     Item    @relation(fields: [itemId], references: [id], onDelete: Cascade)
 }
 
 model Label {

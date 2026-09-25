@@ -22,6 +22,8 @@ import { ITEM_STATUSES, STATUS_LABEL, type ItemStatus } from "@/lib/items/status
 import { LabelBadges } from "@/components/labels/label-badges";
 import { LabelPicker } from "@/components/labels/label-picker";
 import type { LabelChip } from "@/lib/labels/labels";
+import { SubtaskPanel } from "@/components/subtasks/subtask-panel";
+import type { SubtaskRow } from "@/lib/subtasks/subtasks";
 import { formatDueOn } from "@/lib/items/validate";
 
 const initial: BoardFormState = {};
@@ -41,6 +43,7 @@ export function ItemRow({
   noteCount = 0,
   teamLabels = [],
   itemLabels = [],
+  subtasks = [],
 }: {
   slug: string;
   projectSlug: string;
@@ -48,6 +51,7 @@ export function ItemRow({
   people: Person[];
   teamLabels?: LabelChip[];
   itemLabels?: LabelChip[];
+  subtasks?: SubtaskRow[];
   item: {
     id: string;
     title: string;
@@ -177,6 +181,13 @@ export function ItemRow({
           {pending ? "Saving…" : "Save"}
         </Button>
       </form>
+      <SubtaskPanel
+        slug={slug}
+        projectSlug={projectSlug}
+        itemId={item.id}
+        subtasks={subtasks}
+        readOnly={readOnly}
+      />
       <form action={assignToMeAction} className="mt-2">
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="projectSlug" value={projectSlug} />
