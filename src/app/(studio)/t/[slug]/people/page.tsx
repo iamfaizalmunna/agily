@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { InviteForm } from "@/components/teams/invite-form";
 import { CopyLinkButton } from "@/components/teams/copy-link-button";
 import { Button } from "@/components/ui/button";
+import { Select } from "@/components/ui/select";
 import { requireUser } from "@/lib/auth/session";
 import {
   canChangeMemberRole,
@@ -54,7 +55,7 @@ export default async function PeoplePage({
           return (
             <li
               key={member.id}
-              className="flex flex-col gap-3 rounded-2xl border border-paper/10 px-4 py-4 sm:flex-row sm:items-center sm:justify-between"
+              className="flex flex-col gap-3 rounded-2xl border border-paper/10 bg-surface px-4 py-4 shadow-sm sm:flex-row sm:items-center sm:justify-between"
             >
               <div className="min-w-0">
                 <p className="truncate text-paper">{member.user.name}</p>
@@ -68,10 +69,10 @@ export default async function PeoplePage({
                   <form action={changeMemberRoleAction} className="flex gap-2">
                     <input type="hidden" name="slug" value={slug} />
                     <input type="hidden" name="memberId" value={member.id} />
-                    <select
+                    <Select
                       name="role"
                       defaultValue={role}
-                      className="h-12 rounded-2xl border border-paper/10 bg-ink px-3 text-sm text-paper"
+                      className="h-12 w-auto min-w-[7.5rem] px-3 text-sm"
                     >
                       {TEAM_ROLES.filter(
                         (r) => r === role || canChangeMemberRole(ctx.role, role, r),
@@ -80,7 +81,7 @@ export default async function PeoplePage({
                           {r}
                         </option>
                       ))}
-                    </select>
+                    </Select>
                     <Button type="submit" variant="ghost" className="min-h-12">
                       Save
                     </Button>
@@ -123,7 +124,7 @@ export default async function PeoplePage({
               return (
                 <li
                   key={invite.id}
-                  className="flex flex-col gap-3 rounded-2xl border border-paper/10 p-4"
+                  className="flex flex-col gap-3 rounded-2xl border border-paper/10 bg-surface p-4 shadow-sm"
                 >
                   <p className="text-sm">
                     {invite.email} · {invite.role}

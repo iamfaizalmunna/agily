@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   canChangeMemberRole,
+  canEditSettings,
   canInvite,
   canRemoveMember,
   DEFAULT_TEAM_SETTINGS,
@@ -66,6 +67,13 @@ describe("phase 2 roles", () => {
     assert.equal(canChangeMemberRole("owner", "admin", "member"), true);
     assert.equal(canChangeMemberRole("owner", "member", "owner"), true);
     assert.equal(canChangeMemberRole("admin", "member", "viewer"), true);
+  });
+
+  it("limits settings edits to owners and admins", () => {
+    assert.equal(canEditSettings("owner"), true);
+    assert.equal(canEditSettings("admin"), true);
+    assert.equal(canEditSettings("member"), false);
+    assert.equal(canEditSettings("viewer"), false);
   });
 
   it("blocks illegal removals", () => {

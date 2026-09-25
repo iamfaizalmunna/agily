@@ -9,7 +9,7 @@ export default function NotFound() {
     >
       <Link
         href="/home"
-        className="inline-flex min-h-11 items-center rounded-full bg-copper px-5 text-sm font-medium text-ink"
+        className="inline-flex min-h-11 items-center rounded-full bg-copper px-5 text-sm font-medium text-on-copper"
         data-testid="not-found-home"
       >
         Your studios

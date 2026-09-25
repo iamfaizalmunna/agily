@@ -1,7 +1,21 @@
 import { ITEM_STATUSES, isItemStatus, type ItemStatus } from "@/lib/items/status";
 
-export const BOARD_VIEWS = ["ledger", "flow", "orbit"] as const;
+export const BOARD_VIEWS = [
+  "summary",
+  "list",
+  "flow",
+  "orbit",
+  "timeline",
+] as const;
 export type BoardView = (typeof BOARD_VIEWS)[number];
+
+export const BOARD_VIEW_LABEL: Record<BoardView, string> = {
+  summary: "Summary",
+  list: "List",
+  flow: "Board",
+  orbit: "Calendar",
+  timeline: "Timeline",
+};
 
 export function safeStudioNext(
   slug: string,
@@ -13,8 +27,12 @@ export function safeStudioNext(
 }
 
 export function parseBoardView(raw: string | undefined | null): BoardView {
-  if (raw === "flow" || raw === "orbit" || raw === "ledger") return raw;
-  return "ledger";
+  if (raw === "summary") return "summary";
+  if (raw === "list" || raw === "ledger") return "list";
+  if (raw === "flow") return "flow";
+  if (raw === "orbit") return "orbit";
+  if (raw === "timeline") return "timeline";
+  return "summary";
 }
 
 export function boardViewHref(
@@ -25,7 +43,7 @@ export function boardViewHref(
   extra?: Record<string, string | undefined>,
 ) {
   const params = new URLSearchParams();
-  if (view !== "ledger") params.set("view", view);
+  if (view !== "summary") params.set("view", view);
   if (view === "orbit" && yearMonth) params.set("ym", yearMonth);
   if (extra) {
     for (const [key, value] of Object.entries(extra)) {

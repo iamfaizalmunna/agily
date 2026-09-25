@@ -41,6 +41,38 @@ App: [http://127.0.0.1:43123](http://127.0.0.1:43123) · Lens API: [http://127.0
 
 **Signup:** Owner names a studio. Member / Viewer wait for a `/join/[token]` link. Admin is granted by an owner.
 
+## Demo logins
+
+Same convention as ZenFlow (`*@zenflowai.com` / `password123`). Agily uses `*@agily.com` / `password123`. Tap a row on `/signin` to sign in.
+
+| Email | Role |
+|-------|------|
+| `owner@agily.com` | Owner |
+| `admin@agily.com` | Admin |
+| `member@agily.com` | Member |
+| `viewer@agily.com` | Viewer |
+
+Seed all four on Northwind: `npx prisma db seed`
+
+### Example host (like example.zenflowai)
+
+Demo rows on `/signin` when **any** of these is true:
+
+1. `npm run dev` (local)
+2. `NEXT_PUBLIC_DEMO_MODE=true` in `.env`
+3. Hostname starts with `example.` (e.g. `example.agily.com`)
+
+```bash
+cp .env.example .env
+# optional public demo:
+# NEXT_PUBLIC_DEMO_MODE="true"
+npx prisma migrate dev
+npx prisma db seed
+npm run dev
+```
+
+Production installs without the flag hide demo logins. The same hard rules as ZenFlow apply: own SQLite, session cookies, no OAuth, no paid AI, no SMTP.
+
 ## Phases
 
 | Phase | Status on `main` | Story |

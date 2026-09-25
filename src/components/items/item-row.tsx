@@ -5,6 +5,7 @@ import Link from "next/link";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { noteLabel } from "@/lib/focus/focus";
 import {
   assignToMeAction,
@@ -12,6 +13,11 @@ import {
   type BoardFormState,
 } from "@/lib/items/actions";
 import { isAssigned } from "@/lib/items/assign";
+import {
+  ITEM_PRIORITIES,
+  PRIORITY_LABEL,
+  type ItemPriority,
+} from "@/lib/items/priority";
 import { ITEM_STATUSES, STATUS_LABEL, type ItemStatus } from "@/lib/items/status";
 import { formatDueOn } from "@/lib/items/validate";
 
@@ -40,6 +46,7 @@ export function ItemRow({
     title: string;
     body: string;
     status: string;
+    priority: string;
     dueOn: Date | null;
     assignees: { user: Person }[];
   };
@@ -52,13 +59,16 @@ export function ItemRow({
   const [state, action, pending] = useActionState(updateItemAction, initial);
   const assignedIds = item.assignees.map((row) => row.user.id);
   const assignedPeople = item.assignees.map((row) => row.user);
+  const priority = item.priority as ItemPriority;
 
   if (compact && openHref) {
     return (
-      <li id={`item-${item.id}`} className="rounded-2xl border border-paper/10">
+      <li id={`item-${item.id}`} className="rounded-lg border border-border bg-card">
         <Link href={openHref} className="flex flex-col gap-1 px-4 py-3">
-          <p className="text-paper">{item.title}</p>
-          <p className="text-xs uppercase tracking-[0.14em] text-paper/40">
+          <p className="font-medium">{item.title}</p>
+          <p className="text-xs text-muted-foreground">
+            {PRIORITY_LABEL[priority] ?? item.priority}
+            {" · "}
             {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
             {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
             {` · ${noteLabel(noteCount)}`}
@@ -71,9 +81,11 @@ export function ItemRow({
 
   if (readOnly) {
     return (
-      <li id={`item-${item.id}`} className="rounded-2xl border border-paper/10 px-4 py-3">
-        <p className="text-paper">{item.title}</p>
-        <p className="mt-1 text-xs uppercase tracking-[0.14em] text-paper/40">
+      <li id={`item-${item.id}`} className="rounded-lg border border-border bg-card px-4 py-3">
+        <p className="font-medium">{item.title}</p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          {PRIORITY_LABEL[priority] ?? item.priority}
+          {" · "}
           {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
           {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
         </p>
@@ -85,40 +97,51 @@ export function ItemRow({
   }
 
   return (
-    <li id={`item-${item.id}`} className="rounded-2xl border border-paper/10 p-4">
+    <li id={`item-${item.id}`} className="rounded-lg border border-border bg-card p-4">
       <form action={action} className="flex flex-col gap-3">
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="projectSlug" value={projectSlug} />
         <input type="hidden" name="itemId" value={item.id} />
         {next ? <input type="hidden" name="next" value={next} /> : null}
         <Input name="title" defaultValue={item.title} required />
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
-          <select
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+          <Select
+            name="priority"
+            defaultValue={item.priority}
+            className="h-10 px-3 text-sm"
+          >
+            {ITEM_PRIORITIES.map((level) => (
+              <option key={level} value={level}>
+                {PRIORITY_LABEL[level]}
+              </option>
+            ))}
+          </Select>
+          <Select
             name="status"
             defaultValue={item.status}
-            className="h-12 rounded-2xl border border-paper/10 bg-ink px-3 text-sm text-paper"
+            className="h-10 px-3 text-sm"
           >
             {ITEM_STATUSES.map((status) => (
               <option key={status} value={status}>
                 {STATUS_LABEL[status]}
               </option>
             ))}
-          </select>
+          </Select>
           <Input name="dueOn" type="date" defaultValue={formatDueOn(item.dueOn)} />
         </div>
         <fieldset>
-          <legend className="mb-2 text-[0.7rem] font-medium uppercase tracking-[0.16em] text-paper/50">
+          <legend className="mb-2 text-xs font-medium uppercase tracking-wide text-muted-foreground">
             People
           </legend>
           <div className="flex flex-col gap-2">
             {people.map((person) => (
-              <label key={person.id} className="flex min-h-11 items-center gap-3 text-sm">
+              <label key={person.id} className="flex min-h-9 items-center gap-3 text-sm">
                 <input
                   type="checkbox"
                   name="assigneeIds"
                   value={person.id}
                   defaultChecked={isAssigned(assignedIds, person.id)}
-                  className="h-4 w-4 accent-copper"
+                  className="h-4 w-4 accent-primary"
                 />
                 {person.name}
               </label>
@@ -129,15 +152,15 @@ export function ItemRow({
           name="body"
           defaultValue={item.body}
           rows={3}
-          placeholder="Write like a page — short markdown is fine."
-          className="w-full rounded-2xl border border-paper/10 bg-paper/[0.04] px-4 py-3 text-base text-paper outline-none placeholder:text-paper/35 focus:border-copper/70"
+          placeholder="Notes and context for this ticket."
+          className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm outline-none placeholder:text-muted-foreground focus-visible:ring-2 focus-visible:ring-ring"
         />
         {state.error ? (
-          <p className="text-sm text-copper" role="alert">
+          <p className="text-sm text-destructive" role="alert">
             {state.error}
           </p>
         ) : null}
-        <Button className="min-h-12 w-full sm:w-auto" disabled={pending} variant="ghost">
+        <Button type="submit" className="w-full sm:w-auto" disabled={pending} variant="outline">
           {pending ? "Saving…" : "Save"}
         </Button>
       </form>

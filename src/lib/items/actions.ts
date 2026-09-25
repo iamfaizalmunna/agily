@@ -15,6 +15,7 @@ import {
   canWriteBoard,
 } from "@/lib/items/permissions";
 import { createProjectForTeam } from "@/lib/items/create";
+import { parseItemPriority } from "@/lib/items/priority";
 import { isItemStatus } from "@/lib/items/status";
 import { parseDueOn, parseItemTitle } from "@/lib/items/validate";
 import {
@@ -33,7 +34,7 @@ function boardNext(slug: string, projectSlug: string, formData: FormData) {
   );
 }
 
-export type BoardFormState = { error?: string };
+export type BoardFormState = { error?: string; projectSlug?: string };
 
 const projectSchema = z.object({
   slug: z.string().min(1),
@@ -59,7 +60,7 @@ export async function createProjectAction(
     return { error: "You cannot create boards here" };
   }
   const project = await createProjectForTeam(ctx.team.id, parsed.data.name);
-  redirect(`/t/${ctx.team.slug}/p/${project.slug}`);
+  return { projectSlug: project.slug };
 }
 
 export async function archiveProjectAction(formData: FormData) {
@@ -137,6 +138,7 @@ export async function createItemAction(
       title: titleParsed.title,
       body: String(formData.get("body") ?? ""),
       status: "backlog",
+      priority: parseItemPriority(String(formData.get("priority") ?? "")),
       dueOn: due.dueOn,
       position: (last._max.position ?? -1) + 1,
       assignees: assignMe ? { create: { userId: user.id } } : undefined,
@@ -157,6 +159,7 @@ export async function updateItemAction(
   if ("error" in titleParsed) return { error: titleParsed.error };
   const status = String(formData.get("status") ?? "");
   if (!isItemStatus(status)) return { error: "Unknown status" };
+  const priority = parseItemPriority(String(formData.get("priority") ?? ""));
   const due = parseDueOn(String(formData.get("dueOn") ?? ""));
   if ("error" in due) return { error: due.error };
   const ctx = await getMembership(user.id, slug);
@@ -180,6 +183,7 @@ export async function updateItemAction(
       data: {
         title: titleParsed.title,
         status,
+        priority,
         dueOn: due.dueOn,
         body: String(formData.get("body") ?? item.body),
       },
@@ -228,6 +232,80 @@ export async function assignToMeAction(formData: FormData) {
     });
   }
   redirect(boardNext(slug, projectSlug, formData));
+}
+
+async function nextPositionInStatus(projectId: string, status: string) {
+  const last = await prisma.item.aggregate({
+    where: { projectId, status },
+    _max: { position: true },
+  });
+  return (last._max.position ?? -1) + 1;
+}
+
+export async function moveItemStatusQuickAction(
+  slug: string,
+  projectSlug: string,
+  itemId: string,
+  status: string,
+): Promise<{ error?: string }> {
+  if (!isItemStatus(status)) return { error: "Unknown status" };
+  const user = await requireUser();
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) return { error: "Studio not found" };
+  if (!canWriteBoard(ctx.role)) return { error: "Read only" };
+  const item = await prisma.item.findFirst({
+    where: {
+      id: itemId,
+      project: { teamId: ctx.team.id, slug: projectSlug },
+    },
+    select: { id: true, projectId: true, status: true },
+  });
+  if (!item) return { error: "Ticket not found" };
+  const position = await nextPositionInStatus(item.projectId, status);
+  await prisma.item.update({
+    where: { id: item.id },
+    data: { status, position },
+  });
+  return {};
+}
+
+export async function reorderKanbanColumnAction(
+  slug: string,
+  projectSlug: string,
+  status: string,
+  orderedIds: string[],
+): Promise<{ error?: string }> {
+  if (!isItemStatus(status)) return { error: "Unknown status" };
+  if (!orderedIds.length) return {};
+  const user = await requireUser();
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) return { error: "Studio not found" };
+  if (!canWriteBoard(ctx.role)) return { error: "Read only" };
+  const project = await prisma.project.findFirst({
+    where: { teamId: ctx.team.id, slug: projectSlug, archived: false },
+    select: { id: true },
+  });
+  if (!project) return { error: "Board not found" };
+  const rows = await prisma.item.findMany({
+    where: {
+      projectId: project.id,
+      status,
+      id: { in: orderedIds },
+    },
+    select: { id: true },
+  });
+  if (rows.length !== orderedIds.length) {
+    return { error: "Tickets must stay in the same column" };
+  }
+  await prisma.$transaction(
+    orderedIds.map((id, position) =>
+      prisma.item.update({
+        where: { id },
+        data: { position },
+      }),
+    ),
+  );
+  return {};
 }
 
 export async function moveItemStatusAction(formData: FormData) {

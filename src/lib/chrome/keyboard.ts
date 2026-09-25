@@ -31,9 +31,11 @@ export function normalizeKey(
 }
 
 export function boardViewFromDigit(digit: string): BoardView | null {
-  if (digit === "1") return "ledger";
-  if (digit === "2") return "flow";
-  if (digit === "3") return "orbit";
+  if (digit === "1") return "summary";
+  if (digit === "2") return "list";
+  if (digit === "3") return "flow";
+  if (digit === "4") return "orbit";
+  if (digit === "5") return "timeline";
   return null;
 }
 

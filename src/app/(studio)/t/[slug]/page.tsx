@@ -3,6 +3,8 @@ import { notFound } from "next/navigation";
 import { EmptyState } from "@/components/chrome/empty-state";
 import { CreateProjectForm } from "@/components/items/create-project-form";
 import { TicketChip } from "@/components/views/ticket-chip";
+import { Badge } from "@/components/ui/badge";
+import { Card } from "@/components/ui/card";
 import { requireUser } from "@/lib/auth/session";
 import { canCreateProject } from "@/lib/items/permissions";
 import { listProjects, listTeamItems } from "@/lib/items/queries";
@@ -42,11 +44,14 @@ export default async function TeamHomePage({
     if (!item) return null;
     return (
       <TicketChip
-        href={`/t/${slug}/p/${item.project.slug}?focus=${item.id}`}
+        href={`/t/${slug}/p/${item.project.slug}?view=list&focus=${item.id}`}
         title={item.title}
         status={item.status}
+        priority={item.priority}
         dueOn={item.dueOn}
         people={item.assignees.map((row) => row.user)}
+        position={item.position}
+        projectSlug={item.project.slug}
       />
     );
   };
@@ -54,87 +59,96 @@ export default async function TeamHomePage({
   return (
     <section className="flex flex-col gap-8">
       <div>
-        <p className="font-display text-xs tracking-[0.22em] text-copper uppercase">
+        <p className="text-xs font-semibold uppercase tracking-wide text-primary">
           Pulse
         </p>
-        <h1 className="mt-3 font-display text-3xl leading-tight text-paper sm:text-5xl">
-          {ctx.team.name}
-        </h1>
-        <p className="mt-4 max-w-md text-sm leading-relaxed text-paper/50 sm:text-base">
-          Morning stream from the same tickets. Ledger, Flow, and Orbit live on
-          each board.
+        <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">{ctx.team.name}</h1>
+        <p className="mt-2 text-sm text-muted-foreground">
+          Your morning stream across every board in this studio.
         </p>
       </div>
 
-      <section className="flex flex-col gap-3">
-        <h2 className="font-display text-xl text-paper">Mine</h2>
-        {buckets.mine.length ? (
-          buckets.mine.map((item) => (
-            <div key={item.id}>{chip(item.id)}</div>
-          ))
-        ) : (
-          <p className="text-sm text-paper/40">Nothing assigned to you.</p>
-        )}
-      </section>
+      <div className="grid gap-4 lg:grid-cols-3">
+        <PulseCard title="Mine" count={buckets.mine.length}>
+          {buckets.mine.length
+            ? buckets.mine.map((item) => <div key={item.id}>{chip(item.id)}</div>)
+            : <p className="text-sm text-muted-foreground">Nothing assigned to you.</p>}
+        </PulseCard>
+        <PulseCard title="Overdue" count={buckets.overdue.length} tone="destructive">
+          {buckets.overdue.length
+            ? buckets.overdue.map((item) => <div key={item.id}>{chip(item.id)}</div>)
+            : <p className="text-sm text-muted-foreground">Nothing late.</p>}
+        </PulseCard>
+        <PulseCard title="Recently assigned" count={buckets.recent.length}>
+          {buckets.recent.length
+            ? buckets.recent.map((item) => <div key={item.id}>{chip(item.id)}</div>)
+            : <p className="text-sm text-muted-foreground">No recent assigns.</p>}
+        </PulseCard>
+      </div>
 
       <section className="flex flex-col gap-3">
-        <h2 className="font-display text-xl text-paper">Overdue</h2>
-        {buckets.overdue.length ? (
-          buckets.overdue.map((item) => (
-            <div key={item.id}>{chip(item.id)}</div>
-          ))
+        <div className="flex items-center justify-between">
+          <h2 className="text-lg font-semibold">Boards</h2>
+          <Badge variant="secondary">{projects.length}</Badge>
+        </div>
+        {projects.length ? (
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {projects.map((project) => (
+              <li key={project.id}>
+                <Link href={`/t/${slug}/p/${project.slug}`}>
+                  <Card className="flex items-center justify-between p-4 transition-colors hover:border-primary/40 hover:bg-muted/30">
+                    <span className="font-medium">{project.name}</span>
+                    <span className="text-sm text-muted-foreground">
+                      {project._count.items} tickets
+                    </span>
+                  </Card>
+                </Link>
+              </li>
+            ))}
+          </ul>
         ) : (
-          <p className="text-sm text-paper/40">Nothing late.</p>
+          <EmptyState
+            title="No boards yet"
+            body="Open a board to add sections and tickets."
+          />
         )}
       </section>
-
-      <section className="flex flex-col gap-3">
-        <h2 className="font-display text-xl text-paper">Recently assigned</h2>
-        {buckets.recent.length ? (
-          buckets.recent.map((item) => (
-            <div key={item.id}>{chip(item.id)}</div>
-          ))
-        ) : (
-          <p className="text-sm text-paper/40">No recent assigns.</p>
-        )}
-      </section>
-
-      {projects.length ? (
-        <ul className="flex flex-col gap-2">
-          {projects.map((project) => (
-            <li key={project.id}>
-              <Link
-                href={`/t/${slug}/p/${project.slug}`}
-                className="flex min-h-14 items-center justify-between rounded-2xl border border-paper/10 px-4"
-              >
-                <span>{project.name}</span>
-                <span className="text-xs text-paper/40">
-                  {project._count.items} tickets
-                </span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      ) : (
-        <EmptyState
-          title="No boards yet"
-          body="Open a board to add Now / Next / Later sections and tickets."
-        />
-      )}
-
-      <Link
-        href={`/t/${slug}/people`}
-        className="inline-flex min-h-12 items-center justify-center rounded-full border border-paper/15 px-5 text-sm text-paper"
-      >
-        People
-      </Link>
 
       {mayCreate ? (
-        <div>
-          <h2 className="mb-4 font-display text-xl text-paper">Open a board</h2>
-          <CreateProjectForm slug={slug} />
-        </div>
+        <Card className="p-6">
+          <h2 className="text-lg font-semibold">Open a board</h2>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Each board gets Summary, List, Board, Calendar, and Timeline views.
+          </p>
+          <div className="mt-4">
+            <CreateProjectForm slug={slug} />
+          </div>
+        </Card>
       ) : null}
     </section>
+  );
+}
+
+function PulseCard({
+  title,
+  count,
+  tone,
+  children,
+}: {
+  title: string;
+  count: number;
+  tone?: "destructive";
+  children: React.ReactNode;
+}) {
+  return (
+    <Card className="flex flex-col gap-3 p-4">
+      <div className="flex items-center justify-between">
+        <h2 className="text-sm font-semibold">{title}</h2>
+        <Badge variant={tone === "destructive" && count ? "destructive" : "outline"}>
+          {count}
+        </Badge>
+      </div>
+      <div className="flex flex-col gap-2">{children}</div>
+    </Card>
   );
 }

@@ -93,6 +93,7 @@ model Item {
   groupId   String
   title     String
   body      String    @default("")
+  priority  String    @default("minor")
   status    String
   dueOn     DateTime?
   position  Int

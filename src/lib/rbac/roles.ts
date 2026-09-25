@@ -82,6 +82,10 @@ export function canChangeMemberRole(
   return ROLE_RANK[actor] >= ROLE_RANK[next];
 }
 
+export function canEditSettings(actor: TeamRole) {
+  return actor === "owner" || actor === "admin";
+}
+
 export function canRemoveMember(actor: TeamRole, target: TeamRole) {
   if (target === "owner") return actor === "owner";
   if (actor === "owner") return true;

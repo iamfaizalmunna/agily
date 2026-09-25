@@ -7,7 +7,7 @@ const ROWS = [
   { keys: "g then p", action: "Go to Pulse" },
   { keys: "g then e", action: "Go to People" },
   { keys: "g then h", action: "Your studios" },
-  { keys: "1 / 2 / 3", action: "Ledger / Flow / Orbit on a board" },
+  { keys: "1–5", action: "Summary / List / Board / Calendar / Timeline" },
 ];
 
 export function ShortcutHelp({ open, onClose }: { open: boolean; onClose: () => void }) {

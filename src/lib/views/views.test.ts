@@ -42,16 +42,21 @@ function item(
 
 describe("phase 5 views", () => {
   it("parses board views and builds hrefs", () => {
+    assert.equal(parseBoardView("summary"), "summary");
+    assert.equal(parseBoardView("list"), "list");
     assert.equal(parseBoardView("flow"), "flow");
     assert.equal(parseBoardView("orbit"), "orbit");
-    assert.equal(parseBoardView("ledger"), "ledger");
-    assert.equal(parseBoardView("nope"), "ledger");
-    assert.equal(parseBoardView(undefined), "ledger");
+    assert.equal(parseBoardView("timeline"), "timeline");
+    assert.equal(parseBoardView("ledger"), "list");
+    assert.equal(parseBoardView("nope"), "summary");
+    assert.equal(parseBoardView(undefined), "summary");
     assert.equal(safeStudioNext("n", "/t/n", "/t/n/p/p?view=flow"), "/t/n/p/p?view=flow");
     assert.equal(safeStudioNext("n", "/t/n", "https://evil"), "/t/n");
-    assert.equal(boardViewHref("n", "p", "ledger"), "/t/n/p/p");
+    assert.equal(boardViewHref("n", "p", "summary"), "/t/n/p/p");
+    assert.equal(boardViewHref("n", "p", "list"), "/t/n/p/p?view=list");
     assert.equal(boardViewHref("n", "p", "flow"), "/t/n/p/p?view=flow");
     assert.equal(boardViewHref("n", "p", "orbit"), "/t/n/p/p?view=orbit");
+    assert.equal(boardViewHref("n", "p", "timeline"), "/t/n/p/p?view=timeline");
     assert.equal(safeStudioNext("n", "/t/n", ""), "/t/n");
     assert.equal(
       boardViewHref("n", "p", "orbit", "2026-09"),

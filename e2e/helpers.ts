@@ -1,9 +1,9 @@
 import { expect, type Page } from "@playwright/test";
 
 export const E2E = {
-  email: "owner@studio.local",
+  email: "owner@agily.com",
   password: "password123",
-  teamSlug: "northwind-e2e",
+  teamSlug: "northwind",
   projectSlug: "atlas",
 } as const;
 

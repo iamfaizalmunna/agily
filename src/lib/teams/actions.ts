@@ -6,18 +6,25 @@ import { prisma } from "@/lib/db/prisma";
 import { requireUser, normalizeEmail } from "@/lib/auth/session";
 import {
   canChangeMemberRole,
+  canEditSettings,
   canInvite,
   canRemoveMember,
   inviteRolesFor,
   isTeamRole,
   parseTeamSettings,
+  stringifyTeamSettings,
   type TeamRole,
+  type TeamSettings,
 } from "@/lib/rbac/roles";
 import { createTeamForUser } from "@/lib/teams/create";
 import { countOwners, getMembership } from "@/lib/teams/queries";
 import { inviteExpiry, newInviteToken } from "@/lib/teams/tokens";
 
-export type TeamFormState = { error?: string; inviteUrl?: string };
+export type TeamFormState = {
+  error?: string;
+  inviteUrl?: string;
+  slug?: string;
+};
 
 const createTeamSchema = z.object({
   name: z.string().trim().min(1, "Studio needs a name").max(80),
@@ -33,7 +40,7 @@ export async function createTeamAction(
     return { error: parsed.error.issues[0]?.message };
   }
   const team = await createTeamForUser(user.id, parsed.data.name);
-  redirect(`/t/${team.slug}`);
+  return { slug: team.slug };
 }
 
 const inviteSchema = z.object({
@@ -146,6 +153,31 @@ export async function removeMemberAction(formData: FormData) {
   }
   await prisma.teamMember.delete({ where: { id: target.id } });
   redirect(`/t/${slug}/people`);
+}
+
+export async function updateTeamSettingsAction(
+  _prev: TeamFormState,
+  formData: FormData,
+): Promise<TeamFormState> {
+  const user = await requireUser();
+  const slug = String(formData.get("slug") ?? "");
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) return { error: "Studio not found" };
+  if (!canEditSettings(ctx.role)) return { error: "Read only" };
+
+  const settings: TeamSettings = {
+    membersCanCreateProjects: formData.get("membersCanCreateProjects") === "on",
+    membersCanInvite: formData.get("membersCanInvite") === "on",
+    defaultInviteRole: isTeamRole(String(formData.get("defaultInviteRole") ?? ""))
+      ? (String(formData.get("defaultInviteRole")) as TeamRole)
+      : "member",
+  };
+
+  await prisma.team.update({
+    where: { id: ctx.team.id },
+    data: { settings: stringifyTeamSettings(settings) },
+  });
+  redirect(`/t/${slug}/settings`);
 }
 
 export async function revokeInviteAction(formData: FormData) {

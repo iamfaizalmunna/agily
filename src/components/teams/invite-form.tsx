@@ -4,6 +4,7 @@ import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select } from "@/components/ui/select";
 import { CopyLinkButton } from "@/components/teams/copy-link-button";
 import { createInviteAction, type TeamFormState } from "@/lib/teams/actions";
 import type { TeamRole } from "@/lib/rbac/roles";
@@ -33,23 +34,18 @@ export function InviteForm({
           type="email"
           inputMode="email"
           required
-          placeholder="teammate@studio.local"
+          placeholder="teammate@agily.com"
         />
       </div>
       <div>
         <Label htmlFor="role">Access</Label>
-        <select
-          id="role"
-          name="role"
-          className="h-12 w-full rounded-2xl border border-paper/10 bg-paper/[0.04] px-4 text-base text-paper outline-none focus:border-copper/70"
-          defaultValue={roles[0]}
-        >
+        <Select id="role" name="role" defaultValue={roles[0]}>
           {roles.map((role) => (
             <option key={role} value={role}>
               {role}
             </option>
           ))}
-        </select>
+        </Select>
       </div>
       {state.error ? (
         <p className="text-sm text-copper" role="alert">
