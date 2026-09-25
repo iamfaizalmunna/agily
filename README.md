@@ -1,51 +1,187 @@
-# Agily
+<h1 align="center">Agily</h1>
 
-[![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
-[![Foundation](https://img.shields.io/badge/foundation-10%2F10-c9844a)](docs/phases/README.md)
-[![Revamp](https://img.shields.io/badge/revamp-R4%20done-10b981)](docs/phases/REVAMP_README.md)
-[![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
-[![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
+<p align="center">
+  Local agile planner — one ticket model, four board views, Lens on loopback Ollama.<br>
+  <strong>Foundation 1–10</strong> is complete on <code>main</code>. <strong>Revamp v2</strong> is <strong>4 / 12</strong> (board → labels → checklists → epics).
+</p>
 
-Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
+<p align="center">
+  <a href="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml"><img src="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg" alt="Unit pack"></a>
+  <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Foundation-10%2F10-c9844a?style=flat-square" alt="Foundation"></a>
+  <a href="docs/phases/REVAMP_README.md"><img src="https://img.shields.io/badge/Revamp-4%2F12-10b981?style=flat-square" alt="Revamp"></a>
+  <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Unit%20pack-100%25-10b981?style=flat-square" alt="Coverage"></a>
+  <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/App-127.0.0.1%3A43123-c9844a?style=flat-square" alt="App"></a>
+  <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/Lens%20API-127.0.0.1%3A43124-12100e?style=flat-square" alt="Lens API"></a>
+</p>
 
-**Now:** foundation on `main`; **Revamp v2** R1–R4 shipped (board, labels, checklists, epics/types).  
-**Later:** R3–R12 one phase at a time; optional cloud deploy (out of scope for this repo).
+<p align="center">
+  <img src="https://img.shields.io/badge/Next.js%2016-000000?style=flat-square&logo=nextdotjs&logoColor=white" alt="Next.js">
+  <img src="https://img.shields.io/badge/React%2019-61DAFB?style=flat-square&logo=react&logoColor=black" alt="React">
+  <img src="https://img.shields.io/badge/TypeScript-3178C6?style=flat-square&logo=typescript&logoColor=white" alt="TypeScript">
+  <img src="https://img.shields.io/badge/Tailwind%20CSS%204-06B6D4?style=flat-square&logo=tailwindcss&logoColor=white" alt="Tailwind">
+  <img src="https://img.shields.io/badge/Express%205-000000?style=flat-square&logo=express&logoColor=white" alt="Express">
+  <img src="https://img.shields.io/badge/Prisma%206-2D3748?style=flat-square&logo=prisma&logoColor=white" alt="Prisma">
+  <img src="https://img.shields.io/badge/SQLite-003B57?style=flat-square&logo=sqlite&logoColor=white" alt="SQLite">
+  <img src="https://img.shields.io/badge/Zod-3B82F6?style=flat-square" alt="Zod">
+  <img src="https://img.shields.io/badge/Zustand-443B36?style=flat-square" alt="Zustand">
+</p>
 
-## Main
+<p align="center">
+  <img src="https://img.shields.io/badge/dnd--kit-8B5CF6?style=flat-square" alt="dnd-kit">
+  <img src="https://img.shields.io/badge/Base%20UI-000000?style=flat-square" alt="Base UI">
+  <img src="https://img.shields.io/badge/shadcn%2Fui-000000?style=flat-square" alt="shadcn">
+  <img src="https://img.shields.io/badge/Lucide-F56565?style=flat-square" alt="Lucide">
+  <img src="https://img.shields.io/badge/Turborepo-EF4444?style=flat-square&logo=turborepo&logoColor=white" alt="Turborepo">
+  <img src="https://img.shields.io/badge/Playwright-2EAD33?style=flat-square&logo=playwright&logoColor=white" alt="Playwright">
+  <img src="https://img.shields.io/badge/c8%20coverage-10b981?style=flat-square" alt="c8">
+  <img src="https://img.shields.io/badge/Ollama-000000?style=flat-square&logo=ollama&logoColor=white" alt="Ollama">
+  <img src="https://img.shields.io/badge/GitHub%20Actions-2088FF?style=flat-square&logo=githubactions&logoColor=white" alt="GitHub Actions">
+</p>
 
-**Foundation:** all **10 phases** are merged on `main` (auth → ship chrome).  
-**Revamp v2:** shipped on `revamp/r{N}-*` branches — see [docs/phases/REVAMP_README.md](docs/phases/REVAMP_README.md). We do **one revamp phase at a time**; say **next** when you want the following phase started.
+<p align="center">
+  <a href="#roadmap">Roadmap</a> ·
+  <a href="#tech-we-use">Tech</a> ·
+  <a href="#run-in-cursor-agent">Run in Cursor</a> ·
+  <a href="#quick-start">Quick start</a> ·
+  <a href="#demo-logins">Logins</a> ·
+  <a href="#hard-rules">Rules</a> ·
+  <a href="PLAN.md">PLAN.md</a> ·
+  <a href="docs/phases/REVAMP_README.md">Revamp R1–R12</a> ·
+  <a href="http://127.0.0.1:43123/qa/phases">Phase gallery</a>
+</p>
 
-Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)
+---
 
-## Hard rules
+## Roadmap
 
-- Identity lives in `User` + `Session` in SQLite. Email is a login key, not a mailbox.
-- No Auth0, Clerk, NextAuth OAuth, Google/GitHub/Apple sign-in.
-- No OpenAI / Anthropic / Gemini / SMTP / analytics SDKs.
-- GitHub gets source + `/kb` + README. Never `.env`, `*.db`, `.ollama/`, `*.gguf`.
+Two tracks on the same app: **foundation** (auth → ship chrome) is frozen on `main`. **Revamp v2** adds Jira / Monday parity one phase at a time — branch `revamp/r{N}-*`, PR, merge, then **next**.
 
-## Run
+**Charts (browser):** [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases) · [docs/phases/index.html](docs/phases/index.html)  
+**Gap matrix:** [docs/FEATURE_GAP.md](docs/FEATURE_GAP.md) · **Git loop:** [docs/phases/REVAMP_GIT_LOOP.md](docs/phases/REVAMP_GIT_LOOP.md)
+
+### Foundation — phases 1–10 (complete)
+
+| | Phase | What shipped |
+|:--:|:------|:-------------|
+| [![01](https://img.shields.io/badge/01-c9844a?style=flat-square)](docs/phases/01-auth.md) | **[Own-DB auth](docs/phases/01-auth.md)** | Email + password in SQLite; httpOnly `agily_session` cookie |
+| [![02](https://img.shields.io/badge/02-e09a5c?style=flat-square)](docs/phases/02-teams.md) | **[Teams + invites](docs/phases/02-teams.md)** | Studios, roles, `/join/[token]` copy-link invites |
+| [![03](https://img.shields.io/badge/03-f4efe6?style=flat-square&labelColor=12100e)](docs/phases/03-projects.md) | **[Projects & items](docs/phases/03-projects.md)** | Groups, tickets, status, due dates, markdown body |
+| [![04](https://img.shields.io/badge/04-c9844a?style=flat-square)](docs/phases/04-assign.md) | **[People + assign](docs/phases/04-assign.md)** | `ItemAssignee` on the same row — no duplicate cards |
+| [![05](https://img.shields.io/badge/05-c9844a?style=flat-square)](docs/phases/05-views.md) | **[Four views](docs/phases/05-views.md)** | Pulse, Ledger, Flow, Orbit on identical data |
+| [![06](https://img.shields.io/badge/06-c9844a?style=flat-square)](docs/phases/06-lenses.md) | **[Filter lenses](docs/phases/06-lenses.md)** | Mine, overdue, saved chips per user per team |
+| [![07](https://img.shields.io/badge/07-c9844a?style=flat-square)](docs/phases/07-focus.md) | **[Focus + notes](docs/phases/07-focus.md)** | Stage / drawer, `ItemUpdate` thread on a ticket |
+| [![08](https://img.shields.io/badge/08-c9844a?style=flat-square)](docs/phases/08-bell.md) | **[In-app bell](docs/phases/08-bell.md)** | `Notification` rows — no SMTP |
+| [![09](https://img.shields.io/badge/09-c9844a?style=flat-square)](docs/phases/09-lens.md) | **[Lens AI](docs/phases/09-lens.md)** | Turborepo, Express `@agily/api`, Ollama loopback + `/kb` |
+| [![10](https://img.shields.io/badge/10-c9844a?style=flat-square)](docs/phases/10-ship.md) | **[Ship chrome](docs/phases/10-ship.md)** | `?` shortcuts, empty/error pages, Playwright smoke |
+
+Full index: [docs/phases/README.md](docs/phases/README.md)
+
+### Revamp v2 — R1–R12 (in progress)
+
+| | Phase | Status | What shipped |
+|:--:|:------|:------:|:-------------|
+| [![R1](https://img.shields.io/badge/R1-10b981?style=flat-square)](docs/phases/revamp-01-board.md) | **[Board excellence](docs/phases/revamp-01-board.md)** | done | Kanban DnD, column reorder, swimlanes, WIP, board settings |
+| [![R2](https://img.shields.io/badge/R2-10b981?style=flat-square)](docs/phases/revamp-02-labels.md) | **[Labels & taxonomy](docs/phases/revamp-02-labels.md)** | done | Team labels, filter bar, settings CRUD |
+| [![R3](https://img.shields.io/badge/R3-10b981?style=flat-square)](docs/phases/revamp-03-subtasks.md) | **[Subtasks & checklists](docs/phases/revamp-03-subtasks.md)** | done | Checklists, progress, `?q=checklist` lens |
+| [![R4](https://img.shields.io/badge/R4-10b981?style=flat-square)](docs/phases/revamp-04-hierarchy.md) | **[Hierarchy & types](docs/phases/revamp-04-hierarchy.md)** | done | Epic parent/child, task/bug/story/epic, `?epic=` filter |
+| [![R5](https://img.shields.io/badge/R5-c9844a?style=flat-square)](docs/phases/revamp-05-activity.md) | **[Comments & activity](docs/phases/revamp-05-activity.md)** | **next** | Threaded comments, activity feed (planned) |
+| R6–R12 | Analytics → ship | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
+
+---
+
+## Run in Cursor (Agent)
+
+Open this repo in **Cursor**. Required: **Node 22+** (matches CI), **npm 10+**. SQLite is file-based — no MySQL. The Agent can copy env, migrate, seed, test, and start web + Lens API together.
+
+**Paste into Agent chat**
+
+```text
+Run Agily for local development.
+
+1. Copy env if missing: cp .env.example .env
+   Set SESSION_SECRET to a long random string (keep DATABASE_URL as file:./prisma/dev.db).
+2. npm ci
+   (Repo has .npmrc legacy-peer-deps for gantt-task-react + React 19.)
+3. npx prisma generate && npx prisma migrate dev && npx prisma db seed
+4. npm test && npm run test:coverage
+5. npm run dev
+6. Tell me when the UI is at http://127.0.0.1:43123 and Lens health is at http://127.0.0.1:43124/v1/health.
+7. Sign in as owner@agily.com / password123, open team northwind, project atlas.
+```
+
+Optional local AI: `ollama pull llama3.2:3b` and keep Ollama on `127.0.0.1:11434`. If Ollama is down, Lens still answers from `/kb` snippets and board counts.
+
+| After it runs | Open |
+|---------------|------|
+| App | [http://127.0.0.1:43123](http://127.0.0.1:43123) |
+| Sign-in (demo rows when `npm run dev`) | [http://127.0.0.1:43123/signin](http://127.0.0.1:43123/signin) |
+| Phase gallery | [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases) |
+| Lens health | [http://127.0.0.1:43124/v1/health](http://127.0.0.1:43124/v1/health) |
+| Demo studio / project | Team **northwind** · project **atlas** |
+
+Manual steps: [Quick start](#quick-start). E2E: `npm run test:e2e` (uses `prisma/e2e.db`).
+
+---
+
+## Tech we use
+
+Everything below is in this repo today — not a wish list.
+
+| Area | Technologies |
+|------|----------------|
+| **App shell** | [Next.js 16](https://nextjs.org/) App Router, [React 19](https://react.dev/), [TypeScript 5](https://www.typescriptlang.org/), Server Actions, `next dev` on `127.0.0.1:43123` |
+| **Styling** | [Tailwind CSS 4](https://tailwindcss.com/), PostCSS (`@tailwindcss/postcss`), [tw-animate-css](https://www.npmjs.com/package/tw-animate-css), `clsx`, `tailwind-merge`, [class-variance-authority](https://cva.style/docs) |
+| **UI components** | [Base UI](https://base-ui.com/), [shadcn](https://ui.shadcn.com/) CLI, [Lucide](https://lucide.dev/) icons |
+| **Client state** | [Zustand](https://zustand.docs.pmnd.rs/) (Lens panel rail) |
+| **Boards & timeline** | [@dnd-kit](https://dndkit.com/) (core, sortable, modifiers, utilities), kanban server actions, [frappe-gantt](https://frappe.io/gantt), [gantt-task-react](https://www.npmjs.com/package/gantt-task-react) |
+| **API service** | [Express 5](https://expressjs.com/) (`apps/api`), [cookie-parser](https://www.npmjs.com/package/cookie-parser), shared `@agily/lens` package |
+| **Database** | [Prisma 6](https://www.prisma.io/) + [SQLite](https://www.sqlite.org/) (`file:./prisma/dev.db`), migrations + `tsx` seed |
+| **Auth & sessions** | [bcrypt](https://www.npmjs.com/package/bcrypt), httpOnly `agily_session` cookie, role ladder on `User` / `TeamMember` |
+| **Validation** | [Zod 4](https://zod.dev/) (forms, Lens payloads, env guards) |
+| **AI (local only)** | [Ollama](https://ollama.com/) on loopback (`OLLAMA_BASE_URL`), bundled markdown in `public/kb/`, extractive fallback when the model is down |
+| **Monorepo & dev** | npm workspaces, [Turborepo](https://turbo.build/), [concurrently](https://www.npmjs.com/package/concurrently) (web + API), [tsx](https://tsx.is/) for scripts and tests |
+| **Testing** | Node.js built-in [`node:test`](https://nodejs.org/api/test.html), [c8](https://github.com/bcoe/c8) coverage (100% lines on the configured pack), [Playwright](https://playwright.dev/) E2E |
+| **Lint & quality** | [ESLint 9](https://eslint.org/) + `eslint-config-next`, optional [SonarQube](https://www.sonarsource.com/products/sonarqube/) (`sonar-project.properties`, `npm run sonar`) |
+| **CI & tooling** | [GitHub Actions](https://github.com/features/actions) (Node 22, `npm ci`, Prisma generate, unit pack), `.npmrc` `legacy-peer-deps` for React 19 + Gantt peers |
+| **Runtime** | Node **22+** (CI), no Docker required for the default demo |
+
+### Why these choices
+
+| Layer | Choice | Why it is here |
+|-------|--------|----------------|
+| UI | Next.js + React + Tailwind + Base UI / shadcn | One codebase for studio chrome, boards, and focus stage |
+| Data | Prisma + SQLite | Single-machine demo; migrations committed |
+| Auth | bcrypt + session cookie | No OAuth vendors; identity stays in our DB |
+| Monorepo | `apps/api` + `packages/lens` | Lens Express beside Next without a second repository |
+| AI | Ollama loopback + `/kb` | No paid LLM keys; non-loopback `OLLAMA_BASE_URL` is rejected |
+| Boards | dnd-kit + server actions | Revamp R1 ordering and WIP on the same `Item` row |
+| Quality | node:test + c8 + Playwright + Sonar (optional) | `.github/workflows/test.yml` on every push / PR |
+
+---
+
+## Quick start
 
 ```bash
 git clone https://github.com/iamfaizalmunna/agily.git
 cd agily
-cp .env.example .env
-npm install
+cp .env.example .env          # set SESSION_SECRET
+npm ci
 npx prisma migrate dev
+npx prisma db seed
 npm test
 npm run dev
 ```
 
-App: [http://127.0.0.1:43123](http://127.0.0.1:43123) · Lens API: [http://127.0.0.1:43124/v1/health](http://127.0.0.1:43124/v1/health)
+- App: [http://127.0.0.1:43123](http://127.0.0.1:43123)
+- Lens API: [http://127.0.0.1:43124/v1/health](http://127.0.0.1:43124/v1/health)
 
-`npm run dev` starts Next and Express together. Optional: `ollama pull llama3.2:3b` then leave Ollama on `127.0.0.1:11434`. If it is down, Lens still answers from `/kb` and board counts.
+`npm run dev` runs Next and Express together (`concurrently`). Public demo host pattern (like ZenFlow `example.*`): set `NEXT_PUBLIC_DEMO_MODE=true` or use a hostname starting with `example.`.
 
-**Signup:** Owner names a studio. Member / Viewer wait for a `/join/[token]` link. Admin is granted by an owner.
+---
 
 ## Demo logins
 
-Same convention as ZenFlow (`*@zenflowai.com` / `password123`). Agily uses `*@agily.com` / `password123`. Tap a row on `/signin` to sign in.
+Same convention as [ZenFlowAI](https://github.com/iamfaizalmunna/zenflowai): `*@agily.com` / **`password123`**. Tap a row on `/signin` when demo mode is on.
 
 | Email | Role |
 |-------|------|
@@ -54,128 +190,52 @@ Same convention as ZenFlow (`*@zenflowai.com` / `password123`). Agily uses `*@ag
 | `member@agily.com` | Member |
 | `viewer@agily.com` | Viewer |
 
-Seed all four on Northwind: `npx prisma db seed`
+Seed all four on studio **Northwind**: `npx prisma db seed`
 
-### Example host (like example.zenflowai)
+---
 
-Demo rows on `/signin` when **any** of these is true:
+## Hard rules
 
-1. `npm run dev` (local)
-2. `NEXT_PUBLIC_DEMO_MODE=true` in `.env`
-3. Hostname starts with `example.` (e.g. `example.agily.com`)
+- Identity lives in `User` + `Session` in SQLite. Email is a login key, not a mailbox.
+- No Auth0, Clerk, NextAuth OAuth, Google/GitHub/Apple sign-in.
+- No OpenAI / Anthropic / Gemini / SMTP / analytics SDKs.
+- GitHub gets source + `/kb` + README. Never `.env`, `*.db`, `.ollama/`, `*.gguf`.
 
-```bash
-cp .env.example .env
-# optional public demo:
-# NEXT_PUBLIC_DEMO_MODE="true"
-npx prisma migrate dev
-npx prisma db seed
-npm run dev
-```
+---
 
-Production installs without the flag hide demo logins. The same hard rules as ZenFlow apply: own SQLite, session cookies, no OAuth, no paid AI, no SMTP.
+## What you can try today
 
-## Phases
+| Area | In the product |
+|------|----------------|
+| Views | Pulse (mine/overdue), Ledger board, Flow river, Orbit calendar |
+| Lenses | Stack chips (`?q=mine`), save with **Keep** |
+| Focus | `?focus=` stage, notes as updates |
+| Bell | Unread badge, mark read, jump to ticket |
+| Lens | Rail panel, `/lens-api` rewrite, KB + optional Ollama |
+| Revamp | DnD board, labels, checklists, epics & issue types |
+| Chrome | `?` keyboard sheet, `g` navigation chords, Playwright smoke |
 
-| Phase | Status on `main` | Story |
-|------:|:-----------------|:------|
-| 1 Auth | merged | [docs/phases/01-auth.md](docs/phases/01-auth.md) |
-| 2 Teams + invites | merged | [docs/phases/02-teams.md](docs/phases/02-teams.md) |
-| 3 Projects / groups / items | merged | [docs/phases/03-projects.md](docs/phases/03-projects.md) |
-| 4 People + assign | merged | [docs/phases/04-assign.md](docs/phases/04-assign.md) |
-| 5 Four views | merged via PR | [docs/phases/05-views.md](docs/phases/05-views.md) |
-| 6 Filter lenses | merged via PR | [docs/phases/06-lenses.md](docs/phases/06-lenses.md) |
-| 7 Focus + notes | merged via PR | [docs/phases/07-focus.md](docs/phases/07-focus.md) |
-| 8 In-app bell | merged via PR | [docs/phases/08-bell.md](docs/phases/08-bell.md) |
-| 9 Lens + turbo | merged via PR | [docs/phases/09-lens.md](docs/phases/09-lens.md) |
-| 10 Ship chrome | merged via PR | [docs/phases/10-ship.md](docs/phases/10-ship.md) |
-
-### Revamp v2 (Jira / Monday parity on the same SQLite app)
-
-Track: [docs/phases/REVAMP_README.md](docs/phases/REVAMP_README.md) · gap matrix: [docs/FEATURE_GAP.md](docs/FEATURE_GAP.md)
-
-| Phase | Name | Status on `main` | Doc |
-|------:|------|:-----------------|:----|
-| R1 | Board excellence | merged | [revamp-01-board.md](docs/phases/revamp-01-board.md) |
-| R2 | Labels & taxonomy | merged | [revamp-02-labels.md](docs/phases/revamp-02-labels.md) |
-| R3 | Subtasks & checklists | merged | [revamp-03-subtasks.md](docs/phases/revamp-03-subtasks.md) |
-| R4 | Hierarchy & issue types | merged | [revamp-04-hierarchy.md](docs/phases/revamp-04-hierarchy.md) |
-| R5 | Comments & activity | **next** | [revamp-05-activity.md](docs/phases/revamp-05-activity.md) |
-| R6–R12 | … | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
-
-Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
-
-## Ship chrome (phase 10)
-
-Keyboard sheet (`?`), Lens toggle (`/`), studio navigation (`g` chords), view digits on boards. Empty states on bell and boards. `not-found`, `error`, and `global-error` pages. Playwright smoke on `prisma/e2e.db`.
-
-- `npm run test:e2e` — sign-in, Pulse, board, shortcuts, 404
-- CI: `.github/workflows/e2e.yml`
-
-## Lens (phase 9)
-
-Turborepo around the existing Next app. Express at `apps/api`. Helpers in `@agily/lens`.
-
-- Panel on the rail / phone header (Zustand). Same `agily_session` cookie — not JWT
-- Next rewrites `/lens-api/*` to `127.0.0.1:43124`
-- Ollama only on loopback. Non-loopback `OLLAMA_BASE_URL` is rejected
-- `/kb` is bundled markdown. GitHub gets that source, never model weights
-- If Ollama is down: extractive answers from board counts and KB snippets
-
-## Bell (phase 8)
-
-Assign and notes write `Notification` rows. No email.
-
-- Bell on the rail, phone header, and `/t/[studio]/notices`
-- Tap a row to mark it read and open `?focus=`
-- Unread badge, Mark all read
-
-## Focus (phase 7)
-
-One ticket in the air. Same `Item` row.
-
-- Ledger rows stay compact; tap to open
-- Flow, Orbit, and Pulse open `?focus=`
-- Desktop: centered stage. Mobile: bottom drawer
-- Notes are `ItemUpdate` rows. Esc or the dim backdrop closes
-
-## Lenses (phase 6)
-
-One-tap chips on Ledger, Flow, and Orbit. Same tickets.
-
-- Built-in: **Mine**, **Overdue**, **Unassigned**, **This week**, a person, a status
-- Stack chips, then **Keep** to save your own name in SQLite (`FilterLens`)
-- Query stays on the board: `?q=mine&status=doing` or `?lens=`
-
-## Views (phase 5)
-
-Same tickets, four chrome:
-
-- **Pulse** — `/t/[studio]` — mine, overdue, recently assigned
-- **Ledger** — board default — sparse sections
-- **Flow** — `?view=flow` — status river (horizontal scroll on phones)
-- **Orbit** — `?view=orbit` — month from `dueOn` + unscheduled
-
-## Assign (phase 4)
-
-People sit on the **same `Item` row** via `ItemAssignee`. No second ticket for kanban.
-
-- Board: check teammates, or **Assign me** / **Unassign me**
-- New ticket: optional **Assign me**
-- Only studio members can be assigned
-- People page shows ticket counts
-- Viewer: initials only
-
-## Tests
+**Tests**
 
 ```bash
 npm test              # node:test, Prisma-free pack
-npm run test:coverage # c8, 100% lines / statements on that pack
+npm run test:coverage # c8 — 100% lines on configured pack
 npm run test:e2e      # Playwright on prisma/e2e.db
+npm run sonar         # coverage + sonar-scanner (local)
 ```
 
-## Stack
+---
 
-Turborepo workspaces (`apps/*`, `packages/*`). Next.js App Router at the repo root, Express Lens API, TypeScript, Tailwind, Prisma + SQLite, bcrypt, httpOnly `agily_session`, Zustand for the Lens panel. Fonts in `/public/fonts`.
+## Architecture
 
-Architecture: [PLAN.md](PLAN.md)
+```
+src/                 Next.js app (routes, components, server actions)
+apps/api/            Express Lens service (@agily/api)
+packages/lens/       Shared Lens helpers
+prisma/              schema, migrations, seed (demo-studio)
+public/kb/           Bundled markdown for Lens retrieval
+docs/phases/         One story per phase + HTML gallery
+PLAN.md              Architecture snapshot
+```
+
+Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)

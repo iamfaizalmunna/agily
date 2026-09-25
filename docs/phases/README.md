@@ -2,6 +2,8 @@
 
 Each story starts with **who it is for**, **what you see**, and **how it works**. Open a row on GitHub. Open the gallery for the colour map.
 
+**Install with AI:** paste the Agent block in [README.md — Run in Cursor](../../README.md#run-in-cursor-agent).
+
 All **10 foundation phases are on `main`.** New work uses **Revamp v2**:
 
 | | |

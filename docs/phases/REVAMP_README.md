@@ -1,5 +1,8 @@
 # Revamp phases (v2) — one at a time
 
+**Progress on `main`:** R1–R4 **complete** · R5 **next** · R6–R12 planned.  
+**Overview tables & badges:** [README.md](../../README.md#roadmap) · **Cursor install:** [Run in Cursor](../../README.md#run-in-cursor-agent).
+
 **Foundation (phases 1–10)** is done and stays on `main`. We do **not** rewrite auth, teams, or the ticket model from scratch.
 
 This track is **Revamp v2**: Jira / Monday / Notion / GitHub parity on top of the same SQLite + session app.
