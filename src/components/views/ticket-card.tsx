@@ -7,6 +7,7 @@ import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
 import { LabelBadges } from "@/components/labels/label-badges";
 import type { LabelChip } from "@/lib/labels/labels";
+import { formatSubtaskProgress, subtaskProgress } from "@/lib/subtasks/subtasks";
 import { formatIssueKey } from "@/lib/items/issue-key";
 import { PRIORITY_LABEL, type ItemPriority } from "@/lib/items/priority";
 import { formatDueOn } from "@/lib/items/validate";
@@ -23,6 +24,7 @@ export type TicketCardData = {
   position: number;
   projectSlug: string;
   labels?: LabelChip[];
+  subtasks?: { done: boolean }[];
 };
 
 export function TicketCard({
@@ -43,6 +45,7 @@ export function TicketCard({
   const tone = priorityTone(ticket.priority);
   const key = formatIssueKey(ticket.projectSlug, ticket.position);
   const priority = ticket.priority as ItemPriority;
+  const checklist = subtaskProgress(ticket.subtasks ?? []);
 
   return (
     <div
@@ -71,6 +74,11 @@ export function TicketCard({
             <span className={tone.label}>
               {PRIORITY_LABEL[priority] ?? ticket.priority}
             </span>
+            {checklist.total ? (
+              <span className="normal-case text-muted-foreground">
+                {formatSubtaskProgress(checklist.done, checklist.total)}
+              </span>
+            ) : null}
           </div>
           <p className="mt-1.5 text-sm font-medium leading-snug text-foreground">
             {ticket.title}

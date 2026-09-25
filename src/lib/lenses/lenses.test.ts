@@ -36,6 +36,7 @@ function item(
     dueOn: Date | null;
     assigneeIds: string[];
     labelIds: string[];
+    subtasks: { done: boolean }[];
   }>,
 ) {
   return {
@@ -45,6 +46,7 @@ function item(
     dueOn: null as Date | null,
     assigneeIds: [] as string[],
     labelIds: [] as string[],
+    subtasks: [] as { done: boolean }[],
     ...partial,
   };
 }
@@ -175,6 +177,14 @@ describe("phase 6 lenses", () => {
     const tagged = item({ labelIds: ["l1"] });
     assert.equal(itemMatchesLens(tagged, { labelIds: ["l1"] }, ctx), true);
     assert.equal(itemMatchesLens(tagged, { labelIds: ["l2"] }, ctx), false);
+    const withChecklist = item({
+      subtasks: [{ done: false }, { done: true }],
+    });
+    assert.equal(itemMatchesLens(withChecklist, { kind: "checklist" }, ctx), true);
+    assert.equal(
+      itemMatchesLens(item({ subtasks: [{ done: true }] }), { kind: "checklist" }, ctx),
+      false,
+    );
     assert.equal(
       itemMatchesLens(mine, { kind: "mine", status: "doing" }, ctx),
       true,

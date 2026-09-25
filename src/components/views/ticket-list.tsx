@@ -2,6 +2,8 @@ import Link from "next/link";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
 import { LabelBadges } from "@/components/labels/label-badges";
 import type { LabelChip } from "@/lib/labels/labels";
+import type { SubtaskRow } from "@/lib/subtasks/subtasks";
+import { TicketListChecklist } from "@/components/views/ticket-list-checklist";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { PRIORITY_LABEL, type ItemPriority } from "@/lib/items/priority";
@@ -24,6 +26,7 @@ export type TicketListItem = {
   groupName?: string;
   active?: boolean;
   labels?: LabelChip[];
+  subtasks?: SubtaskRow[];
 };
 
 export function TicketList({
@@ -71,6 +74,9 @@ export function TicketList({
                     ) : null}
                     {item.labels?.length ? (
                       <LabelBadges labels={item.labels} compact className="mt-1.5" />
+                    ) : null}
+                    {item.subtasks?.length ? (
+                      <TicketListChecklist subtasks={item.subtasks} />
                     ) : null}
                   </td>
                   <td className="px-4 py-3">

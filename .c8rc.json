@@ -24,6 +24,7 @@
     "src/lib/chrome/keyboard.ts",
     "src/lib/board/kanban.ts",
     "src/lib/labels/labels.ts",
+    "src/lib/subtasks/subtasks.ts",
     "packages/lens/src/loopback.ts",
     "packages/lens/src/kb.ts",
     "packages/lens/src/extract.ts",

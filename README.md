@@ -2,13 +2,13 @@
 
 [![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
 [![Foundation](https://img.shields.io/badge/foundation-10%2F10-c9844a)](docs/phases/README.md)
-[![Revamp](https://img.shields.io/badge/revamp-R2%20done-10b981)](docs/phases/REVAMP_README.md)
+[![Revamp](https://img.shields.io/badge/revamp-R3%20done-10b981)](docs/phases/REVAMP_README.md)
 [![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
 [![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** foundation (phases 1–10) on `main`, plus **Revamp v2** — R1 board and R2 labels shipped on `revamp/r2-labels` (merge when ready).  
+**Now:** foundation on `main`; **Revamp v2** R1–R3 on `main` / `revamp/r3-subtasks` (board, labels, checklists).  
 **Later:** R3–R12 one phase at a time; optional cloud deploy (out of scope for this repo).
 
 ## Main
@@ -97,9 +97,10 @@ Track: [docs/phases/REVAMP_README.md](docs/phases/REVAMP_README.md) · gap matri
 | Phase | Name | Status on `main` | Doc |
 |------:|------|:-----------------|:----|
 | R1 | Board excellence | merged | [revamp-01-board.md](docs/phases/revamp-01-board.md) |
-| R2 | Labels & taxonomy | merged on `revamp/r2-labels` | [revamp-02-labels.md](docs/phases/revamp-02-labels.md) |
-| R3 | Subtasks & checklists | **next** (say “next” to start) | [revamp-03-subtasks.md](docs/phases/revamp-03-subtasks.md) |
-| R4–R12 | … | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
+| R2 | Labels & taxonomy | merged | [revamp-02-labels.md](docs/phases/revamp-02-labels.md) |
+| R3 | Subtasks & checklists | merged on `revamp/r3-subtasks` | [revamp-03-subtasks.md](docs/phases/revamp-03-subtasks.md) |
+| R4 | Hierarchy & issue types | **next** | [revamp-04-hierarchy.md](docs/phases/revamp-04-hierarchy.md) |
+| R5–R12 | … | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
 
