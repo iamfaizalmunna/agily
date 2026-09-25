@@ -4,6 +4,8 @@ import type { ReactNode } from "react";
 import { useEffect } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 export function FocusStage({
   closeHref,
@@ -23,24 +25,27 @@ export function FocusStage({
   }, [closeHref, router]);
 
   return (
-    <div className="fixed inset-0 z-40 flex items-end justify-center md:items-start">
+    <div className="fixed inset-0 z-40 flex justify-end">
       <Link
         href={closeHref}
-        className="absolute inset-0 bg-ink/75"
+        className="absolute inset-0 bg-background/70 backdrop-blur-sm"
         aria-label="Close focus"
       />
       <div
         role="dialog"
         aria-modal="true"
-        className="relative z-10 flex max-h-[88dvh] w-full flex-col overflow-y-auto rounded-t-3xl border border-paper/15 bg-ink px-4 py-5 md:mt-[8vh] md:max-w-xl md:rounded-3xl"
+        className="relative z-10 flex h-full w-full max-w-2xl flex-col overflow-y-auto border-l border-border bg-card shadow-xl"
       >
-        <Link
-          href={closeHref}
-          className="mb-4 self-end text-sm text-copper"
-        >
-          Close
-        </Link>
-        {children}
+        <header className="sticky top-0 z-10 flex items-center justify-between border-b border-border bg-card/95 px-4 py-3 backdrop-blur">
+          <p className="text-sm font-medium">Ticket detail</p>
+          <Link
+            href={closeHref}
+            className={cn(buttonVariants({ variant: "outline", size: "sm" }))}
+          >
+            Close
+          </Link>
+        </header>
+        <div className="flex-1 px-4 py-4">{children}</div>
       </div>
     </div>
   );

@@ -1,3 +1,4 @@
+import { isItemPriority, type ItemPriority } from "@/lib/items/priority";
 import { isItemStatus, type ItemStatus } from "@/lib/items/status";
 import { dueDayKey, isOverdue, startOfUtcDay } from "@/lib/views/views";
 
@@ -15,10 +16,14 @@ export type LensSpec = {
   kind?: LensKind;
   status?: ItemStatus;
   personId?: string;
+  priority?: ItemPriority;
+  find?: string;
 };
 
 export type LensItem = {
+  title: string;
   status: string;
+  priority: string;
   dueOn: Date | null;
   assigneeIds: string[];
 };
@@ -35,6 +40,12 @@ export function sanitizeLensSpec(raw: Partial<LensSpec> | null | undefined): Len
   }
   if (raw && typeof raw.personId === "string" && raw.personId.trim()) {
     spec.personId = raw.personId.trim();
+  }
+  if (raw && typeof raw.priority === "string" && isItemPriority(raw.priority)) {
+    spec.priority = raw.priority;
+  }
+  if (raw && typeof raw.find === "string" && raw.find.trim()) {
+    spec.find = raw.find.trim().slice(0, 80);
   }
   return spec;
 }
@@ -53,11 +64,26 @@ export function stringifyLensSpec(spec: LensSpec) {
 }
 
 export function isEmptyLens(spec: LensSpec) {
-  return !spec.kind && !spec.status && !spec.personId;
+  const clean = sanitizeLensSpec(spec);
+  return (
+    !clean.kind &&
+    !clean.status &&
+    !clean.personId &&
+    !clean.priority &&
+    !clean.find
+  );
 }
 
 export function sameLensSpec(a: LensSpec, b: LensSpec) {
-  return a.kind === b.kind && a.status === b.status && a.personId === b.personId;
+  const left = sanitizeLensSpec(a);
+  const right = sanitizeLensSpec(b);
+  return (
+    left.kind === right.kind &&
+    left.status === right.status &&
+    left.personId === right.personId &&
+    left.priority === right.priority &&
+    left.find === right.find
+  );
 }
 
 export function parseLensName(raw: string) {
@@ -71,11 +97,15 @@ export function parseLensQuery(input: {
   q?: string | undefined;
   status?: string | undefined;
   who?: string | undefined;
+  priority?: string | undefined;
+  find?: string | undefined;
 }): LensSpec {
   return sanitizeLensSpec({
     kind: isLensKind(input.q) ? input.q : undefined,
     status: input.status as ItemStatus | undefined,
     personId: input.who,
+    priority: input.priority as ItemPriority | undefined,
+    find: input.find,
   });
 }
 
@@ -89,6 +119,8 @@ export function lensQueryRecord(
   if (clean.kind) out.q = clean.kind;
   if (clean.status) out.status = clean.status;
   if (clean.personId) out.who = clean.personId;
+  if (clean.priority) out.priority = clean.priority;
+  if (clean.find) out.find = clean.find;
   return out;
 }
 
@@ -110,6 +142,33 @@ export function toggleLensPerson(spec: LensSpec, personId: string): LensSpec {
   return sanitizeLensSpec({
     ...spec,
     personId: spec.personId === personId ? undefined : personId,
+  });
+}
+
+export function pickLensKind(spec: LensSpec, kind?: LensKind): LensSpec {
+  return sanitizeLensSpec({ ...spec, kind });
+}
+
+export function pickLensStatus(spec: LensSpec, status?: ItemStatus): LensSpec {
+  return sanitizeLensSpec({ ...spec, status });
+}
+
+export function pickLensPerson(spec: LensSpec, personId?: string): LensSpec {
+  return sanitizeLensSpec({ ...spec, personId });
+}
+
+export function pickLensPriority(
+  spec: LensSpec,
+  priority?: ItemPriority,
+): LensSpec {
+  return sanitizeLensSpec({ ...spec, priority });
+}
+
+export function withLensFind(spec: LensSpec, find: string): LensSpec {
+  const trimmed = find.trim();
+  return sanitizeLensSpec({
+    ...spec,
+    find: trimmed ? trimmed.slice(0, 80) : undefined,
   });
 }
 
@@ -135,6 +194,10 @@ export function isDueThisWeek(dueOn: Date | null | undefined, now: Date) {
   return key >= start && key <= end;
 }
 
+export function titleMatchesFind(title: string, find: string) {
+  return title.toLowerCase().includes(find.toLowerCase());
+}
+
 export function itemMatchesLens(
   item: LensItem,
   spec: LensSpec,
@@ -155,6 +218,8 @@ export function itemMatchesLens(
   }
   if (clean.status && item.status !== clean.status) return false;
   if (clean.personId && !item.assigneeIds.includes(clean.personId)) return false;
+  if (clean.priority && item.priority !== clean.priority) return false;
+  if (clean.find && !titleMatchesFind(item.title, clean.find)) return false;
   return true;
 }
 

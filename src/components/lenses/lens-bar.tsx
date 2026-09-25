@@ -23,7 +23,7 @@ type Person = { id: string; name: string };
 function chipClass(on: boolean) {
   return cn(
     "inline-flex min-h-11 items-center rounded-full px-4 text-sm",
-    on ? "bg-copper text-ink" : "border border-paper/15 text-paper/70",
+    on ? "bg-copper text-on-copper" : "border border-paper/15 text-paper/70",
   );
 }
 

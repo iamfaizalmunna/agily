@@ -44,7 +44,7 @@ export function SignUpForm() {
           autoComplete="email"
           required
           inputMode="email"
-          placeholder="you@studio.local"
+          placeholder="you@agily.com"
         />
       </div>
       <div>

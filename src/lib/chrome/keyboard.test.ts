@@ -13,24 +13,38 @@ describe("phase 10 keyboard", () => {
     assert.equal(isTypingTarget(null), false);
     assert.equal(isTypingTarget({} as EventTarget), false);
     assert.equal(
-      isTypingTarget({ tagName: "INPUT" } as EventTarget),
+      isTypingTarget({ tagName: "INPUT" } as unknown as EventTarget),
       true,
     );
     assert.equal(
-      isTypingTarget({ tagName: "DIV", isContentEditable: true } as EventTarget),
+      isTypingTarget({ tagName: "DIV", isContentEditable: true } as unknown as EventTarget),
       true,
     );
-    assert.equal(normalizeKey({ key: "P", metaKey: false, ctrlKey: false, altKey: false }), "p");
-    assert.equal(normalizeKey({ key: "?", metaKey: false, ctrlKey: false, altKey: false, shiftKey: true }), "?");
-    assert.equal(normalizeKey({ key: "/", metaKey: false, ctrlKey: false, altKey: false, shiftKey: true }), "?");
-    assert.equal(normalizeKey({ key: "p", metaKey: true, ctrlKey: false, altKey: false }), "");
+    assert.equal(
+      normalizeKey({ key: "P", metaKey: false, ctrlKey: false, altKey: false, shiftKey: false }),
+      "p",
+    );
+    assert.equal(
+      normalizeKey({ key: "?", metaKey: false, ctrlKey: false, altKey: false, shiftKey: true }),
+      "?",
+    );
+    assert.equal(
+      normalizeKey({ key: "/", metaKey: false, ctrlKey: false, altKey: false, shiftKey: true }),
+      "?",
+    );
+    assert.equal(
+      normalizeKey({ key: "p", metaKey: true, ctrlKey: false, altKey: false, shiftKey: false }),
+      "",
+    );
   });
 
   it("maps digits to board views", () => {
-    assert.equal(boardViewFromDigit("1"), "ledger");
-    assert.equal(boardViewFromDigit("2"), "flow");
-    assert.equal(boardViewFromDigit("3"), "orbit");
-    assert.equal(boardViewFromDigit("4"), null);
+    assert.equal(boardViewFromDigit("1"), "summary");
+    assert.equal(boardViewFromDigit("2"), "list");
+    assert.equal(boardViewFromDigit("3"), "flow");
+    assert.equal(boardViewFromDigit("4"), "orbit");
+    assert.equal(boardViewFromDigit("5"), "timeline");
+    assert.equal(boardViewFromDigit("6"), null);
   });
 
   it("builds two-key chords", () => {
@@ -57,9 +71,9 @@ describe("phase 10 keyboard", () => {
     );
     assert.equal(resolveKeyboardChord("Escape", {}), null);
     assert.deepEqual(
-      resolveKeyboardChord("2", { onBoard: true }),
+      resolveKeyboardChord("3", { onBoard: true }),
       { type: "switch-view", view: "flow" },
     );
-    assert.equal(resolveKeyboardChord("2", { onBoard: false }), null);
+    assert.equal(resolveKeyboardChord("3", { onBoard: false }), null);
   });
 });

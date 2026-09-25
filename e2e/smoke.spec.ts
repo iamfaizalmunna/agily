@@ -8,5 +8,7 @@ test.describe("studio smoke", () => {
     await expect(page.getByRole("heading", { name: "Northwind" })).toBeVisible();
     await openBoard(page);
     await expect(page.getByRole("navigation", { name: "Board views" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Summary" })).toBeVisible();
+    await expect(page.getByRole("link", { name: "Board" })).toBeVisible();
   });
 });

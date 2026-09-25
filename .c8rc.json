@@ -5,6 +5,8 @@
   "statements": 100,
   "include": [
     "src/lib/auth/identity.ts",
+    "src/lib/auth/demo-accounts.ts",
+    "src/lib/demo/mode.ts",
     "src/lib/auth/cookie-options.ts",
     "src/lib/rbac/roles.ts",
     "src/lib/teams/tokens.ts",
@@ -20,6 +22,7 @@
     "src/lib/notices/notices.ts",
     "src/lib/cn.ts",
     "src/lib/chrome/keyboard.ts",
+    "src/lib/board/kanban.ts",
     "packages/lens/src/loopback.ts",
     "packages/lens/src/kb.ts",
     "packages/lens/src/extract.ts",

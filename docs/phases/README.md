@@ -1,8 +1,13 @@
-# Phases 1–10
+# Phases 1–10 (foundation — complete)
 
 Each story starts with **who it is for**, **what you see**, and **how it works**. Open a row on GitHub. Open the gallery for the colour map.
 
-All **10 phases land on `main` through branches.** Phase 10 is `phase-10-ship-chrome` then merge.
+All **10 foundation phases are on `main`.** New work uses **Revamp v2**:
+
+| | |
+|--|--|
+| **Active roadmap** | **[REVAMP_README.md](REVAMP_README.md)** — phases R1–R12, one at a time |
+| Feature checklist | [FEATURE_GAP.md](../FEATURE_GAP.md) |
 
 | | Phase | In one sentence | Story |
 |:--:|:------|:----------------|:------|
@@ -26,4 +31,23 @@ All **10 phases land on `main` through branches.** Phase 10 is `phase-10-ship-ch
 
 Unit pack: `npm test` (100% on the Prisma-free files). Playwright: `npm run test:e2e`.
 
-Not in this product: cloud sign-in, SMTP, paid LLM APIs, Gantt, automations, file hosting, billing.
+Not in this product: cloud sign-in, SMTP, paid LLM APIs, cloud sync, billing. (Gantt and board DnD are in revamp R1/R7.)
+
+---
+
+## Revamp v2 quick map
+
+| Phase | Focus |
+|:-----:|-------|
+| R1 | Board: DnD order, swimlanes, WIP |
+| R2 | Labels |
+| R3 | Subtasks |
+| R4 | Epics & types |
+| R5 | Activity & threaded comments |
+| R6 | Burndown & charts |
+| R7 | Timeline dependencies |
+| R8 | ⌘K search |
+| R9 | Custom statuses & fields |
+| R10 | CSV & templates |
+| R11 | Shell polish |
+| R12 | QA & ship |

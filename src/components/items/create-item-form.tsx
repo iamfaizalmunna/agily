@@ -3,7 +3,13 @@
 import { useActionState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { Select } from "@/components/ui/select";
 import { createItemAction, type BoardFormState } from "@/lib/items/actions";
+import {
+  DEFAULT_ITEM_PRIORITY,
+  ITEM_PRIORITIES,
+  PRIORITY_LABEL,
+} from "@/lib/items/priority";
 
 const initial: BoardFormState = {};
 
@@ -24,17 +30,30 @@ export function CreateItemForm({
       <input type="hidden" name="projectSlug" value={projectSlug} />
       <input type="hidden" name="groupId" value={groupId} />
       <Input name="title" required placeholder="New ticket" />
-      <Input name="dueOn" type="date" />
-      <label className="flex min-h-11 items-center gap-3 text-sm text-paper/70">
-        <input type="checkbox" name="assignMe" className="h-4 w-4 accent-copper" />
+      <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <Select
+          name="priority"
+          defaultValue={DEFAULT_ITEM_PRIORITY}
+          className="h-10 px-3 text-sm"
+        >
+          {ITEM_PRIORITIES.map((priority) => (
+            <option key={priority} value={priority}>
+              {PRIORITY_LABEL[priority]}
+            </option>
+          ))}
+        </Select>
+        <Input name="dueOn" type="date" />
+      </div>
+      <label className="flex min-h-9 items-center gap-3 text-sm text-muted-foreground">
+        <input type="checkbox" name="assignMe" className="h-4 w-4 accent-primary" />
         Assign me
       </label>
       {state.error ? (
-        <p className="text-sm text-copper" role="alert">
+        <p className="text-sm text-destructive" role="alert">
           {state.error}
         </p>
       ) : null}
-      <Button className="min-h-12 w-full sm:w-auto" disabled={pending} variant="ghost">
+      <Button type="submit" className="w-full sm:w-auto" disabled={pending} variant="outline">
         {pending ? "Adding…" : "Add ticket"}
       </Button>
     </form>

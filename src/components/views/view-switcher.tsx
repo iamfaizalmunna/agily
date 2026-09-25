@@ -1,46 +1,13 @@
-import Link from "next/link";
-import { cn } from "@/lib/cn";
-import {
-  BOARD_VIEWS,
-  boardViewHref,
-  type BoardView,
-} from "@/lib/views/views";
+import { ProjectTabs } from "@/components/views/project-tabs";
+import type { BoardView } from "@/lib/views/views";
 
-const LABEL: Record<BoardView, string> = {
-  ledger: "Ledger",
-  flow: "Flow",
-  orbit: "Orbit",
-};
-
-export function ViewSwitcher({
-  slug,
-  projectSlug,
-  view,
-  yearMonth,
-  extra,
-}: {
+/** @deprecated Use ProjectTabs */
+export function ViewSwitcher(props: {
   slug: string;
   projectSlug: string;
   view: BoardView;
   yearMonth?: string;
   extra?: Record<string, string>;
 }) {
-  return (
-    <nav className="flex flex-wrap gap-2" aria-label="Board views">
-      {BOARD_VIEWS.map((name) => (
-        <Link
-          key={name}
-          href={boardViewHref(slug, projectSlug, name, yearMonth, extra)}
-          className={cn(
-            "inline-flex min-h-11 items-center rounded-full px-4 text-sm",
-            view === name
-              ? "bg-copper text-ink"
-              : "border border-paper/15 text-paper/70",
-          )}
-        >
-          {LABEL[name]}
-        </Link>
-      ))}
-    </nav>
-  );
+  return <ProjectTabs {...props} />;
 }

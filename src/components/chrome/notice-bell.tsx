@@ -27,7 +27,7 @@ export function NoticeBell({
     >
       Bell
       {badge ? (
-        <span className="absolute -top-0.5 right-1 min-w-4 rounded-full bg-copper px-1 text-center text-[0.6rem] leading-4 text-ink">
+        <span className="absolute -top-0.5 right-1 min-w-4 rounded-full bg-copper px-1 text-center text-[0.6rem] leading-4 text-on-copper">
           {badge}
         </span>
       ) : null}
