@@ -1,5 +1,7 @@
 import { notFound } from "next/navigation";
+import { LabelsSettings } from "@/components/labels/labels-settings";
 import { SettingsForm } from "@/components/teams/settings-form";
+import { listTeamLabels } from "@/lib/labels/queries";
 import { requireUser } from "@/lib/auth/session";
 import {
   canEditSettings,
@@ -20,6 +22,7 @@ export default async function SettingsPage({
 
   const settings = parseTeamSettings(ctx.team.settings);
   const editable = canEditSettings(ctx.role);
+  const labels = await listTeamLabels(ctx.team.id);
 
   return (
     <section className="mx-auto flex max-w-2xl flex-col gap-8">
@@ -34,7 +37,10 @@ export default async function SettingsPage({
       </div>
 
       {editable ? (
-        <SettingsForm slug={slug} settings={settings} />
+        <>
+          <SettingsForm slug={slug} settings={settings} />
+          <LabelsSettings slug={slug} labels={labels} />
+        </>
       ) : (
         <div className="rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
           <p className="font-medium text-foreground">Read only</p>

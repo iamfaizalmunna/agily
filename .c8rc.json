@@ -23,6 +23,7 @@
     "src/lib/cn.ts",
     "src/lib/chrome/keyboard.ts",
     "src/lib/board/kanban.ts",
+    "src/lib/labels/labels.ts",
     "packages/lens/src/loopback.ts",
     "packages/lens/src/kb.ts",
     "packages/lens/src/extract.ts",

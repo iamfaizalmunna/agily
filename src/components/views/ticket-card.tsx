@@ -5,6 +5,8 @@ import { GripVertical } from "lucide-react";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
+import { LabelBadges } from "@/components/labels/label-badges";
+import type { LabelChip } from "@/lib/labels/labels";
 import { formatIssueKey } from "@/lib/items/issue-key";
 import { PRIORITY_LABEL, type ItemPriority } from "@/lib/items/priority";
 import { formatDueOn } from "@/lib/items/validate";
@@ -20,6 +22,7 @@ export type TicketCardData = {
   people: { id: string; name: string }[];
   position: number;
   projectSlug: string;
+  labels?: LabelChip[];
 };
 
 export function TicketCard({
@@ -72,6 +75,9 @@ export function TicketCard({
           <p className="mt-1.5 text-sm font-medium leading-snug text-foreground">
             {ticket.title}
           </p>
+          {ticket.labels?.length ? (
+            <LabelBadges labels={ticket.labels} compact={compact} className="mt-2" />
+          ) : null}
           {ticket.dueOn ? (
             <p className="mt-1 text-xs text-muted-foreground">
               Due {formatDueOn(ticket.dueOn)}

@@ -1,18 +1,20 @@
 # Agily
 
 [![Unit pack](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg)](https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml)
-[![Phase](https://img.shields.io/badge/phase-10%2F10-c9844a)](docs/phases/README.md)
+[![Foundation](https://img.shields.io/badge/foundation-10%2F10-c9844a)](docs/phases/README.md)
+[![Revamp](https://img.shields.io/badge/revamp-R2%20done-10b981)](docs/phases/REVAMP_README.md)
 [![Coverage](https://img.shields.io/badge/unit%20pack-100%25-10b981)](docs/phases/README.md)
 [![AI](https://img.shields.io/badge/AI-Ollama%20localhost%20only-12100e)](docs/phases/README.md)
 
 Local agile planner: Jira capability, Monday boards, Notion-like writing — **our SQLite only**. No cloud APIs, no OAuth, no paid AI.
 
-**Now:** full local studio — auth through Lens, keyboard chrome, Playwright smoke.  
-**Later:** optional cloud deploy (out of scope for this repo).
+**Now:** foundation (phases 1–10) on `main`, plus **Revamp v2** — R1 board and R2 labels shipped on `revamp/r2-labels` (merge when ready).  
+**Later:** R3–R12 one phase at a time; optional cloud deploy (out of scope for this repo).
 
 ## Main
 
-All **10 phases are merged on `main`** through feature branches (Phase 10: `phase-10-ship-chrome` → PR → merge).
+**Foundation:** all **10 phases** are merged on `main` (auth → ship chrome).  
+**Revamp v2:** shipped on `revamp/r{N}-*` branches — see [docs/phases/REVAMP_README.md](docs/phases/REVAMP_README.md). We do **one revamp phase at a time**; say **next** when you want the following phase started.
 
 Repo: [github.com/iamfaizalmunna/agily](https://github.com/iamfaizalmunna/agily)
 
@@ -87,6 +89,17 @@ Production installs without the flag hide demo logins. The same hard rules as Ze
 | 8 In-app bell | merged via PR | [docs/phases/08-bell.md](docs/phases/08-bell.md) |
 | 9 Lens + turbo | merged via PR | [docs/phases/09-lens.md](docs/phases/09-lens.md) |
 | 10 Ship chrome | merged via PR | [docs/phases/10-ship.md](docs/phases/10-ship.md) |
+
+### Revamp v2 (Jira / Monday parity on the same SQLite app)
+
+Track: [docs/phases/REVAMP_README.md](docs/phases/REVAMP_README.md) · gap matrix: [docs/FEATURE_GAP.md](docs/FEATURE_GAP.md)
+
+| Phase | Name | Status on `main` | Doc |
+|------:|------|:-----------------|:----|
+| R1 | Board excellence | merged | [revamp-01-board.md](docs/phases/revamp-01-board.md) |
+| R2 | Labels & taxonomy | merged on `revamp/r2-labels` | [revamp-02-labels.md](docs/phases/revamp-02-labels.md) |
+| R3 | Subtasks & checklists | **next** (say “next” to start) | [revamp-03-subtasks.md](docs/phases/revamp-03-subtasks.md) |
+| R4–R12 | … | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
 
 Colour map: [docs/phases/index.html](docs/phases/index.html) · [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases)
 

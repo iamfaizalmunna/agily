@@ -41,6 +41,7 @@ export async function getItemFocus(
     },
     include: {
       assignees: { include: { user: true } },
+      labels: { include: { label: true } },
       updates: {
         orderBy: { createdAt: "asc" },
         include: { user: true },
@@ -60,6 +61,7 @@ export async function getProjectBoard(teamId: string, projectSlug: string) {
             orderBy: { position: "asc" },
             include: {
               assignees: { include: { user: true } },
+              labels: { include: { label: true } },
               _count: { select: { updates: true } },
             },
           },

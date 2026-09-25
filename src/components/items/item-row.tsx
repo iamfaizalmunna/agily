@@ -19,6 +19,9 @@ import {
   type ItemPriority,
 } from "@/lib/items/priority";
 import { ITEM_STATUSES, STATUS_LABEL, type ItemStatus } from "@/lib/items/status";
+import { LabelBadges } from "@/components/labels/label-badges";
+import { LabelPicker } from "@/components/labels/label-picker";
+import type { LabelChip } from "@/lib/labels/labels";
 import { formatDueOn } from "@/lib/items/validate";
 
 const initial: BoardFormState = {};
@@ -36,11 +39,15 @@ export function ItemRow({
   openHref,
   next,
   noteCount = 0,
+  teamLabels = [],
+  itemLabels = [],
 }: {
   slug: string;
   projectSlug: string;
   currentUserId: string;
   people: Person[];
+  teamLabels?: LabelChip[];
+  itemLabels?: LabelChip[];
   item: {
     id: string;
     title: string;
@@ -74,6 +81,7 @@ export function ItemRow({
             {` · ${noteLabel(noteCount)}`}
           </p>
           <AssigneeMarks people={assignedPeople} />
+          <LabelBadges labels={itemLabels} className="mt-2" />
         </Link>
       </li>
     );
@@ -92,6 +100,7 @@ export function ItemRow({
         <div className="mt-2">
           <AssigneeMarks people={assignedPeople} />
         </div>
+        <LabelBadges labels={itemLabels} className="mt-2" />
       </li>
     );
   }
@@ -148,6 +157,10 @@ export function ItemRow({
             ))}
           </div>
         </fieldset>
+        <LabelPicker
+          labels={teamLabels}
+          selectedIds={itemLabels.map((label) => label.id)}
+        />
         <textarea
           name="body"
           defaultValue={item.body}

@@ -9,6 +9,11 @@ import { Button } from "@/components/ui/button";
 import { BoardSettingsBar } from "@/components/views/board-settings-bar";
 import { FlowRiver } from "@/components/views/flow-river";
 import { parseBoardDisplayPrefs } from "@/lib/board/kanban";
+import {
+  labelIdsFromRows,
+  mapLabelChips,
+} from "@/lib/labels/labels";
+import { listTeamLabels } from "@/lib/labels/queries";
 import { OrbitMonth } from "@/components/views/orbit-month";
 import { ProjectTabs } from "@/components/views/project-tabs";
 import { SummaryDashboard } from "@/components/views/summary-dashboard";
@@ -54,6 +59,7 @@ export default async function ProjectBoardPage({
     who?: string;
     priority?: string;
     find?: string;
+    labels?: string;
     lens?: string;
     focus?: string;
     lane?: string;
@@ -119,6 +125,8 @@ export default async function ProjectBoardPage({
   }));
   const nameByUserId = new Map(people.map((person) => [person.id, person.name]));
   const boardPrefs = parseBoardDisplayPrefs(query);
+  const teamLabels = await listTeamLabels(ctx.team.id);
+  const focusedLabels = focused ? mapLabelChips(focused.labels) : [];
 
   const groupNameByItem = new Map<string, string>();
   for (const group of project.groups) {
@@ -133,6 +141,7 @@ export default async function ProjectBoardPage({
     priority: string;
     dueOn: Date | null;
     assignees: { userId: string }[];
+    labels: { labelId: string }[];
     createdAt?: Date;
     updatedAt?: Date;
   }) =>
@@ -143,6 +152,7 @@ export default async function ProjectBoardPage({
         priority: item.priority,
         dueOn: item.dueOn,
         assigneeIds: item.assignees.map((row) => row.userId),
+        labelIds: labelIdsFromRows(item.labels),
       },
       spec,
       matchCtx,
@@ -161,6 +171,8 @@ export default async function ProjectBoardPage({
       ),
       people: item.assignees.map((row) => row.user),
       groupName: groupNameByItem.get(item.id),
+      labels: mapLabelChips(item.labels),
+      labelIds: labelIdsFromRows(item.labels),
     }));
 
   const summaryRows = items.map((item) => ({
@@ -216,6 +228,7 @@ export default async function ProjectBoardPage({
           savedId={savedId}
           saved={saved}
           people={people}
+          teamLabels={teamLabels}
         />
       ) : null}
 
@@ -250,6 +263,7 @@ export default async function ProjectBoardPage({
               projectSlug,
               groupName: item.groupName,
               active: focusId === item.id,
+              labels: item.labels,
             }))}
             selectedId={focusId ?? undefined}
           />
@@ -262,6 +276,8 @@ export default async function ProjectBoardPage({
                     projectSlug={projectSlug}
                     currentUserId={user.id}
                     people={people}
+                    teamLabels={teamLabels}
+                    itemLabels={focusedLabels}
                     item={focused}
                     readOnly={!writable}
                     next={focusHref}
@@ -306,6 +322,7 @@ export default async function ProjectBoardPage({
               people: item.people,
               position: item.position,
               projectSlug,
+              labels: item.labels,
             }))}
             writable={writable}
             prefs={boardPrefs}
@@ -353,6 +370,7 @@ export default async function ProjectBoardPage({
                 slug={slug}
                 projectSlug={projectSlug}
                 groupId={group.id}
+                teamLabels={teamLabels}
               />
             </section>
           ))}
@@ -368,6 +386,8 @@ export default async function ProjectBoardPage({
               projectSlug={projectSlug}
               currentUserId={user.id}
               people={people}
+              teamLabels={teamLabels}
+              itemLabels={focusedLabels}
               item={focused}
               readOnly={!writable}
               next={focusHref}
@@ -393,6 +413,8 @@ export default async function ProjectBoardPage({
                 projectSlug={projectSlug}
                 currentUserId={user.id}
                 people={people}
+                teamLabels={teamLabels}
+                itemLabels={focusedLabels}
                 item={focused}
                 readOnly={!writable}
                 next={focusHref}
