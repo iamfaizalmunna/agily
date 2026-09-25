@@ -11,6 +11,8 @@ This track is **Revamp v2**: Jira / Monday / Notion / GitHub parity on top of th
 3. Ship: code + tests + update the phase file **Status** to `complete`.
 4. Merge to `main`, then open the next phase only.
 
+GitHub loop (push branch → PR → merge): [REVAMP_GIT_LOOP.md](REVAMP_GIT_LOOP.md)
+
 **Rule:** Do not start R3 while R2 is in progress.
 
 ## Progress
