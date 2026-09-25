@@ -8,6 +8,11 @@ import { createItemAction, type BoardFormState } from "@/lib/items/actions";
 import { LabelPicker } from "@/components/labels/label-picker";
 import type { LabelChip } from "@/lib/labels/labels";
 import {
+  DEFAULT_ISSUE_TYPE,
+  ISSUE_TYPES,
+  ISSUE_TYPE_LABEL,
+} from "@/lib/items/issue-type";
+import {
   DEFAULT_ITEM_PRIORITY,
   ITEM_PRIORITIES,
   PRIORITY_LABEL,
@@ -20,11 +25,13 @@ export function CreateItemForm({
   projectSlug,
   groupId,
   teamLabels = [],
+  epics = [],
 }: {
   slug: string;
   projectSlug: string;
   groupId: string;
   teamLabels?: LabelChip[];
+  epics?: { id: string; title: string }[];
 }) {
   const [state, action, pending] = useActionState(createItemAction, initial);
 
@@ -35,6 +42,27 @@ export function CreateItemForm({
       <input type="hidden" name="groupId" value={groupId} />
       <Input name="title" required placeholder="New ticket" />
       <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+        <Select
+          name="type"
+          defaultValue={DEFAULT_ISSUE_TYPE}
+          className="h-10 px-3 text-sm"
+        >
+          {ISSUE_TYPES.map((type) => (
+            <option key={type} value={type}>
+              {ISSUE_TYPE_LABEL[type]}
+            </option>
+          ))}
+        </Select>
+        {epics.length ? (
+          <Select name="parentId" defaultValue="" className="h-10 px-3 text-sm">
+            <option value="">No epic</option>
+            {epics.map((epic) => (
+              <option key={epic.id} value={epic.id}>
+                {epic.title}
+              </option>
+            ))}
+          </Select>
+        ) : null}
         <Select
           name="priority"
           defaultValue={DEFAULT_ITEM_PRIORITY}

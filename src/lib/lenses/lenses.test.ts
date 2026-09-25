@@ -11,6 +11,7 @@ import {
   parseLensName,
   parseLensQuery,
   parseLensSpec,
+  pickEpicFilter,
   pickLensKind,
   pickLensPerson,
   pickLensPriority,
@@ -37,6 +38,7 @@ function item(
     assigneeIds: string[];
     labelIds: string[];
     subtasks: { done: boolean }[];
+    parentId: string | null;
   }>,
 ) {
   return {
@@ -47,6 +49,7 @@ function item(
     assigneeIds: [] as string[],
     labelIds: [] as string[],
     subtasks: [] as { done: boolean }[],
+    parentId: null as string | null,
     ...partial,
   };
 }
@@ -102,6 +105,7 @@ describe("phase 6 lenses", () => {
       },
     );
     assert.deepEqual(parseLensQuery({ q: "nope", status: "nope" }), {});
+    assert.deepEqual(parseLensQuery({ epic: "e1" }), { parentId: "e1" });
     assert.deepEqual(lensQueryRecord({ kind: "mine", status: "doing" }), {
       q: "mine",
       status: "doing",
@@ -134,6 +138,8 @@ describe("phase 6 lenses", () => {
     assert.deepEqual(withLensFind({ find: "old" }, " "), {});
     assert.deepEqual(toggleLensLabel({}, "l1"), { labelIds: ["l1"] });
     assert.deepEqual(toggleLensLabel({ labelIds: ["l1"] }, "l1"), {});
+    assert.deepEqual(pickEpicFilter({}, "e1"), { parentId: "e1" });
+    assert.deepEqual(pickEpicFilter({ parentId: "e1" }), {});
   });
 
   it("marks this week from Sunday UTC", () => {
@@ -185,6 +191,9 @@ describe("phase 6 lenses", () => {
       itemMatchesLens(item({ subtasks: [{ done: true }] }), { kind: "checklist" }, ctx),
       false,
     );
+    const child = item({ parentId: "e1" });
+    assert.equal(itemMatchesLens(child, { parentId: "e1" }, ctx), true);
+    assert.equal(itemMatchesLens(child, { parentId: "e2" }, ctx), false);
     assert.equal(
       itemMatchesLens(mine, { kind: "mine", status: "doing" }, ctx),
       true,

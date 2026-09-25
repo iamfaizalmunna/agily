@@ -15,6 +15,8 @@ import {
   canWriteBoard,
 } from "@/lib/items/permissions";
 import { createProjectForTeam } from "@/lib/items/create";
+import { validateParentLink, wouldCreateCycle } from "@/lib/items/hierarchy";
+import { parseIssueType, type IssueType } from "@/lib/items/issue-type";
 import { parseItemPriority } from "@/lib/items/priority";
 import { isItemStatus } from "@/lib/items/status";
 import { parseDueOn, parseItemTitle } from "@/lib/items/validate";
@@ -26,6 +28,50 @@ import {
 import { collectLabelIds } from "@/lib/labels/labels";
 import { writeNotices } from "@/lib/notices/write";
 import { safeStudioNext } from "@/lib/views/views";
+
+async function resolveParentId(
+  teamId: string,
+  projectId: string,
+  itemId: string | null,
+  itemType: IssueType,
+  rawParentId: string,
+) {
+  const trimmed = rawParentId.trim();
+  if (!trimmed) return { parentId: null as string | null };
+  const parent = await prisma.item.findFirst({
+    where: { id: trimmed, projectId, project: { teamId } },
+    select: {
+      id: true,
+      parentId: true,
+      type: true,
+      status: true,
+      title: true,
+    },
+  });
+  if (!parent) return { error: "Epic not found" as const };
+  const gate = validateParentLink(
+    { id: itemId ?? "new", type: itemType },
+    parent,
+  );
+  if ("error" in gate) return { error: gate.error };
+  if (itemId) {
+    const rows = await prisma.item.findMany({
+      where: { projectId },
+      select: {
+        id: true,
+        parentId: true,
+        type: true,
+        status: true,
+        title: true,
+      },
+    });
+    const map = new Map(rows.map((row) => [row.id, row]));
+    if (wouldCreateCycle(itemId, trimmed, map)) {
+      return { error: "That parent would create a cycle" as const };
+    }
+  }
+  return { parentId: trimmed };
+}
 
 async function replaceItemLabels(
   itemId: string,
@@ -150,12 +196,23 @@ export async function createItemAction(
     _max: { position: true },
   });
   const assignMe = formData.get("assignMe") === "on";
+  const type = parseIssueType(String(formData.get("type") ?? ""));
+  const parentResolved = await resolveParentId(
+    ctx.team.id,
+    group.projectId,
+    null,
+    type,
+    String(formData.get("parentId") ?? ""),
+  );
+  if ("error" in parentResolved) return { error: parentResolved.error };
   const item = await prisma.item.create({
     data: {
       projectId: group.projectId,
       groupId: group.id,
+      parentId: parentResolved.parentId,
       title: titleParsed.title,
       body: String(formData.get("body") ?? ""),
+      type,
       status: "backlog",
       priority: parseItemPriority(String(formData.get("priority") ?? "")),
       dueOn: due.dueOn,
@@ -197,6 +254,15 @@ export async function updateItemAction(
   const nextIds = filterAssignableIds(collectAssigneeIds(formData), teamIds);
   const current = item.assignees.map((row) => row.userId);
   const added = nextIds.filter((id) => !current.includes(id));
+  const type = parseIssueType(String(formData.get("type") ?? item.type));
+  const parentResolved = await resolveParentId(
+    ctx.team.id,
+    item.projectId,
+    item.id,
+    type,
+    String(formData.get("parentId") ?? ""),
+  );
+  if ("error" in parentResolved) return { error: parentResolved.error };
   await prisma.$transaction([
     prisma.item.update({
       where: { id: item.id },
@@ -204,6 +270,8 @@ export async function updateItemAction(
         title: titleParsed.title,
         status,
         priority,
+        type,
+        parentId: parentResolved.parentId,
         dueOn: due.dueOn,
         body: String(formData.get("body") ?? item.body),
       },

@@ -60,6 +60,7 @@ export default async function ProjectBoardPage({
     priority?: string;
     find?: string;
     labels?: string;
+    epic?: string;
     lens?: string;
     focus?: string;
     lane?: string;
@@ -137,6 +138,14 @@ export default async function ProjectBoardPage({
     : [];
 
   const groupNameByItem = new Map<string, string>();
+  const allBoardItems = flattenBoardItems(project.groups);
+  const projectEpics = allBoardItems
+    .filter((item) => item.type === "epic")
+    .map((item) => ({
+      id: item.id,
+      title: item.title,
+      position: item.position,
+    }));
   for (const group of project.groups) {
     for (const item of group.items) {
       groupNameByItem.set(item.id, group.name);
@@ -151,6 +160,7 @@ export default async function ProjectBoardPage({
     assignees: { userId: string }[];
     labels: { labelId: string }[];
     subtasks: { done: boolean }[];
+    parentId: string | null;
     createdAt?: Date;
     updatedAt?: Date;
   }) =>
@@ -163,6 +173,7 @@ export default async function ProjectBoardPage({
         assigneeIds: item.assignees.map((row) => row.userId),
         labelIds: labelIdsFromRows(item.labels),
         subtasks: item.subtasks,
+        parentId: item.parentId,
       },
       spec,
       matchCtx,
@@ -195,6 +206,8 @@ export default async function ProjectBoardPage({
     id: item.id,
     title: item.title,
     status: item.status,
+    type: item.type,
+    parentId: item.parentId,
     priority: item.priority,
     dueOn: item.dueOn,
     updatedAt: item.updatedAt,
@@ -245,6 +258,7 @@ export default async function ProjectBoardPage({
           saved={saved}
           people={people}
           teamLabels={teamLabels}
+          epics={projectEpics}
         />
       ) : null}
 
@@ -296,6 +310,8 @@ export default async function ProjectBoardPage({
                     teamLabels={teamLabels}
                     itemLabels={focusedLabels}
                     subtasks={focusedSubtasks}
+                    epics={projectEpics}
+                    parent={focused.parent}
                     item={focused}
                     readOnly={!writable}
                     next={focusHref}
@@ -342,6 +358,7 @@ export default async function ProjectBoardPage({
               projectSlug,
               labels: item.labels,
               subtasks: item.subtasks.map((row) => ({ done: row.done })),
+              type: item.type,
             }))}
             writable={writable}
             prefs={boardPrefs}
@@ -390,6 +407,7 @@ export default async function ProjectBoardPage({
                 projectSlug={projectSlug}
                 groupId={group.id}
                 teamLabels={teamLabels}
+                epics={projectEpics}
               />
             </section>
           ))}
@@ -408,6 +426,8 @@ export default async function ProjectBoardPage({
               teamLabels={teamLabels}
               itemLabels={focusedLabels}
               subtasks={focusedSubtasks}
+              epics={projectEpics}
+              parent={focused.parent}
               item={focused}
               readOnly={!writable}
               next={focusHref}
@@ -436,6 +456,8 @@ export default async function ProjectBoardPage({
                 teamLabels={teamLabels}
                 itemLabels={focusedLabels}
                 subtasks={focusedSubtasks}
+                epics={projectEpics}
+                parent={focused.parent}
                 item={focused}
                 readOnly={!writable}
                 next={focusHref}

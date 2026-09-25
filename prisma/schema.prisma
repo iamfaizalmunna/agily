@@ -92,8 +92,10 @@ model Item {
   id        String    @id @default(cuid())
   projectId String
   groupId   String
+  parentId  String?
   title     String
   body      String    @default("")
+  type      String    @default("task")
   priority  String    @default("minor")
   status    String
   dueOn     DateTime?
@@ -102,10 +104,14 @@ model Item {
   updatedAt DateTime  @updatedAt
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
   group      Group          @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  parent     Item?          @relation("ItemTree", fields: [parentId], references: [id], onDelete: SetNull)
+  children   Item[]         @relation("ItemTree")
   assignees  ItemAssignee[]
   updates    ItemUpdate[]
   labels     ItemLabel[]
   subtasks   Subtask[]
+
+  @@index([parentId])
 }
 
 model Subtask {

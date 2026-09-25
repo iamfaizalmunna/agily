@@ -24,6 +24,13 @@ import { LabelPicker } from "@/components/labels/label-picker";
 import type { LabelChip } from "@/lib/labels/labels";
 import { SubtaskPanel } from "@/components/subtasks/subtask-panel";
 import type { SubtaskRow } from "@/lib/subtasks/subtasks";
+import { HierarchyCrumb } from "@/components/items/hierarchy-crumb";
+import {
+  ISSUE_TYPES,
+  ISSUE_TYPE_LABEL,
+  parseIssueType,
+  type IssueType,
+} from "@/lib/items/issue-type";
 import { formatDueOn } from "@/lib/items/validate";
 
 const initial: BoardFormState = {};
@@ -44,6 +51,8 @@ export function ItemRow({
   teamLabels = [],
   itemLabels = [],
   subtasks = [],
+  epics = [],
+  parent = null,
 }: {
   slug: string;
   projectSlug: string;
@@ -52,12 +61,21 @@ export function ItemRow({
   teamLabels?: LabelChip[];
   itemLabels?: LabelChip[];
   subtasks?: SubtaskRow[];
+  epics?: { id: string; title: string; position: number }[];
+  parent?: {
+    id: string;
+    title: string;
+    type: string;
+    position: number;
+  } | null;
   item: {
     id: string;
     title: string;
     body: string;
     status: string;
+    type: string;
     priority: string;
+    parentId?: string | null;
     dueOn: Date | null;
     assignees: { user: Person }[];
   };
@@ -71,6 +89,7 @@ export function ItemRow({
   const assignedIds = item.assignees.map((row) => row.user.id);
   const assignedPeople = item.assignees.map((row) => row.user);
   const priority = item.priority as ItemPriority;
+  const issueType = parseIssueType(item.type);
 
   if (compact && openHref) {
     return (
@@ -111,12 +130,49 @@ export function ItemRow({
 
   return (
     <li id={`item-${item.id}`} className="rounded-lg border border-border bg-card p-4">
+      {parent ? (
+        <HierarchyCrumb
+          slug={slug}
+          projectSlug={projectSlug}
+          parent={parent}
+          childType={item.type}
+        />
+      ) : null}
       <form action={action} className="flex flex-col gap-3">
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="projectSlug" value={projectSlug} />
         <input type="hidden" name="itemId" value={item.id} />
         {next ? <input type="hidden" name="next" value={next} /> : null}
         <Input name="title" defaultValue={item.title} required />
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2">
+          <Select
+            name="type"
+            defaultValue={item.type}
+            className="h-10 px-3 text-sm"
+          >
+            {ISSUE_TYPES.map((type) => (
+              <option key={type} value={type}>
+                {ISSUE_TYPE_LABEL[type]}
+              </option>
+            ))}
+          </Select>
+          {issueType !== "epic" && epics.length ? (
+            <Select
+              name="parentId"
+              defaultValue={item.parentId ?? ""}
+              className="h-10 px-3 text-sm"
+            >
+              <option value="">No epic</option>
+              {epics.map((epic) => (
+                <option key={epic.id} value={epic.id}>
+                  {epic.title}
+                </option>
+              ))}
+            </Select>
+          ) : (
+            <input type="hidden" name="parentId" value="" />
+          )}
+        </div>
         <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
           <Select
             name="priority"

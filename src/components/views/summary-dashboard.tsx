@@ -3,6 +3,8 @@ import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
 import { STATUS_LABEL, type ItemStatus } from "@/lib/items/status";
 import { priorityTone } from "@/lib/ui/priority-tone";
+import type { HierarchyNode } from "@/lib/items/hierarchy";
+import { SummaryEpics } from "@/components/views/summary-epics";
 import {
   countCompletedSince,
   priorityBreakdown,
@@ -36,6 +38,13 @@ export function SummaryDashboard({
   const completed = countCompletedSince(items, weekStart(now));
   const recent = recentUpdates(items);
   const stats = summaryStats(items, now);
+  const hierarchyItems: HierarchyNode[] = items.map((item) => ({
+    id: item.id,
+    title: item.title,
+    status: item.status,
+    type: item.type ?? "task",
+    parentId: item.parentId ?? null,
+  }));
 
   return (
     <div className="flex flex-col gap-4">
@@ -45,6 +54,8 @@ export function SummaryDashboard({
         <StatCard label="Overdue" value={stats.overdue} tone="destructive" />
         <StatCard label="Done this week" value={completed} tone="success" />
       </div>
+
+      <SummaryEpics items={hierarchyItems} focusHref={focusHref} />
 
       <div className="grid gap-4 lg:grid-cols-2">
         <Card className="p-4">
