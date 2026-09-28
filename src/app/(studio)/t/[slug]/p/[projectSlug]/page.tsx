@@ -8,12 +8,14 @@ import { ItemRow } from "@/components/items/item-row";
 import { FilterBar } from "@/components/lenses/filter-bar";
 import { Button } from "@/components/ui/button";
 import { BoardSettingsBar } from "@/components/views/board-settings-bar";
+import { BoardExportLink } from "@/components/views/board-export-link";
 import { FlowRiver } from "@/components/views/flow-river";
 import { parseBoardDisplayPrefs } from "@/lib/board/kanban";
 import {
   parseCustomFields,
   parseFieldSchema,
 } from "@/lib/custom-fields/fields";
+import { ticketTemplatesFromTeamSettings } from "@/lib/data/templates";
 import { resolveWorkflow } from "@/lib/workflow/workflow";
 import {
   labelIdsFromRows,
@@ -94,6 +96,7 @@ export default async function ProjectBoardPage({
   if (!project) notFound();
   const workflow = resolveWorkflow(project.workflow);
   const fieldSchema = parseFieldSchema(project.fieldSchema);
+  const ticketTemplates = ticketTemplatesFromTeamSettings(ctx.team.settings);
   const dependencyRows = await listProjectDependencies(project.id);
 
   const savedRows = await listLenses(ctx.team.id, user.id);
@@ -297,18 +300,28 @@ export default async function ProjectBoardPage({
       />
 
       {showFilters ? (
-        <FilterBar
-          slug={slug}
-          projectSlug={projectSlug}
-          view={view}
-          yearMonth={yearMonth}
-          spec={spec}
-          savedId={savedId}
-          saved={saved}
-          people={people}
-          teamLabels={teamLabels}
-          epics={projectEpics}
-        />
+        <div className="flex flex-col gap-2">
+          <FilterBar
+            slug={slug}
+            projectSlug={projectSlug}
+            view={view}
+            yearMonth={yearMonth}
+            spec={spec}
+            savedId={savedId}
+            saved={saved}
+            people={people}
+            teamLabels={teamLabels}
+            epics={projectEpics}
+          />
+          <div className="flex justify-end">
+            <BoardExportLink
+              slug={slug}
+              projectSlug={projectSlug}
+              spec={spec}
+              savedId={savedId}
+            />
+          </div>
+        </div>
       ) : null}
 
       {view === "summary" ? (
@@ -468,6 +481,7 @@ export default async function ProjectBoardPage({
                 groupId={group.id}
                 teamLabels={teamLabels}
                 epics={projectEpics}
+                templates={ticketTemplates}
               />
             </section>
           ))}

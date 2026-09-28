@@ -40,6 +40,21 @@ describe("phase 2 roles", () => {
       parseTeamSettings('{"defaultInviteRole":"nope"}').defaultInviteRole,
       "member",
     );
+    assert.equal(
+      parseTeamSettings('{"defaultInviteRole":"admin"}').defaultInviteRole,
+      "admin",
+    );
+    assert.equal(
+      stringifyTeamSettings({
+        ...DEFAULT_TEAM_SETTINGS,
+        defaultInviteRole: "viewer",
+      }),
+      JSON.stringify({
+        membersCanCreateProjects: true,
+        membersCanInvite: true,
+        defaultInviteRole: "viewer",
+      }),
+    );
   });
 
   it("gates invites", () => {

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { ProjectBoardSettings } from "@/components/projects/project-board-settings";
+import { ProjectDataTools } from "@/components/projects/project-data-tools";
 import { requireUser } from "@/lib/auth/session";
 import { parseFieldSchema } from "@/lib/custom-fields/fields";
 import { canWriteBoard } from "@/lib/items/permissions";
@@ -20,7 +21,7 @@ export default async function ProjectSettingsPage({
 
   const project = await prisma.project.findFirst({
     where: { teamId: ctx.team.id, slug: projectSlug, archived: false },
-    select: { name: true, workflow: true, fieldSchema: true },
+    select: { id: true, name: true, workflow: true, fieldSchema: true },
   });
   if (!project) notFound();
 
@@ -37,13 +38,20 @@ export default async function ProjectSettingsPage({
         ← Back to board
       </Link>
       {writable ? (
-        <ProjectBoardSettings
-          slug={slug}
-          projectSlug={projectSlug}
-          projectName={project.name}
-          workflow={workflow}
-          fieldSchema={fieldSchema}
-        />
+        <>
+          <ProjectBoardSettings
+            slug={slug}
+            projectSlug={projectSlug}
+            projectName={project.name}
+            workflow={workflow}
+            fieldSchema={fieldSchema}
+          />
+          <ProjectDataTools
+            slug={slug}
+            projectSlug={projectSlug}
+            exportHref={`/t/${slug}/p/${projectSlug}/export`}
+          />
+        </>
       ) : (
         <section className="mx-auto max-w-2xl rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
           <p className="font-medium text-foreground">Read only</p>
