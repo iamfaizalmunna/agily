@@ -1,5 +1,6 @@
 import { notFound } from "next/navigation";
 import { LabelsSettings } from "@/components/labels/labels-settings";
+import { TicketTemplatesInfo } from "@/components/teams/ticket-templates-info";
 import { SettingsForm } from "@/components/teams/settings-form";
 import { listTeamLabels } from "@/lib/labels/queries";
 import { requireUser } from "@/lib/auth/session";
@@ -40,6 +41,7 @@ export default async function SettingsPage({
         <>
           <SettingsForm slug={slug} settings={settings} />
           <LabelsSettings slug={slug} labels={labels} />
+          <TicketTemplatesInfo settingsJson={ctx.team.settings} />
         </>
       ) : (
         <div className="rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">

@@ -2,13 +2,13 @@
 
 <p align="center">
   Local agile planner — one ticket model, four board views, Lens on loopback Ollama.<br>
-  <strong>Foundation 1–10</strong> is complete on <code>main</code>. <strong>Revamp v2</strong> is <strong>9 / 12</strong> (through custom fields & workflows).
+  <strong>Foundation 1–10</strong> is complete on <code>main</code>. <strong>Revamp v2</strong> is <strong>10 / 12</strong> (through import, export & templates).
 </p>
 
 <p align="center">
   <a href="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml"><img src="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg" alt="Unit pack"></a>
   <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Foundation-10%2F10-c9844a?style=flat-square" alt="Foundation"></a>
-  <a href="docs/phases/REVAMP_README.md"><img src="https://img.shields.io/badge/Revamp-9%2F12-10b981?style=flat-square" alt="Revamp"></a>
+  <a href="docs/phases/REVAMP_README.md"><img src="https://img.shields.io/badge/Revamp-10%2F12-10b981?style=flat-square" alt="Revamp"></a>
   <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Unit%20pack-100%25-10b981?style=flat-square" alt="Coverage"></a>
   <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/App-127.0.0.1%3A43123-c9844a?style=flat-square" alt="App"></a>
   <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/Lens%20API-127.0.0.1%3A43124-12100e?style=flat-square" alt="Lens API"></a>
@@ -89,8 +89,9 @@ Full index: [docs/phases/README.md](docs/phases/README.md)
 | [![R7](https://img.shields.io/badge/R7-10b981?style=flat-square)](docs/phases/revamp-07-timeline.md) | **[Timeline & dependencies](docs/phases/revamp-07-timeline.md)** | done | Gantt deps, milestones, drag due, Blocked lens |
 | [![R8](https://img.shields.io/badge/R8-10b981?style=flat-square)](docs/phases/revamp-08-search.md) | **[Search & command palette](docs/phases/revamp-08-search.md)** | done | ⌘K palette, team search, recents |
 | [![R9](https://img.shields.io/badge/R9-10b981?style=flat-square)](docs/phases/revamp-09-custom.md) | **[Custom fields & workflows](docs/phases/revamp-09-custom.md)** | done | Per-project workflow, custom fields, board settings |
-| [![R10](https://img.shields.io/badge/R10-c9844a?style=flat-square)](docs/phases/revamp-10-data.md) | **[Import / export](docs/phases/revamp-10-data.md)** | **next** | Planned |
-| R11–R12 | Shell → ship | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
+| [![R10](https://img.shields.io/badge/R10-10b981?style=flat-square)](docs/phases/revamp-10-data.md) | **[Import / export](docs/phases/revamp-10-data.md)** | done | CSV in/out, templates, duplicate board |
+| [![R11](https://img.shields.io/badge/R11-c9844a?style=flat-square)](docs/phases/revamp-11-shell.md) | **[Shell & visual parity](docs/phases/revamp-11-shell.md)** | **next** | Planned |
+| R12 | Ship revamp | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
 
 ---
 
@@ -228,6 +229,8 @@ npm run test:coverage # c8 — 100% lines on configured pack
 npm run test:e2e      # Playwright on prisma/e2e.db
 npm run sonar         # coverage + sonar-scanner (local)
 ```
+
+**CI SonarQube (optional):** In GitHub → Settings → Secrets and variables → Actions, set `SONAR_TOKEN` and `SONAR_HOST_URL` (for [SonarCloud](https://sonarcloud.io), use `https://sonarcloud.io`). Add repository variable `SONAR_ENABLED` = `true` to run the Sonar job after the unit pack. Uncomment `sonar.organization` in `sonar-project.properties` for SonarCloud.
 
 ---
 
