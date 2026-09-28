@@ -1,6 +1,7 @@
 "use client";
 
 const ROWS = [
+  { keys: "⌘K / Ctrl+K", action: "Command palette — search & jump" },
   { keys: "?", action: "Show this sheet" },
   { keys: "Esc", action: "Close Lens, help, or focus" },
   { keys: "/", action: "Open Lens" },

@@ -9,6 +9,13 @@ export type KeyboardAction =
   | { type: "go-people"; slug: string }
   | { type: "switch-view"; view: BoardView };
 
+export function isCommandPaletteKey(
+  event: Pick<KeyboardEvent, "key" | "metaKey" | "ctrlKey">,
+) {
+  const key = event.key.toLowerCase();
+  return (event.metaKey || event.ctrlKey) && key === "k";
+}
+
 export function isTypingTarget(target: EventTarget | null) {
   if (!target || typeof target !== "object") return false;
   const el = target as { tagName?: string; isContentEditable?: boolean };

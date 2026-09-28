@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   boardViewFromDigit,
+  isCommandPaletteKey,
   isTypingTarget,
   nextChordBuffer,
   normalizeKey,
@@ -9,6 +10,21 @@ import {
 } from "@/lib/chrome/keyboard";
 
 describe("phase 10 keyboard", () => {
+  it("detects command palette shortcut", () => {
+    assert.equal(
+      isCommandPaletteKey({ key: "k", metaKey: true, ctrlKey: false }),
+      true,
+    );
+    assert.equal(
+      isCommandPaletteKey({ key: "k", metaKey: false, ctrlKey: true }),
+      true,
+    );
+    assert.equal(
+      isCommandPaletteKey({ key: "k", metaKey: false, ctrlKey: false }),
+      false,
+    );
+  });
+
   it("ignores non-elements and normalizes keys", () => {
     assert.equal(isTypingTarget(null), false);
     assert.equal(isTypingTarget({} as EventTarget), false);

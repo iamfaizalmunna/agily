@@ -19,6 +19,8 @@
     "src/lib/views/views.ts",
     "src/lib/views/analytics.ts",
     "src/lib/dependencies/dependencies.ts",
+    "src/lib/search/search.ts",
+    "src/lib/search/recent.ts",
     "src/lib/lenses/lenses.ts",
     "src/lib/focus/focus.ts",
     "src/lib/notices/notices.ts",

@@ -4,6 +4,7 @@ import { Suspense, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { StudioSidebar } from "@/components/chrome/studio-sidebar";
 import { StudioTopbar } from "@/components/chrome/studio-topbar";
+import { CommandPaletteProvider } from "@/components/chrome/command-palette-provider";
 import { KeyboardProvider } from "@/components/chrome/keyboard-provider";
 import { LensPanel, LensTrigger } from "@/components/lens/lens-panel";
 import { NoticeBell } from "@/components/chrome/notice-bell";
@@ -125,6 +126,7 @@ export function StudioShell({
 
       <Suspense fallback={null}>
         <KeyboardProvider slug={slug} />
+        <CommandPaletteProvider slug={slug} />
         <LensPanel slug={slug} />
       </Suspense>
     </div>
