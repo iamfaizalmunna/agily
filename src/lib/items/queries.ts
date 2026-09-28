@@ -45,9 +45,20 @@ export async function getItemFocus(
       subtasks: { orderBy: { position: "asc" } },
       parent: { select: { id: true, title: true, type: true, position: true } },
       children: { select: { id: true, status: true, title: true, type: true } },
-      updates: {
-        orderBy: { createdAt: "asc" },
+      events: {
+        orderBy: { createdAt: "desc" },
         include: { user: true },
+      },
+      updates: {
+        where: { parentId: null },
+        orderBy: { createdAt: "asc" },
+        include: {
+          user: true,
+          replies: {
+            orderBy: { createdAt: "asc" },
+            include: { user: true },
+          },
+        },
       },
     },
   });

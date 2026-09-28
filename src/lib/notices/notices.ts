@@ -1,4 +1,4 @@
-export const NOTICE_KINDS = ["assigned", "note"] as const;
+export const NOTICE_KINDS = ["assigned", "note", "mention", "reply"] as const;
 export type NoticeKind = (typeof NOTICE_KINDS)[number];
 
 export function isNoticeKind(value: string | undefined | null): value is NoticeKind {
@@ -17,11 +17,24 @@ export function noticeCopy(
   kind: NoticeKind,
   actorName: string,
   itemTitle: string,
+  snippet?: string,
 ) {
   if (kind === "assigned") {
     return {
       title: `${actorName} assigned you`,
       body: itemTitle,
+    };
+  }
+  if (kind === "mention") {
+    return {
+      title: `${actorName} mentioned you`,
+      body: snippet?.trim() || itemTitle,
+    };
+  }
+  if (kind === "reply") {
+    return {
+      title: `${actorName} replied to your comment`,
+      body: snippet?.trim() || itemTitle,
     };
   }
   return {

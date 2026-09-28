@@ -18,6 +18,7 @@ model User {
   assignments  ItemAssignee[]
   lenses       FilterLens[]
   updates      ItemUpdate[]
+  itemEvents   ItemEvent[]
   notices      Notification[]
 }
 
@@ -110,6 +111,7 @@ model Item {
   updates    ItemUpdate[]
   labels     ItemLabel[]
   subtasks   Subtask[]
+  events     ItemEvent[]
 
   @@index([parentId])
 }
@@ -169,13 +171,32 @@ model FilterLens {
 }
 
 model ItemUpdate {
-  id        String   @id @default(cuid())
+  id        String       @id @default(cuid())
   itemId    String
   userId    String
   body      String
+  parentId  String?
+  createdAt DateTime     @default(now())
+  item      Item         @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  parent    ItemUpdate?  @relation("CommentReplies", fields: [parentId], references: [id], onDelete: Cascade)
+  replies   ItemUpdate[] @relation("CommentReplies")
+
+  @@index([parentId])
+}
+
+model ItemEvent {
+  id        String   @id @default(cuid())
+  itemId    String
+  userId    String?
+  kind      String
+  fromValue String?
+  toValue   String?
   createdAt DateTime @default(now())
   item      Item     @relation(fields: [itemId], references: [id], onDelete: Cascade)
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([itemId, createdAt])
 }
 
 model Notification {

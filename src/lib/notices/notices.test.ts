@@ -15,6 +15,8 @@ describe("phase 8 notices", () => {
   it("keeps kinds and drops the actor", () => {
     assert.equal(isNoticeKind("assigned"), true);
     assert.equal(isNoticeKind("note"), true);
+    assert.equal(isNoticeKind("mention"), true);
+    assert.equal(isNoticeKind("reply"), true);
     assert.equal(isNoticeKind("email"), false);
     assert.deepEqual(recipientsExcept(["a", "a", "b", ""], "a"), ["b"]);
     assert.deepEqual(recipientsExcept(["me"], "me"), []);
@@ -32,6 +34,18 @@ describe("phase 8 notices", () => {
     assert.deepEqual(noticeCopy("note", "Lee", "Late review"), {
       title: "Lee left a note",
       body: "Late review",
+    });
+    assert.deepEqual(noticeCopy("mention", "Ada", "Ticket", "Please review"), {
+      title: "Ada mentioned you",
+      body: "Please review",
+    });
+    assert.deepEqual(noticeCopy("reply", "Lee", "Ticket", "Thanks"), {
+      title: "Lee replied to your comment",
+      body: "Thanks",
+    });
+    assert.deepEqual(noticeCopy("mention", "Ada", "Ticket"), {
+      title: "Ada mentioned you",
+      body: "Ticket",
     });
   });
 

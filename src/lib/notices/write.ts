@@ -16,10 +16,16 @@ export async function writeNotices(input: {
   actorName: string;
   kind: NoticeKind;
   userIds: string[];
+  snippet?: string;
 }) {
   const people = recipientsExcept(input.userIds, input.actorId);
   if (!people.length) return;
-  const copy = noticeCopy(input.kind, input.actorName, input.itemTitle);
+  const copy = noticeCopy(
+    input.kind,
+    input.actorName,
+    input.itemTitle,
+    input.snippet,
+  );
   await prisma.notification.createMany({
     data: people.map((userId) => ({
       teamId: input.teamId,

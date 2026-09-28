@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
-import { CommentThread } from "@/components/focus/comment-thread";
+import { FocusDiscussion } from "@/components/focus/focus-discussion";
 import { FocusStage } from "@/components/focus/focus-stage";
+import { buildActivityFeed } from "@/lib/activity/feed";
 import { CreateGroupForm } from "@/components/items/create-group-form";
 import { CreateItemForm } from "@/components/items/create-item-form";
 import { ItemRow } from "@/components/items/item-row";
@@ -120,6 +121,32 @@ export default async function ProjectBoardPage({
   const writable = canWriteBoard(ctx.role) && !project.archived;
   const mayNote = canComment(ctx.role) && !project.archived;
   const mayArchive = canArchiveProject(ctx.role) && !project.archived;
+  const studioMembers = ctx.team.members.map((member) => ({
+    id: member.user.id,
+    name: member.user.name,
+    email: member.user.email,
+  }));
+  const focusFeed = focused
+    ? buildActivityFeed(
+        focused.events,
+        focused.updates.flatMap((comment) => [
+          {
+            id: comment.id,
+            body: comment.body,
+            createdAt: comment.createdAt,
+            parentId: null,
+            user: comment.user,
+          },
+          ...comment.replies.map((reply) => ({
+            id: reply.id,
+            body: reply.body,
+            createdAt: reply.createdAt,
+            parentId: comment.id,
+            user: reply.user,
+          })),
+        ]),
+      )
+    : [];
   const people = ctx.team.members.map((member) => ({
     id: member.user.id,
     name: member.user.name,
@@ -433,13 +460,15 @@ export default async function ProjectBoardPage({
               next={focusHref}
             />
           </ul>
-          <CommentThread
+          <FocusDiscussion
             slug={slug}
             projectSlug={projectSlug}
             itemId={focused.id}
             next={focusHref}
-            notes={focused.updates}
             canWrite={mayNote}
+            members={studioMembers}
+            feed={focusFeed}
+            comments={focused.updates}
           />
         </FocusStage>
       ) : null}
@@ -463,13 +492,15 @@ export default async function ProjectBoardPage({
                 next={focusHref}
               />
             </ul>
-            <CommentThread
+            <FocusDiscussion
               slug={slug}
               projectSlug={projectSlug}
               itemId={focused.id}
               next={focusHref}
-              notes={focused.updates}
               canWrite={mayNote}
+              members={studioMembers}
+              feed={focusFeed}
+              comments={focused.updates}
             />
           </FocusStage>
         </div>

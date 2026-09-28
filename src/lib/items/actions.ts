@@ -26,8 +26,26 @@ import {
   toggleAssignee,
 } from "@/lib/items/assign";
 import { collectLabelIds } from "@/lib/labels/labels";
+import { parseMentionUserIds, type MentionMember } from "@/lib/activity/mentions";
+import { writeItemEvents } from "@/lib/activity/write-events";
 import { writeNotices } from "@/lib/notices/write";
 import { safeStudioNext } from "@/lib/views/views";
+
+function memberNameMap(
+  members: { userId: string; user: { id: string; name: string } }[],
+) {
+  return new Map(members.map((row) => [row.user.id, row.user.name]));
+}
+
+function mentionMembers(
+  members: { user: { id: string; name: string; email: string } }[],
+): MentionMember[] {
+  return members.map((row) => ({
+    id: row.user.id,
+    name: row.user.name,
+    email: row.user.email,
+  }));
+}
 
 async function resolveParentId(
   teamId: string,
@@ -263,6 +281,19 @@ export async function updateItemAction(
     String(formData.get("parentId") ?? ""),
   );
   if ("error" in parentResolved) return { error: parentResolved.error };
+  const names = memberNameMap(ctx.team.members);
+  const before = {
+    status: item.status,
+    priority: item.priority,
+    dueOn: item.dueOn,
+    assigneeIds: current,
+  };
+  const after = {
+    status,
+    priority,
+    dueOn: due.dueOn,
+    assigneeIds: nextIds,
+  };
   await prisma.$transaction([
     prisma.item.update({
       where: { id: item.id },
@@ -281,6 +312,7 @@ export async function updateItemAction(
       prisma.itemAssignee.create({ data: { itemId: item.id, userId } }),
     ),
   ]);
+  await writeItemEvents(item.id, user.id, before, after, names);
   await replaceItemLabels(item.id, ctx.team.id, collectLabelIds(formData));
   await writeNotices({
     teamId: ctx.team.id,
@@ -314,12 +346,31 @@ export async function assignToMeAction(formData: FormData) {
   if (!item) return;
   const current = item.assignees.map((row) => row.userId);
   const next = toggleAssignee(current, user.id);
+  const names = memberNameMap(ctx.team.members);
+  const before = {
+    status: item.status,
+    priority: item.priority,
+    dueOn: item.dueOn,
+    assigneeIds: current,
+  };
   await prisma.itemAssignee.deleteMany({ where: { itemId: item.id } });
   if (next.length) {
     await prisma.itemAssignee.createMany({
       data: next.map((userId) => ({ itemId: item.id, userId })),
     });
   }
+  await writeItemEvents(
+    item.id,
+    user.id,
+    before,
+    {
+      status: item.status,
+      priority: item.priority,
+      dueOn: item.dueOn,
+      assigneeIds: next,
+    },
+    names,
+  );
   redirect(boardNext(slug, projectSlug, formData));
 }
 
@@ -347,14 +398,40 @@ export async function moveItemStatusQuickAction(
       id: itemId,
       project: { teamId: ctx.team.id, slug: projectSlug },
     },
-    select: { id: true, projectId: true, status: true },
+    select: {
+      id: true,
+      projectId: true,
+      status: true,
+      priority: true,
+      dueOn: true,
+      assignees: { select: { userId: true } },
+    },
   });
   if (!item) return { error: "Ticket not found" };
   const position = await nextPositionInStatus(item.projectId, status);
+  const names = memberNameMap(ctx.team.members);
+  const assigneeIds = item.assignees.map((row) => row.userId);
   await prisma.item.update({
     where: { id: item.id },
     data: { status, position },
   });
+  await writeItemEvents(
+    item.id,
+    user.id,
+    {
+      status: item.status,
+      priority: item.priority,
+      dueOn: item.dueOn,
+      assigneeIds,
+    },
+    {
+      status,
+      priority: item.priority,
+      dueOn: item.dueOn,
+      assigneeIds,
+    },
+    names,
+  );
   return {};
 }
 
@@ -407,13 +484,37 @@ export async function moveItemStatusAction(formData: FormData) {
   const ctx = await getMembership(user.id, slug);
   if (!ctx) redirect("/home");
   if (!canWriteBoard(ctx.role)) return;
-  await prisma.item.updateMany({
+  const item = await prisma.item.findFirst({
     where: {
       id: itemId,
       project: { teamId: ctx.team.id, slug: projectSlug },
     },
+    include: { assignees: true },
+  });
+  if (!item) return;
+  const names = memberNameMap(ctx.team.members);
+  const assigneeIds = item.assignees.map((row) => row.userId);
+  await prisma.item.update({
+    where: { id: item.id },
     data: { status },
   });
+  await writeItemEvents(
+    item.id,
+    user.id,
+    {
+      status: item.status,
+      priority: item.priority,
+      dueOn: item.dueOn,
+      assigneeIds,
+    },
+    {
+      status,
+      priority: item.priority,
+      dueOn: item.dueOn,
+      assigneeIds,
+    },
+    names,
+  );
   redirect(boardNext(slug, projectSlug, formData));
 }
 
@@ -427,9 +528,11 @@ export async function addCommentAction(
   const itemId = String(formData.get("itemId") ?? "");
   const note = parseCommentBody(String(formData.get("body") ?? ""));
   if ("error" in note) return { error: note.error };
+  const parentId = String(formData.get("parentId") ?? "").trim() || null;
   const ctx = await getMembership(user.id, slug);
   if (!ctx) return { error: "Studio not found" };
   if (!canComment(ctx.role)) return { error: "Read only" };
+  const members = mentionMembers(ctx.team.members);
   const item = await prisma.item.findFirst({
     where: {
       id: itemId,
@@ -438,19 +541,63 @@ export async function addCommentAction(
     include: { assignees: true },
   });
   if (!item) return { error: "Ticket not found" };
+  let parentAuthorId: string | null = null;
+  if (parentId) {
+    const parent = await prisma.itemUpdate.findFirst({
+      where: { id: parentId, itemId: item.id },
+      select: { userId: true },
+    });
+    if (!parent) return { error: "Reply not found" };
+    parentAuthorId = parent.userId;
+  }
   await prisma.itemUpdate.create({
-    data: { itemId: item.id, userId: user.id, body: note.body },
+    data: {
+      itemId: item.id,
+      userId: user.id,
+      body: note.body,
+      parentId,
+    },
   });
-  await writeNotices({
-    teamId: ctx.team.id,
-    slug,
-    projectSlug,
-    itemId: item.id,
-    itemTitle: item.title,
-    actorId: user.id,
-    actorName: user.name,
-    kind: "note",
-    userIds: item.assignees.map((row) => row.userId),
-  });
+  const mentioned = parseMentionUserIds(note.body, members);
+  if (mentioned.length) {
+    await writeNotices({
+      teamId: ctx.team.id,
+      slug,
+      projectSlug,
+      itemId: item.id,
+      itemTitle: item.title,
+      actorId: user.id,
+      actorName: user.name,
+      kind: "mention",
+      userIds: mentioned,
+      snippet: note.body,
+    });
+  }
+  if (parentAuthorId) {
+    await writeNotices({
+      teamId: ctx.team.id,
+      slug,
+      projectSlug,
+      itemId: item.id,
+      itemTitle: item.title,
+      actorId: user.id,
+      actorName: user.name,
+      kind: "reply",
+      userIds: [parentAuthorId],
+      snippet: note.body,
+    });
+  } else {
+    await writeNotices({
+      teamId: ctx.team.id,
+      slug,
+      projectSlug,
+      itemId: item.id,
+      itemTitle: item.title,
+      actorId: user.id,
+      actorName: user.name,
+      kind: "note",
+      userIds: item.assignees.map((row) => row.userId),
+    });
+  }
   redirect(boardNext(slug, projectSlug, formData));
 }

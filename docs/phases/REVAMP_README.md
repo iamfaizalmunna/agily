@@ -1,6 +1,6 @@
 # Revamp phases (v2) — one at a time
 
-**Progress on `main`:** R1–R4 **complete** · R5 **next** · R6–R12 planned.  
+**Progress on `main`:** R1–R5 **complete** · R6 **next** · R7–R12 planned.  
 **Overview tables & badges:** [README.md](../../README.md#roadmap) · **Cursor install:** [Run in Cursor](../../README.md#run-in-cursor-agent).
 
 **Foundation (phases 1–10)** is done and stays on `main`. We do **not** rewrite auth, teams, or the ticket model from scratch.
@@ -26,7 +26,7 @@ GitHub loop (push branch → PR → merge): [REVAMP_GIT_LOOP.md](REVAMP_GIT_LOOP
 | R2 | Labels & taxonomy | **complete** | [revamp-02-labels.md](revamp-02-labels.md) |
 | R3 | Subtasks & checklists | **complete** | [revamp-03-subtasks.md](revamp-03-subtasks.md) |
 | R4 | Hierarchy & issue types | **complete** | [revamp-04-hierarchy.md](revamp-04-hierarchy.md) |
-| R5 | Comments & activity | planned | [revamp-05-activity.md](revamp-05-activity.md) |
+| R5 | Comments & activity | **complete** | [revamp-05-activity.md](revamp-05-activity.md) |
 | R6 | Analytics & charts | planned | [revamp-06-analytics.md](revamp-06-analytics.md) |
 | R7 | Timeline & dependencies | planned | [revamp-07-timeline.md](revamp-07-timeline.md) |
 | R8 | Search & command palette | planned | [revamp-08-search.md](revamp-08-search.md) |
