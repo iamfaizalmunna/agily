@@ -28,7 +28,15 @@ import {
   canComment,
   canWriteBoard,
 } from "@/lib/items/permissions";
-import { getItemFocus, getProjectBoard } from "@/lib/items/queries";
+import {
+  blockedItemIds,
+  ganttDependencyIds,
+} from "@/lib/dependencies/dependencies";
+import {
+  getItemFocus,
+  getProjectBoard,
+  listProjectDependencies,
+} from "@/lib/items/queries";
 import { getLens, listLenses } from "@/lib/lenses/queries";
 import {
   itemMatchesLens,
@@ -79,6 +87,7 @@ export default async function ProjectBoardPage({
 
   const project = await getProjectBoard(ctx.team.id, projectSlug);
   if (!project) notFound();
+  const dependencyRows = await listProjectDependencies(project.id);
 
   const savedRows = await listLenses(ctx.team.id, user.id);
   const saved = savedRows.map((row) => ({
@@ -115,7 +124,6 @@ export default async function ProjectBoardPage({
       )
     : closeHref;
   const now = new Date();
-  const matchCtx = { userId: user.id, now };
 
   const yearMonth = formatYearMonth(year, month);
   const writable = canWriteBoard(ctx.role) && !project.archived;
@@ -166,6 +174,11 @@ export default async function ProjectBoardPage({
 
   const groupNameByItem = new Map<string, string>();
   const allBoardItems = flattenBoardItems(project.groups);
+  const blockedIds = blockedItemIds(
+    allBoardItems.map((item) => ({ id: item.id, status: item.status })),
+    dependencyRows,
+  );
+  const matchCtx = { userId: user.id, now, blockedIds };
   const projectEpics = allBoardItems
     .filter((item) => item.type === "epic")
     .map((item) => ({
@@ -180,8 +193,8 @@ export default async function ProjectBoardPage({
   }
 
   const visible = (item: {
+    id: string;
     title: string;
-    status: string;
     priority: string;
     dueOn: Date | null;
     assignees: { userId: string }[];
@@ -193,6 +206,7 @@ export default async function ProjectBoardPage({
   }) =>
     itemMatchesLens(
       {
+        id: item.id,
         title: item.title,
         status: item.status,
         priority: item.priority,
@@ -407,12 +421,17 @@ export default async function ProjectBoardPage({
 
       {view === "timeline" ? (
         <TimelineChart
+          slug={slug}
+          projectSlug={projectSlug}
+          canWrite={writable}
           items={items.map((item) => ({
             id: item.id,
             title: item.title,
             status: item.status,
+            type: item.type,
             createdAt: item.createdAt,
             dueOn: item.dueOn,
+            dependencyIds: ganttDependencyIds(item.id, dependencyRows),
             href: boardViewHref(
               slug,
               projectSlug,

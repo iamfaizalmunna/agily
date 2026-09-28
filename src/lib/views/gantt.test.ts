@@ -19,4 +19,21 @@ describe("gantt mapping", () => {
     assert.equal(tasks[0]?.progress, 55);
     assert.ok(tasks[0]?.end.getTime() > tasks[0]?.start.getTime());
   });
+
+  it("maps milestones and dependency arrows", () => {
+    const tasks = itemsToGanttTasks([
+      {
+        id: "m",
+        title: "Launch",
+        status: "ready",
+        type: "milestone",
+        createdAt: new Date("2026-09-01T12:00:00.000Z"),
+        dueOn: new Date("2026-09-30T12:00:00.000Z"),
+        href: "/t",
+        dependencyIds: ["a"],
+      },
+    ]);
+    assert.equal(tasks[0]?.type, "milestone");
+    assert.deepEqual(tasks[0]?.dependencies, ["a"]);
+  });
 });

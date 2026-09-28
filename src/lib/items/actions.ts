@@ -601,3 +601,48 @@ export async function addCommentAction(
   }
   redirect(boardNext(slug, projectSlug, formData));
 }
+
+export async function updateGanttDueAction(
+  slug: string,
+  projectSlug: string,
+  itemId: string,
+  end: Date,
+): Promise<{ error?: string }> {
+  const user = await requireUser();
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) return { error: "Studio not found" };
+  if (!canWriteBoard(ctx.role)) return { error: "Read only" };
+  const item = await prisma.item.findFirst({
+    where: {
+      id: itemId,
+      project: { teamId: ctx.team.id, slug: projectSlug },
+    },
+    include: { assignees: true },
+  });
+  if (!item) return { error: "Ticket not found" };
+  const names = memberNameMap(ctx.team.members);
+  const assigneeIds = item.assignees.map((row) => row.userId);
+  const before = {
+    status: item.status,
+    priority: item.priority,
+    dueOn: item.dueOn,
+    assigneeIds,
+  };
+  await prisma.item.update({
+    where: { id: item.id },
+    data: { dueOn: end },
+  });
+  await writeItemEvents(
+    item.id,
+    user.id,
+    before,
+    {
+      status: item.status,
+      priority: item.priority,
+      dueOn: end,
+      assigneeIds,
+    },
+    names,
+  );
+  return {};
+}

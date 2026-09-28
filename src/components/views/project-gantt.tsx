@@ -1,13 +1,25 @@
 "use client";
 
-import { useMemo } from "react";
+import { useMemo, useTransition } from "react";
 import { useRouter } from "next/navigation";
 import { Gantt, ViewMode, type Task } from "gantt-task-react";
+import { updateGanttDueAction } from "@/lib/items/actions";
 import { itemsToGanttTasks, type GanttSourceRow } from "@/lib/views/gantt";
 import "gantt-task-react/dist/index.css";
 
-export function ProjectGantt({ items }: { items: GanttSourceRow[] }) {
+export function ProjectGantt({
+  slug,
+  projectSlug,
+  items,
+  canWrite,
+}: {
+  slug: string;
+  projectSlug: string;
+  items: GanttSourceRow[];
+  canWrite: boolean;
+}) {
   const router = useRouter();
+  const [pending, startTransition] = useTransition();
   const tasks = useMemo(() => itemsToGanttTasks(items), [items]);
   const hrefById = useMemo(
     () => new Map(items.map((item) => [item.id, item.href])),
@@ -23,7 +35,10 @@ export function ProjectGantt({ items }: { items: GanttSourceRow[] }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-lg border border-border bg-card [&_.bar]:!rounded-md [&_.calendar]:!fill-muted-foreground [&_.gridRow]:!fill-card [&_.today]:!stroke-destructive">
+    <div
+      className="overflow-hidden rounded-lg border border-border bg-card [&_.bar]:!rounded-md [&_.calendar]:!fill-muted-foreground [&_.gridRow]:!fill-card [&_.today]:!stroke-destructive"
+      aria-busy={pending}
+    >
       <Gantt
         tasks={tasks}
         viewMode={ViewMode.Week}
@@ -38,6 +53,22 @@ export function ProjectGantt({ items }: { items: GanttSourceRow[] }) {
           const href = hrefById.get(task.id);
           if (href) router.push(href);
         }}
+        onDateChange={
+          canWrite
+            ? (task) => {
+                startTransition(async () => {
+                  const result = await updateGanttDueAction(
+                    slug,
+                    projectSlug,
+                    task.id,
+                    task.end,
+                  );
+                  if (!result.error) router.refresh();
+                });
+                return true;
+              }
+            : undefined
+        }
       />
     </div>
   );

@@ -2,13 +2,13 @@
 
 <p align="center">
   Local agile planner — one ticket model, four board views, Lens on loopback Ollama.<br>
-  <strong>Foundation 1–10</strong> is complete on <code>main</code>. <strong>Revamp v2</strong> is <strong>6 / 12</strong> (through analytics & charts).
+  <strong>Foundation 1–10</strong> is complete on <code>main</code>. <strong>Revamp v2</strong> is <strong>7 / 12</strong> (through timeline & dependencies).
 </p>
 
 <p align="center">
   <a href="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml"><img src="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg" alt="Unit pack"></a>
   <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Foundation-10%2F10-c9844a?style=flat-square" alt="Foundation"></a>
-  <a href="docs/phases/REVAMP_README.md"><img src="https://img.shields.io/badge/Revamp-6%2F12-10b981?style=flat-square" alt="Revamp"></a>
+  <a href="docs/phases/REVAMP_README.md"><img src="https://img.shields.io/badge/Revamp-7%2F12-10b981?style=flat-square" alt="Revamp"></a>
   <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Unit%20pack-100%25-10b981?style=flat-square" alt="Coverage"></a>
   <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/App-127.0.0.1%3A43123-c9844a?style=flat-square" alt="App"></a>
   <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/Lens%20API-127.0.0.1%3A43124-12100e?style=flat-square" alt="Lens API"></a>
@@ -86,8 +86,9 @@ Full index: [docs/phases/README.md](docs/phases/README.md)
 | [![R4](https://img.shields.io/badge/R4-10b981?style=flat-square)](docs/phases/revamp-04-hierarchy.md) | **[Hierarchy & types](docs/phases/revamp-04-hierarchy.md)** | done | Epic parent/child, task/bug/story/epic, `?epic=` filter |
 | [![R5](https://img.shields.io/badge/R5-10b981?style=flat-square)](docs/phases/revamp-05-activity.md) | **[Comments & activity](docs/phases/revamp-05-activity.md)** | done | Activity tab, `ItemEvent` audit, replies, @mentions |
 | [![R6](https://img.shields.io/badge/R6-10b981?style=flat-square)](docs/phases/revamp-06-analytics.md) | **[Analytics & charts](docs/phases/revamp-06-analytics.md)** | done | Burndown, status donut, sparkline, Pulse overdue |
-| [![R7](https://img.shields.io/badge/R7-c9844a?style=flat-square)](docs/phases/revamp-07-timeline.md) | **[Timeline & dependencies](docs/phases/revamp-07-timeline.md)** | **next** | Gantt links (planned) |
-| R8–R12 | Search → ship | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
+| [![R7](https://img.shields.io/badge/R7-10b981?style=flat-square)](docs/phases/revamp-07-timeline.md) | **[Timeline & dependencies](docs/phases/revamp-07-timeline.md)** | done | Gantt deps, milestones, drag due, Blocked lens |
+| [![R8](https://img.shields.io/badge/R8-c9844a?style=flat-square)](docs/phases/revamp-08-search.md) | **[Search & command palette](docs/phases/revamp-08-search.md)** | **next** | ⌘K (planned) |
+| R9–R12 | Custom fields → ship | planned | [REVAMP_README.md](docs/phases/REVAMP_README.md) |
 
 ---
 
