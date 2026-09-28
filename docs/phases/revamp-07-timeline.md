@@ -1,7 +1,7 @@
 # R7 — Timeline & dependencies
 
-**Status:** planned  
-**Branch:** `revamp/r7-timeline`
+**Status:** complete  
+**Branch:** `revamp/r7-timeline` (merged via PR)
 
 ## Goal
 
@@ -9,9 +9,9 @@ Roadmap UI: Gantt dependencies, milestones, drag dates (local).
 
 ## Deliverables
 
-- [ ] `ItemDependency` (blocks / blocked by)
-- [ ] Gantt arrows via gantt-task-react `dependencies`
-- [ ] Milestone type (zero-duration bar)
-- [ ] Optional: drag bar end → update `dueOn` (server action)
-- [ ] Lens: blocked items
-- [ ] Seed: 3 linked tickets on Atlas
+- [x] `ItemDependency` (blocks / blocked by)
+- [x] Gantt arrows via gantt-task-react `dependencies`
+- [x] Milestone type (zero-duration bar)
+- [x] Optional: drag bar end → update `dueOn` (server action)
+- [x] Lens: blocked items
+- [x] Seed: 3 linked tickets on Atlas

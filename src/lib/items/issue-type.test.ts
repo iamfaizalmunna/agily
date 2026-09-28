@@ -7,6 +7,7 @@ describe("issue-type", () => {
     assert.equal(parseIssueType("epic"), "epic");
     assert.equal(parseIssueType("nope"), "task");
     assert.equal(ISSUE_TYPE_LABEL.story, "Story");
+    assert.equal(parseIssueType("milestone"), "milestone");
     assert.equal(isIssueType("bug"), true);
     assert.equal(isIssueType("idea"), false);
   });

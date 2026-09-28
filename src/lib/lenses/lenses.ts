@@ -16,6 +16,7 @@ export const LENS_KINDS = [
   "unassigned",
   "week",
   "checklist",
+  "blocked",
 ] as const;
 export type LensKind = (typeof LENS_KINDS)[number];
 
@@ -25,6 +26,7 @@ export const LENS_KIND_LABEL: Record<LensKind, string> = {
   unassigned: "Unassigned",
   week: "This week",
   checklist: "Open checklists",
+  blocked: "Blocked",
 };
 
 export type LensSpec = {
@@ -37,7 +39,14 @@ export type LensSpec = {
   parentId?: string;
 };
 
+export type LensMatchCtx = {
+  userId: string;
+  now: Date;
+  blockedIds?: Set<string>;
+};
+
 export type LensItem = {
+  id?: string;
   title: string;
   status: string;
   priority: string;
@@ -254,7 +263,7 @@ export function titleMatchesFind(title: string, find: string) {
 export function itemMatchesLens(
   item: LensItem,
   spec: LensSpec,
-  ctx: { userId: string; now: Date },
+  ctx: LensMatchCtx,
 ) {
   const clean = sanitizeLensSpec(spec);
   if (clean.kind === "mine" && !item.assigneeIds.includes(ctx.userId)) {
@@ -272,6 +281,9 @@ export function itemMatchesLens(
   if (clean.kind === "checklist" && !hasOpenSubtasks(item.subtasks)) {
     return false;
   }
+  if (clean.kind === "blocked") {
+    if (!item.id || !ctx.blockedIds?.has(item.id)) return false;
+  }
   if (clean.status && item.status !== clean.status) return false;
   if (clean.personId && !item.assigneeIds.includes(clean.personId)) return false;
   if (clean.priority && item.priority !== clean.priority) return false;
@@ -284,7 +296,7 @@ export function itemMatchesLens(
 export function filterItemsByLens<T extends LensItem>(
   items: T[],
   spec: LensSpec,
-  ctx: { userId: string; now: Date },
+  ctx: LensMatchCtx,
 ) {
   if (isEmptyLens(sanitizeLensSpec(spec))) return items;
   return items.filter((item) => itemMatchesLens(item, spec, ctx));

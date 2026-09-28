@@ -64,6 +64,13 @@ export async function getItemFocus(
   });
 }
 
+export async function listProjectDependencies(projectId: string) {
+  return prisma.itemDependency.findMany({
+    where: { projectId },
+    select: { predecessorId: true, successorId: true },
+  });
+}
+
 export async function getProjectBoard(teamId: string, projectSlug: string) {
   return prisma.project.findFirst({
     where: { teamId, slug: projectSlug },

@@ -31,6 +31,7 @@ const now = new Date("2026-09-24T15:00:00.000Z");
 
 function item(
   partial: Partial<{
+    id: string;
     title: string;
     status: string;
     priority: string;
@@ -203,5 +204,18 @@ describe("phase 6 lenses", () => {
       ["doing", "ready"],
     );
     assert.equal(filterItemsByLens([mine, late], { kind: "mine" }, ctx).length, 1);
+    const blockedCtx = {
+      ...ctx,
+      blockedIds: new Set(["blocked-1"]),
+    };
+    const blockedItem = item({ id: "blocked-1" });
+    assert.equal(
+      itemMatchesLens(blockedItem, { kind: "blocked" }, blockedCtx),
+      true,
+    );
+    assert.equal(
+      itemMatchesLens(mine, { kind: "blocked" }, blockedCtx),
+      false,
+    );
   });
 });

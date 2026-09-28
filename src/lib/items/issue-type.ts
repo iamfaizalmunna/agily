@@ -1,4 +1,4 @@
-export const ISSUE_TYPES = ["task", "bug", "story", "epic"] as const;
+export const ISSUE_TYPES = ["task", "bug", "story", "epic", "milestone"] as const;
 export type IssueType = (typeof ISSUE_TYPES)[number];
 
 export const ISSUE_TYPE_LABEL: Record<IssueType, string> = {
@@ -6,6 +6,7 @@ export const ISSUE_TYPE_LABEL: Record<IssueType, string> = {
   bug: "Bug",
   story: "Story",
   epic: "Epic",
+  milestone: "Milestone",
 };
 
 export const DEFAULT_ISSUE_TYPE: IssueType = "task";

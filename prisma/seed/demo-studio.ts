@@ -13,6 +13,7 @@ type SeedUser = { id: string; role: TeamRole };
 type TicketSeed = {
   title: string;
   body?: string;
+  type?: string;
   status: string;
   priority: string;
   group: "Now" | "Next" | "Later";
@@ -93,6 +94,15 @@ const ATLAS_TICKETS: TicketSeed[] = [
     ],
     assignees: ["admin"],
     dueDays: 21,
+  },
+  {
+    title: "Atlas launch milestone",
+    type: "milestone",
+    status: "ready",
+    priority: "major",
+    group: "Next",
+    assignees: ["owner"],
+    dueDays: 45,
   },
   {
     title: "Timeline dependency lines",
@@ -298,6 +308,7 @@ async function seedTickets(
         groupId,
         title: ticket.title,
         body: ticket.body ?? "",
+        type: ticket.type ?? "task",
         status: ticket.status,
         priority: ticket.priority,
         dueOn: dueFromDays(ticket.dueDays, base),
@@ -370,6 +381,39 @@ async function seedChecklistsOnExisting(
         },
       });
     }
+  }
+}
+
+async function seedAtlasDependencies(prisma: PrismaClient, projectId: string) {
+  const links: [string, string][] = [
+    ["Seed demo data script", "Timeline dependency lines"],
+    ["Timeline dependency lines", "Drag-and-drop on Flow board"],
+    ["Drag-and-drop on Flow board", "Atlas launch milestone"],
+  ];
+  for (const [predTitle, succTitle] of links) {
+    const predecessor = await prisma.item.findFirst({
+      where: { projectId, title: predTitle },
+      select: { id: true },
+    });
+    const successor = await prisma.item.findFirst({
+      where: { projectId, title: succTitle },
+      select: { id: true },
+    });
+    if (!predecessor || !successor) continue;
+    await prisma.itemDependency.upsert({
+      where: {
+        predecessorId_successorId: {
+          predecessorId: predecessor.id,
+          successorId: successor.id,
+        },
+      },
+      update: {},
+      create: {
+        projectId,
+        predecessorId: predecessor.id,
+        successorId: successor.id,
+      },
+    });
   }
 }
 
@@ -481,6 +525,8 @@ export async function seedDemoStudio(
   );
 
   const ownerUserId = users.get("owner");
+  await seedAtlasDependencies(prisma, atlas.id);
+
   if (ownerUserId) {
     await prisma.filterLens.upsert({
       where: {

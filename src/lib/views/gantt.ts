@@ -5,9 +5,11 @@ export type GanttSourceRow = {
   id: string;
   title: string;
   status: string;
+  type?: string;
   createdAt: Date;
   dueOn: Date | null;
   href: string;
+  dependencyIds?: string[];
 };
 
 const DAY_MS = 24 * 60 * 60 * 1000;
@@ -40,19 +42,23 @@ export function itemsToGanttTasks(items: GanttSourceRow[]): Task[] {
     const status = item.status as ItemStatus;
     const progress = STATUS_PROGRESS[status] ?? 20;
     const color = STATUS_COLOR[status] ?? "#0052cc";
-    const start = new Date(item.createdAt);
-    let end = barEnd(item);
-    if (end.getTime() <= start.getTime()) {
+    const milestone = item.type === "milestone";
+    const start = milestone && item.dueOn
+      ? new Date(item.dueOn)
+      : new Date(item.createdAt);
+    let end = milestone && item.dueOn ? new Date(item.dueOn) : barEnd(item);
+    if (!milestone && end.getTime() <= start.getTime()) {
       end = new Date(start.getTime() + 2 * DAY_MS);
     }
 
     return {
       id: item.id,
-      type: "task",
+      type: milestone ? "milestone" : "task",
       name: item.title,
       start,
       end,
-      progress,
+      progress: milestone ? 0 : progress,
+      dependencies: item.dependencyIds ?? [],
       styles: {
         backgroundColor: color,
         backgroundSelectedColor: color,

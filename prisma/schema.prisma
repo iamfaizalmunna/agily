@@ -75,7 +75,8 @@ model Project {
   createdAt DateTime @default(now())
   team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   groups    Group[]
-  items     Item[]
+  items        Item[]
+  dependencies ItemDependency[]
 
   @@unique([teamId, slug])
 }
@@ -111,9 +112,24 @@ model Item {
   updates    ItemUpdate[]
   labels     ItemLabel[]
   subtasks   Subtask[]
-  events     ItemEvent[]
+  events            ItemEvent[]
+  blocksOthers      ItemDependency[] @relation("DepSuccessor")
+  blockedBy         ItemDependency[] @relation("DepPredecessor")
 
   @@index([parentId])
+}
+
+model ItemDependency {
+  id            String  @id @default(cuid())
+  projectId     String
+  predecessorId String
+  successorId   String
+  project       Project @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  predecessor   Item    @relation("DepPredecessor", fields: [predecessorId], references: [id], onDelete: Cascade)
+  successor     Item    @relation("DepSuccessor", fields: [successorId], references: [id], onDelete: Cascade)
+
+  @@unique([predecessorId, successorId])
+  @@index([projectId])
 }
 
 model Subtask {
