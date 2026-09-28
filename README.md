@@ -1,14 +1,14 @@
 <h1 align="center">Agily</h1>
 
 <p align="center">
-  Local agile planner — one ticket model, four board views, Lens on loopback Ollama.<br>
-  <strong>Foundation 1–10</strong> is complete on <code>main</code>. <strong>Revamp v2</strong> is <strong>11 / 12</strong> (through shell & visual parity).
+  Local agile planner — teams, boards, filters, and optional on-device AI.<br>
+  <strong>Foundation (1–10)</strong> and <strong>Revamp (R1–R12)</strong> are <strong>complete</strong> on <code>main</code>.
 </p>
 
 <p align="center">
   <a href="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml"><img src="https://github.com/iamfaizalmunna/agily/actions/workflows/test.yml/badge.svg" alt="Unit pack"></a>
   <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Foundation-10%2F10-c9844a?style=flat-square" alt="Foundation"></a>
-  <a href="docs/phases/REVAMP_README.md"><img src="https://img.shields.io/badge/Revamp-11%2F12-10b981?style=flat-square" alt="Revamp"></a>
+  <a href="docs/phases/REVAMP_README.md"><img src="https://img.shields.io/badge/Revamp-12%2F12-10b981?style=flat-square" alt="Revamp"></a>
   <a href="docs/phases/README.md"><img src="https://img.shields.io/badge/Unit%20pack-100%25-10b981?style=flat-square" alt="Coverage"></a>
   <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/App-127.0.0.1%3A43123-c9844a?style=flat-square" alt="App"></a>
   <a href="#run-in-cursor-agent"><img src="https://img.shields.io/badge/Lens%20API-127.0.0.1%3A43124-12100e?style=flat-square" alt="Lens API"></a>
@@ -47,14 +47,27 @@
   <a href="#hard-rules">Rules</a> ·
   <a href="PLAN.md">PLAN.md</a> ·
   <a href="docs/phases/REVAMP_README.md">Revamp R1–R12</a> ·
+  <a href="docs/HARDENING.md">Hardening</a> ·
   <a href="http://127.0.0.1:43123/qa/phases">Phase gallery</a>
 </p>
 
 ---
 
+## In plain English
+
+**What it is:** Agily is a **local** planning app for small teams — sign in, create a studio, add projects, and manage work on boards. Everything stays in a **SQLite file on your machine** (no cloud account required for the demo).
+
+**What you can do:** Summary dashboard, list, kanban board, calendar, and timeline on the **same tickets**; labels, checklists, epics, comments, filters, CSV import/export, command palette (⌘K), and studio settings. Optional **Lens** assistant uses **Ollama on your laptop** (or built-in help text if AI is off).
+
+**Quality:** Automated **unit tests** (100% line coverage on our core pack), **browser tests** for main flows, and **GitHub Actions** on every change. A **security hardening** pass adds safer headers, login attempt limits, and stricter startup checks — see [HARDENING.md](docs/HARDENING.md).
+
+**Demo:** [http://127.0.0.1:43123](http://127.0.0.1:43123) after `npm run dev` — studio **northwind**, project **atlas**, logins below.
+
+---
+
 ## Roadmap
 
-Two tracks on the same app: **foundation** (auth → ship chrome) is frozen on `main`. **Revamp v2** adds Jira / Monday parity one phase at a time — branch `revamp/r{N}-*`, PR, merge, then **next**.
+**Foundation (phases 1–10)** and **Revamp v2 (R1–R12)** are finished on `main`. Further work (e.g. hardening, new features) ships in small PRs.
 
 **Charts (browser):** [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases) · [docs/phases/index.html](docs/phases/index.html)  
 **Gap matrix:** [docs/FEATURE_GAP.md](docs/FEATURE_GAP.md) · **Git loop:** [docs/phases/REVAMP_GIT_LOOP.md](docs/phases/REVAMP_GIT_LOOP.md)
@@ -67,7 +80,7 @@ Two tracks on the same app: **foundation** (auth → ship chrome) is frozen on `
 | [![02](https://img.shields.io/badge/02-e09a5c?style=flat-square)](docs/phases/02-teams.md) | **[Teams + invites](docs/phases/02-teams.md)** | Studios, roles, `/join/[token]` copy-link invites |
 | [![03](https://img.shields.io/badge/03-f4efe6?style=flat-square&labelColor=12100e)](docs/phases/03-projects.md) | **[Projects & items](docs/phases/03-projects.md)** | Groups, tickets, status, due dates, markdown body |
 | [![04](https://img.shields.io/badge/04-c9844a?style=flat-square)](docs/phases/04-assign.md) | **[People + assign](docs/phases/04-assign.md)** | `ItemAssignee` on the same row — no duplicate cards |
-| [![05](https://img.shields.io/badge/05-c9844a?style=flat-square)](docs/phases/05-views.md) | **[Four views](docs/phases/05-views.md)** | Pulse, Ledger, Flow, Orbit on identical data |
+| [![05](https://img.shields.io/badge/05-c9844a?style=flat-square)](docs/phases/05-views.md) | **[Views](docs/phases/05-views.md)** | Same data in multiple views (evolved in revamp to Summary / List / Board / Calendar / Timeline) |
 | [![06](https://img.shields.io/badge/06-c9844a?style=flat-square)](docs/phases/06-lenses.md) | **[Filter lenses](docs/phases/06-lenses.md)** | Mine, overdue, saved chips per user per team |
 | [![07](https://img.shields.io/badge/07-c9844a?style=flat-square)](docs/phases/07-focus.md) | **[Focus + notes](docs/phases/07-focus.md)** | Stage / drawer, `ItemUpdate` thread on a ticket |
 | [![08](https://img.shields.io/badge/08-c9844a?style=flat-square)](docs/phases/08-bell.md) | **[In-app bell](docs/phases/08-bell.md)** | `Notification` rows — no SMTP |
@@ -150,6 +163,7 @@ Everything below is in this repo today — not a wish list.
 | **Monorepo & dev** | npm workspaces, [Turborepo](https://turbo.build/), [concurrently](https://www.npmjs.com/package/concurrently) (web + API), [tsx](https://tsx.is/) for scripts and tests |
 | **Testing** | Node.js built-in [`node:test`](https://nodejs.org/api/test.html), [c8](https://github.com/bcoe/c8) coverage (100% lines on the configured pack), [Playwright](https://playwright.dev/) E2E |
 | **Lint & quality** | [ESLint 9](https://eslint.org/) + `eslint-config-next`, optional [SonarQube](https://www.sonarsource.com/products/sonarqube/) (`sonar-project.properties`, `npm run sonar`) |
+| **Hardening** | [docs/HARDENING.md](docs/HARDENING.md) — headers, env guard, sign-in throttle, safe exports |
 | **CI & tooling** | [GitHub Actions](https://github.com/features/actions) (Node 22, `npm ci`, Prisma generate, unit pack), `.npmrc` `legacy-peer-deps` for React 19 + Gantt peers |
 | **Runtime** | Node **22+** (CI), no Docker required for the default demo |
 
@@ -215,20 +229,22 @@ Seed all four on studio **Northwind**: `npx prisma db seed`
 
 | Area | In the product |
 |------|----------------|
-| Views | Pulse (mine/overdue), Ledger board, Flow river, Orbit calendar |
-| Lenses | Stack chips (`?q=mine`), save with **Keep** |
-| Focus | `?focus=` stage, notes as updates |
-| Bell | Unread badge, mark read, jump to ticket |
-| Lens | Rail panel, `/lens-api` rewrite, KB + optional Ollama |
-| Revamp | DnD board, labels, checklists, epics & issue types |
-| Chrome | `?` keyboard sheet, `g` navigation chords, Playwright smoke |
+| **Studio home** | Pulse — your work, overdue, quick links |
+| **Board views** | Summary · List · Board (kanban) · Calendar · Timeline (Gantt) |
+| **Planning** | Labels, checklists, epics, issue types, custom fields, per-project workflow |
+| **Filters** | Mine, overdue, status, labels, saved lenses |
+| **Data** | CSV import/export, ticket templates, duplicate board |
+| **Collaboration** | Comments, activity, @mentions, in-app notifications |
+| **Chrome** | Collapsible sidebar, ⌘K command palette, team search, `?` shortcuts |
+| **Lens** | Side panel — local Ollama + bundled help articles |
+| **Focus** | Open one ticket full-screen with notes (`?focus=`) |
 
 **Tests**
 
 ```bash
-npm test              # node:test, Prisma-free pack
+npm test              # node:test (~130+ tests on core logic)
 npm run test:coverage # c8 — 100% lines on configured pack
-npm run test:e2e      # Playwright on prisma/e2e.db
+npm run test:e2e      # Playwright (sign-in, board, filters, timeline, settings)
 npm run sonar         # coverage + sonar-scanner (local)
 ```
 
