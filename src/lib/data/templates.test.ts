@@ -74,5 +74,18 @@ describe("data/templates", () => {
       ]),
       null,
     );
+    assert.equal(
+      parseTicketTemplatesFromJson([
+        {
+          id: "bad2",
+          name: "Y",
+          type: "task",
+          title: "",
+          body: "",
+          priority: "not-a-priority",
+        },
+      ]),
+      null,
+    );
   });
 });

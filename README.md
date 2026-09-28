@@ -230,6 +230,8 @@ npm run test:e2e      # Playwright on prisma/e2e.db
 npm run sonar         # coverage + sonar-scanner (local)
 ```
 
+**CI SonarQube (optional):** In GitHub → Settings → Secrets and variables → Actions, set `SONAR_TOKEN` and `SONAR_HOST_URL` (for [SonarCloud](https://sonarcloud.io), use `https://sonarcloud.io`). Add repository variable `SONAR_ENABLED` = `true` to run the Sonar job after the unit pack. Uncomment `sonar.organization` in `sonar-project.properties` for SonarCloud.
+
 ---
 
 ## Architecture

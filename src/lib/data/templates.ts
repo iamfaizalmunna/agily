@@ -1,5 +1,5 @@
-import { parseIssueType, type IssueType } from "@/lib/items/issue-type";
-import { parseItemPriority, type ItemPriority } from "@/lib/items/priority";
+import { isIssueType, type IssueType } from "@/lib/items/issue-type";
+import { isItemPriority, type ItemPriority } from "@/lib/items/priority";
 
 export type TicketTemplate = {
   id: string;
@@ -64,10 +64,11 @@ export function parseTicketTemplatesFromJson(raw: unknown): TicketTemplate[] | n
     const name = String((row as { name?: unknown }).name ?? "").trim();
     const title = String((row as { title?: unknown }).title ?? "");
     const body = String((row as { body?: unknown }).body ?? "");
-    const type = parseIssueType(String((row as { type?: unknown }).type ?? ""));
-    const priority = parseItemPriority(
-      String((row as { priority?: unknown }).priority ?? ""),
-    );
+    const typeRaw = String((row as { type?: unknown }).type ?? "").trim();
+    const priorityRaw = String((row as { priority?: unknown }).priority ?? "").trim();
+    if (!isIssueType(typeRaw) || !isItemPriority(priorityRaw)) return null;
+    const type = typeRaw;
+    const priority = priorityRaw;
     if (!id || !name) return null;
     out.push({ id, name, type, title, body, priority });
   }
