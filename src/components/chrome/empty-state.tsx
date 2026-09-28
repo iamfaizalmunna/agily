@@ -1,26 +1,35 @@
 import type { ReactNode } from "react";
 import Link from "next/link";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/cn";
 
 export function EmptyState({
   title,
   body,
   action,
+  icon,
 }: {
   title: string;
   body: string;
   action?: { href: string; label: string };
+  icon?: ReactNode;
 }) {
   return (
     <div
-      className="rounded-2xl border border-dashed border-paper/15 px-4 py-8 text-center"
+      className="flex flex-col items-center rounded-lg border border-dashed border-border bg-muted/20 px-6 py-10 text-center"
       data-testid="empty-state"
     >
-      <p className="font-display text-lg text-paper">{title}</p>
-      <p className="mt-2 text-sm leading-relaxed text-paper/45">{body}</p>
+      {icon ? (
+        <div className="mb-3 text-muted-foreground" aria-hidden>{icon}</div>
+      ) : null}
+      <p className="text-lg font-semibold text-foreground">{title}</p>
+      <p className="mt-2 max-w-md text-sm leading-relaxed text-muted-foreground">
+        {body}
+      </p>
       {action ? (
         <Link
           href={action.href}
-          className="mt-4 inline-flex min-h-11 items-center rounded-full border border-paper/15 px-5 text-sm text-copper"
+          className={cn(buttonVariants({ variant: "outline" }), "mt-5")}
         >
           {action.label}
         </Link>
@@ -40,11 +49,11 @@ export function ErrorPanel({
 }) {
   return (
     <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-4 px-4 py-10">
-      <p className="font-display text-xs uppercase tracking-[0.22em] text-copper">
+      <p className="text-xs font-semibold uppercase tracking-wide text-primary">
         Agily
       </p>
-      <h1 className="font-display text-3xl text-paper">{title}</h1>
-      <p className="text-sm leading-relaxed text-paper/50">{body}</p>
+      <h1 className="text-3xl font-semibold text-foreground">{title}</h1>
+      <p className="text-sm leading-relaxed text-muted-foreground">{body}</p>
       {children}
     </main>
   );

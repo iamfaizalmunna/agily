@@ -2,6 +2,7 @@
 
 import { Suspense, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
+import { CommandPaletteTrigger } from "@/components/chrome/command-palette-trigger";
 import { StudioSidebar } from "@/components/chrome/studio-sidebar";
 import { StudioTopbar } from "@/components/chrome/studio-topbar";
 import { CommandPaletteProvider } from "@/components/chrome/command-palette-provider";
@@ -65,6 +66,7 @@ export function StudioShell({
         <p className="min-w-0 flex-1 truncate text-sm font-medium">
           {current?.name ?? "Agily"}
         </p>
+        <CommandPaletteTrigger compact />
         <LensTrigger />
         <NoticeBell href={noticesHref} count={unread} on={onBell} compact />
         <SignOutButton />
@@ -82,6 +84,8 @@ export function StudioShell({
             userEmail={userEmail}
             role={current?.role}
             teamName={current?.name}
+            slug={slug}
+            projectSlug={projectSlugFromPath(path) ?? undefined}
             projectName={
               projectSlugFromPath(path)
                 ?.replace(/-/g, " ")

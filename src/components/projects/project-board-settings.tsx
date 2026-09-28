@@ -47,17 +47,7 @@ export function ProjectBoardSettings({
   );
 
   return (
-    <section className="mx-auto flex max-w-2xl flex-col gap-8">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-          Board settings
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">{projectName}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Customize Flow columns and optional ticket fields for this board.
-        </p>
-      </div>
-
+    <div className="flex flex-col gap-8">
       <div className="flex flex-col gap-4 rounded-lg border border-border bg-card p-6">
         <div>
           <h2 className="text-lg font-semibold">Workflow</h2>
@@ -176,7 +166,7 @@ export function ProjectBoardSettings({
           <Button type="submit" disabled={addingField}>Add field</Button>
         </form>
       </div>
-    </section>
+    </div>
   );
 }
 

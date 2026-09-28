@@ -85,11 +85,14 @@ function KanbanColumn({
   wipLimit?: number;
 }) {
   const tone = statusTone(status);
+  const headingId = `kanban-heading-${status}`;
   const { setNodeRef, isOver } = useDroppable({ id: status });
 
   return (
     <section
       ref={setNodeRef}
+      role="region"
+      aria-labelledby={headingId}
       data-testid={`kanban-column-${status}`}
       style={{ borderTopColor: accentColor }}
       className={cn(
@@ -101,7 +104,7 @@ function KanbanColumn({
       )}
     >
       <header className="flex items-center justify-between px-3 py-2.5">
-        <h2 className="text-sm font-semibold">{label}</h2>
+        <h2 id={headingId} className="text-sm font-semibold">{label}</h2>
         <span
           className={cn(
             "rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground",
@@ -415,6 +418,7 @@ export function KanbanBoard({
 
   return (
     <DndContext
+      accessibility={{ screenReaderInstructions: { draggable: "Pick up a ticket with space or enter. Move with arrow keys." } }}
       sensors={sensors}
       collisionDetection={collisionDetection}
       onDragStart={onDragStart}
