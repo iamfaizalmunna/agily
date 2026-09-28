@@ -14,6 +14,11 @@ import { createTeamForUser } from "@/lib/teams/create";
 import { parseJoinToken } from "@/lib/teams/tokens";
 import { acceptInviteAction } from "@/lib/teams/join";
 import { isTeamRole, type TeamRole } from "@/lib/rbac/roles";
+import {
+  clearSignInFailures,
+  isSignInLocked,
+  recordSignInFailure,
+} from "@/lib/auth/sign-in-throttle";
 
 export type AuthFormState = {
   error?: string;
@@ -109,16 +114,23 @@ export async function signInAction(
   }
 
   const email = normalizeEmail(parsed.data.email);
+  if (isSignInLocked(email)) {
+    return { error: "Too many attempts. Wait a few minutes and try again." };
+  }
+
   const user = await prisma.user.findUnique({ where: { email } });
   if (!user) {
+    recordSignInFailure(email);
     return { error: "Email or password is wrong" };
   }
 
   const ok = await verifyPassword(parsed.data.password, user.passwordHash);
   if (!ok) {
+    recordSignInFailure(email);
     return { error: "Email or password is wrong" };
   }
 
+  clearSignInFailures(email);
   await createSession(user.id);
   redirect("/home");
 }

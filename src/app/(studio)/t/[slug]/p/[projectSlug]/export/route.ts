@@ -16,6 +16,10 @@ import {
 } from "@/lib/lenses/lenses";
 import { getLens } from "@/lib/lenses/queries";
 import { flattenBoardItems } from "@/lib/views/views";
+import {
+  contentDispositionAttachment,
+  safeDownloadFilename,
+} from "@/lib/security/filename";
 
 export async function GET(
   request: NextRequest,
@@ -90,11 +94,11 @@ export async function GET(
     })),
   );
   const csv = exportRowsToCsv(rows);
-  const filename = `${projectSlug}-export.csv`;
+  const filename = safeDownloadFilename(projectSlug);
   return new NextResponse(csv, {
     headers: {
       "Content-Type": "text/csv; charset=utf-8",
-      "Content-Disposition": `attachment; filename="${filename}"`,
+      "Content-Disposition": contentDispositionAttachment(filename),
     },
   });
 }

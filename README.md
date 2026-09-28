@@ -150,6 +150,7 @@ Everything below is in this repo today — not a wish list.
 | **Monorepo & dev** | npm workspaces, [Turborepo](https://turbo.build/), [concurrently](https://www.npmjs.com/package/concurrently) (web + API), [tsx](https://tsx.is/) for scripts and tests |
 | **Testing** | Node.js built-in [`node:test`](https://nodejs.org/api/test.html), [c8](https://github.com/bcoe/c8) coverage (100% lines on the configured pack), [Playwright](https://playwright.dev/) E2E |
 | **Lint & quality** | [ESLint 9](https://eslint.org/) + `eslint-config-next`, optional [SonarQube](https://www.sonarsource.com/products/sonarqube/) (`sonar-project.properties`, `npm run sonar`) |
+| **Hardening** | [docs/HARDENING.md](docs/HARDENING.md) — headers, env guard, sign-in throttle, safe exports |
 | **CI & tooling** | [GitHub Actions](https://github.com/features/actions) (Node 22, `npm ci`, Prisma generate, unit pack), `.npmrc` `legacy-peer-deps` for React 19 + Gantt peers |
 | **Runtime** | Node **22+** (CI), no Docker required for the default demo |
 
