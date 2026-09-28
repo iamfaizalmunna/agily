@@ -1,7 +1,7 @@
 # R5 — Comments & activity
 
-**Status:** planned  
-**Branch:** `revamp/r5-activity`
+**Status:** complete  
+**Branch:** `revamp/r5-activity` (merged via PR)
 
 ## Goal
 
@@ -9,8 +9,8 @@ GitHub/Jira activity tab: who changed what, threaded comments.
 
 ## Deliverables
 
-- [ ] `ItemEvent` audit log (status, assignee, priority, due)
-- [ ] Activity tab on focus (timeline feed)
-- [ ] Comment replies (parent comment id)
-- [ ] @mention autocomplete (studio members only)
-- [ ] Notices for mentions + replies
+- [x] `ItemEvent` audit log (status, assignee, priority, due)
+- [x] Activity tab on focus (timeline feed)
+- [x] Comment replies (parent comment id)
+- [x] @mention autocomplete (studio members only)
+- [x] Notices for mentions + replies
