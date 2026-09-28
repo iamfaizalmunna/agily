@@ -67,12 +67,14 @@ model Invite {
 }
 
 model Project {
-  id        String   @id @default(cuid())
-  teamId    String
-  name      String
-  slug      String
-  archived  Boolean  @default(false)
-  createdAt DateTime @default(now())
+  id          String   @id @default(cuid())
+  teamId      String
+  name        String
+  slug        String
+  workflow    String   @default("")
+  fieldSchema String   @default("[]")
+  archived    Boolean  @default(false)
+  createdAt   DateTime @default(now())
   team      Team     @relation(fields: [teamId], references: [id], onDelete: Cascade)
   groups    Group[]
   items        Item[]
@@ -99,9 +101,10 @@ model Item {
   body      String    @default("")
   type      String    @default("task")
   priority  String    @default("minor")
-  status    String
-  dueOn     DateTime?
-  position  Int
+  status        String
+  customFields  String    @default("{}")
+  dueOn         DateTime?
+  position      Int
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
   project   Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)

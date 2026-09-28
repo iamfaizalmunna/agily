@@ -1,5 +1,6 @@
 import { KanbanBoard } from "@/components/views/kanban-board";
 import type { BoardDisplayPrefs } from "@/lib/board/kanban";
+import type { Workflow } from "@/lib/workflow/workflow";
 
 type FlowItem = {
   id: string;
@@ -20,6 +21,7 @@ export function FlowRiver({
   writable,
   prefs,
   nameByUserId,
+  workflow,
 }: {
   slug: string;
   projectSlug: string;
@@ -27,6 +29,7 @@ export function FlowRiver({
   writable: boolean;
   prefs: BoardDisplayPrefs;
   nameByUserId: Map<string, string>;
+  workflow: Workflow;
 }) {
   return (
     <KanbanBoard
@@ -36,6 +39,7 @@ export function FlowRiver({
       writable={writable}
       prefs={prefs}
       nameByUserId={nameByUserId}
+      workflow={workflow}
     />
   );
 }

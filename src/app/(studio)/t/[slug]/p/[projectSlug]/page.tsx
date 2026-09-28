@@ -11,6 +11,11 @@ import { BoardSettingsBar } from "@/components/views/board-settings-bar";
 import { FlowRiver } from "@/components/views/flow-river";
 import { parseBoardDisplayPrefs } from "@/lib/board/kanban";
 import {
+  parseCustomFields,
+  parseFieldSchema,
+} from "@/lib/custom-fields/fields";
+import { resolveWorkflow } from "@/lib/workflow/workflow";
+import {
   labelIdsFromRows,
   mapLabelChips,
 } from "@/lib/labels/labels";
@@ -87,6 +92,8 @@ export default async function ProjectBoardPage({
 
   const project = await getProjectBoard(ctx.team.id, projectSlug);
   if (!project) notFound();
+  const workflow = resolveWorkflow(project.workflow);
+  const fieldSchema = parseFieldSchema(project.fieldSchema);
   const dependencyRows = await listProjectDependencies(project.id);
 
   const savedRows = await listLenses(ctx.team.id, user.id);
@@ -195,6 +202,7 @@ export default async function ProjectBoardPage({
   const visible = (item: {
     id: string;
     title: string;
+    status: string;
     priority: string;
     dueOn: Date | null;
     assignees: { userId: string }[];
@@ -353,18 +361,23 @@ export default async function ProjectBoardPage({
                     subtasks={focusedSubtasks}
                     epics={projectEpics}
                     parent={focused.parent}
+                    workflow={workflow}
+                    fieldSchema={fieldSchema}
+                    customFields={parseCustomFields(focused.customFields)}
                     item={focused}
                     readOnly={!writable}
                     next={focusHref}
                   />
                 </ul>
-                <CommentThread
+                <FocusDiscussion
                   slug={slug}
                   projectSlug={projectSlug}
                   itemId={focused.id}
                   next={focusHref}
-                  notes={focused.updates}
                   canWrite={mayNote}
+                  members={studioMembers}
+                  feed={focusFeed}
+                  comments={focused.updates}
                 />
               </div>
             ) : (
@@ -387,6 +400,7 @@ export default async function ProjectBoardPage({
           <FlowRiver
             slug={slug}
             projectSlug={projectSlug}
+            workflow={workflow}
             items={items.map((item) => ({
               id: item.id,
               title: item.title,
@@ -474,6 +488,9 @@ export default async function ProjectBoardPage({
               subtasks={focusedSubtasks}
               epics={projectEpics}
               parent={focused.parent}
+              workflow={workflow}
+              fieldSchema={fieldSchema}
+              customFields={parseCustomFields(focused.customFields)}
               item={focused}
               readOnly={!writable}
               next={focusHref}
@@ -506,6 +523,9 @@ export default async function ProjectBoardPage({
                 subtasks={focusedSubtasks}
                 epics={projectEpics}
                 parent={focused.parent}
+                workflow={workflow}
+                fieldSchema={fieldSchema}
+                customFields={parseCustomFields(focused.customFields)}
                 item={focused}
                 readOnly={!writable}
                 next={focusHref}

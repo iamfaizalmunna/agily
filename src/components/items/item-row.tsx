@@ -18,7 +18,12 @@ import {
   PRIORITY_LABEL,
   type ItemPriority,
 } from "@/lib/items/priority";
-import { ITEM_STATUSES, STATUS_LABEL, type ItemStatus } from "@/lib/items/status";
+import { ItemCustomFields } from "@/components/items/item-custom-fields";
+import type { CustomFieldDef, CustomFieldValues } from "@/lib/custom-fields/fields";
+import {
+  workflowStatusLabel,
+  type Workflow,
+} from "@/lib/workflow/workflow";
 import { LabelBadges } from "@/components/labels/label-badges";
 import { LabelPicker } from "@/components/labels/label-picker";
 import type { LabelChip } from "@/lib/labels/labels";
@@ -53,6 +58,9 @@ export function ItemRow({
   subtasks = [],
   epics = [],
   parent = null,
+  workflow,
+  fieldSchema = [],
+  customFields = {},
 }: {
   slug: string;
   projectSlug: string;
@@ -68,6 +76,9 @@ export function ItemRow({
     type: string;
     position: number;
   } | null;
+  workflow: Workflow;
+  fieldSchema?: CustomFieldDef[];
+  customFields?: CustomFieldValues;
   item: {
     id: string;
     title: string;
@@ -99,7 +110,7 @@ export function ItemRow({
           <p className="text-xs text-muted-foreground">
             {PRIORITY_LABEL[priority] ?? item.priority}
             {" · "}
-            {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
+            {workflowStatusLabel(workflow, item.status)}
             {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
             {` · ${noteLabel(noteCount)}`}
           </p>
@@ -117,7 +128,7 @@ export function ItemRow({
         <p className="mt-1 text-xs text-muted-foreground">
           {PRIORITY_LABEL[priority] ?? item.priority}
           {" · "}
-          {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
+          {workflowStatusLabel(workflow, item.status)}
           {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
         </p>
         <div className="mt-2">
@@ -190,9 +201,9 @@ export function ItemRow({
             defaultValue={item.status}
             className="h-10 px-3 text-sm"
           >
-            {ITEM_STATUSES.map((status) => (
-              <option key={status} value={status}>
-                {STATUS_LABEL[status]}
+            {workflow.statuses.map((status) => (
+              <option key={status.id} value={status.id}>
+                {status.label}
               </option>
             ))}
           </Select>
@@ -221,6 +232,7 @@ export function ItemRow({
           labels={teamLabels}
           selectedIds={itemLabels.map((label) => label.id)}
         />
+        <ItemCustomFields defs={fieldSchema} values={customFields} />
         <textarea
           name="body"
           defaultValue={item.body}

@@ -1,8 +1,10 @@
 import assert from "node:assert/strict";
 import { describe, it } from "node:test";
+import { defaultWorkflow } from "@/lib/workflow/workflow";
 import {
   boardDisplayQuery,
   groupByStatusSorted,
+  groupByWorkflowSorted,
   groupSwimlanes,
   isOverWip,
   parseBoardDisplayPrefs,
@@ -54,6 +56,25 @@ describe("board/kanban", () => {
     assert.deepEqual(columns.doing.map((row) => row.id), ["2", "1"]);
     assert.equal(visibleKanbanStatuses(false).includes("done"), true);
     assert.equal(visibleKanbanStatuses(true).includes("done"), false);
+    const custom = defaultWorkflow();
+    custom.statuses.push({
+      id: "qa",
+      label: "QA",
+      color: "#abcdef",
+    });
+    const customCols = groupByWorkflowSorted(
+      [
+        {
+          id: "9",
+          status: "qa",
+          position: 0,
+          priority: "minor",
+          people: [],
+        },
+      ],
+      custom,
+    );
+    assert.equal(customCols.qa.length, 1);
   });
 
   it("computes WIP hints", () => {
