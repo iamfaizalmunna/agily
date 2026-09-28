@@ -10,6 +10,10 @@ import { canCreateProject } from "@/lib/items/permissions";
 import { listProjects, listTeamItems } from "@/lib/items/queries";
 import { parseTeamSettings } from "@/lib/rbac/roles";
 import { getMembership } from "@/lib/teams/queries";
+import {
+  studioOverdueByBoard,
+  studioOverdueTotal,
+} from "@/lib/views/analytics";
 import { pulseBuckets } from "@/lib/views/views";
 
 export default async function TeamHomePage({
@@ -26,6 +30,7 @@ export default async function TeamHomePage({
   const mayCreate = canCreateProject(ctx.role, settings);
   const projects = await listProjects(ctx.team.id);
   const rows = await listTeamItems(ctx.team.id);
+  const now = new Date();
   const buckets = pulseBuckets(
     rows.map((item) => ({
       id: item.id,
@@ -36,8 +41,18 @@ export default async function TeamHomePage({
       assigneeIds: item.assignees.map((row) => row.userId),
     })),
     user.id,
-    new Date(),
+    now,
   );
+  const overdueBoards = studioOverdueByBoard(
+    rows.map((item) => ({
+      projectSlug: item.project.slug,
+      projectName: item.project.name,
+      status: item.status,
+      dueOn: item.dueOn,
+    })),
+    now,
+  );
+  const studioOverdue = studioOverdueTotal(overdueBoards);
 
   const chip = (id: string) => {
     const item = rows.find((row) => row.id === id);
@@ -67,6 +82,33 @@ export default async function TeamHomePage({
           Your morning stream across every board in this studio.
         </p>
       </div>
+
+      {studioOverdue > 0 ? (
+        <Card className="border-destructive/40 bg-destructive/5 p-4">
+          <div className="flex flex-wrap items-center justify-between gap-2">
+            <div>
+              <p className="text-sm font-semibold text-destructive">
+                Studio overdue
+              </p>
+              <p className="text-xs text-muted-foreground">
+                Across all boards in this studio
+              </p>
+            </div>
+            <Badge variant="destructive">{studioOverdue}</Badge>
+          </div>
+          <ul className="mt-3 flex flex-wrap gap-2">
+            {overdueBoards.map((board) => (
+              <li key={board.projectSlug}>
+                <Link href={`/t/${slug}/p/${board.projectSlug}`}>
+                  <Badge variant="outline" className="hover:bg-muted">
+                    {board.projectName} · {board.overdue}
+                  </Badge>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </Card>
+      ) : null}
 
       <div className="grid gap-4 lg:grid-cols-3">
         <PulseCard title="Mine" count={buckets.mine.length}>
