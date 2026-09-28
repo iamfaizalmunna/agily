@@ -33,18 +33,19 @@ import {
 } from "@/lib/items/actions";
 import {
   type BoardDisplayPrefs,
-  groupByStatusSorted,
+  groupByWorkflowSorted,
   groupSwimlanes,
   isOverWip,
   visibleKanbanStatuses,
   wipLimitFor,
 } from "@/lib/board/kanban";
-import {
-  STATUS_LABEL,
-  isItemStatus,
-  type ItemStatus,
-} from "@/lib/items/status";
 import { statusTone } from "@/lib/ui/status-tone";
+import {
+  isWorkflowStatus,
+  workflowStatusColor,
+  workflowStatusLabel,
+  type Workflow,
+} from "@/lib/workflow/workflow";
 import { cn } from "@/lib/cn";
 import { KanbanSortableTicket } from "@/components/views/kanban-sortable-ticket";
 
@@ -64,6 +65,8 @@ const dropAnimation: DropAnimation = {
 
 function KanbanColumn({
   status,
+  label,
+  accentColor,
   items,
   writable,
   activeId,
@@ -71,7 +74,9 @@ function KanbanColumn({
   overWip,
   wipLimit,
 }: {
-  status: ItemStatus;
+  status: string;
+  label: string;
+  accentColor: string;
   items: KanbanItem[];
   writable: boolean;
   activeId: string | null;
@@ -86,6 +91,7 @@ function KanbanColumn({
     <section
       ref={setNodeRef}
       data-testid={`kanban-column-${status}`}
+      style={{ borderTopColor: accentColor }}
       className={cn(
         "flex w-72 shrink-0 flex-col rounded-lg border border-border bg-muted/20 transition-[background,box-shadow,transform] duration-200",
         "border-t-4",
@@ -95,7 +101,7 @@ function KanbanColumn({
       )}
     >
       <header className="flex items-center justify-between px-3 py-2.5">
-        <h2 className="text-sm font-semibold">{STATUS_LABEL[status]}</h2>
+        <h2 className="text-sm font-semibold">{label}</h2>
         <span
           className={cn(
             "rounded-full bg-background px-2 py-0.5 text-xs text-muted-foreground",
@@ -142,6 +148,7 @@ function KanbanRow({
   label,
   localItems,
   statuses,
+  workflow,
   writable,
   pending,
   activeId,
@@ -149,15 +156,16 @@ function KanbanRow({
 }: {
   label: string;
   localItems: KanbanItem[];
-  statuses: readonly ItemStatus[];
+  statuses: readonly string[];
+  workflow: Workflow;
   writable: boolean;
   pending: boolean;
   activeId: string | null;
   compact: boolean;
 }) {
   const columns = useMemo(
-    () => groupByStatusSorted(localItems),
-    [localItems],
+    () => groupByWorkflowSorted(localItems, workflow),
+    [localItems, workflow],
   );
 
   return (
@@ -169,12 +177,14 @@ function KanbanRow({
       ) : null}
       <div className="flex min-w-max gap-3">
         {statuses.map((status) => {
-          const items = columns[status];
+          const items = columns[status] ?? [];
           const limit = wipLimitFor(status);
           return (
             <KanbanColumn
               key={status}
               status={status}
+              label={workflowStatusLabel(workflow, status)}
+              accentColor={workflowStatusColor(workflow, status)}
               items={items}
               writable={writable && !pending}
               activeId={activeId}
@@ -196,6 +206,7 @@ export function KanbanBoard({
   writable,
   prefs,
   nameByUserId,
+  workflow,
 }: {
   slug: string;
   projectSlug: string;
@@ -203,6 +214,7 @@ export function KanbanBoard({
   writable: boolean;
   prefs: BoardDisplayPrefs;
   nameByUserId: Map<string, string>;
+  workflow: Workflow;
 }) {
   const [pending, startTransition] = useTransition();
   const [activeId, setActiveId] = useState<string | null>(null);
@@ -225,8 +237,8 @@ export function KanbanBoard({
   }, [items, activeId]);
 
   const statuses = useMemo(
-    () => visibleKanbanStatuses(prefs.hideDone),
-    [prefs.hideDone],
+    () => visibleKanbanStatuses(prefs.hideDone, workflow),
+    [prefs.hideDone, workflow],
   );
 
   const lanes = useMemo(() => {
@@ -242,10 +254,10 @@ export function KanbanBoard({
 
   const findItem = (id: string) => localItems.find((row) => row.id === id);
 
-  const resolveStatus = (id: string): ItemStatus | null => {
-    if (isItemStatus(id)) return id;
+  const resolveStatus = (id: string): string | null => {
+    if (isWorkflowStatus(workflow, id)) return id;
     const item = findItem(id);
-    return item && isItemStatus(item.status) ? item.status : null;
+    return item && isWorkflowStatus(workflow, item.status) ? item.status : null;
   };
 
   const collisionDetection: CollisionDetection = (args) => {
@@ -254,7 +266,7 @@ export function KanbanBoard({
     return rectIntersection(args);
   };
 
-  const moveToColumn = (itemId: string, status: ItemStatus, persist = true) => {
+  const moveToColumn = (itemId: string, status: string, persist = true) => {
     const current = findItem(itemId);
     if (!current || current.status === status) return;
 
@@ -284,7 +296,7 @@ export function KanbanBoard({
   const reorderInColumn = (
     itemId: string,
     overId: string,
-    status: ItemStatus,
+    status: string,
   ) => {
     const columnItems = localItems.filter((item) => item.status === status);
     const oldIndex = columnItems.findIndex((item) => item.id === itemId);
@@ -296,15 +308,15 @@ export function KanbanBoard({
     setLocalItems([...others, ...reordered]);
   };
 
-  const columnOrder = (status: ItemStatus) =>
+  const columnOrder = (status: string) =>
     localItems.filter((item) => item.status === status).map((item) => item.id);
 
-  const serverColumnOrder = (status: ItemStatus) =>
+  const serverColumnOrder = (status: string) =>
     serverItemsRef.current
       .filter((item) => item.status === status)
       .map((item) => item.id);
 
-  const applyReorderResult = (status: ItemStatus, orderedIds: string[]) => {
+  const applyReorderResult = (status: string, orderedIds: string[]) => {
     const positions = new Map(orderedIds.map((id, index) => [id, index]));
     serverItemsRef.current = serverItemsRef.current.map((item) =>
       item.status === status && positions.has(item.id)
@@ -313,7 +325,7 @@ export function KanbanBoard({
     );
   };
 
-  const persistColumnIfNeeded = async (columnStatus: ItemStatus) => {
+  const persistColumnIfNeeded = async (columnStatus: string) => {
     const orderedIds = columnOrder(columnStatus);
     if (orderedIds.join() === serverColumnOrder(columnStatus).join()) return true;
     const result = await reorderKanbanColumnAction(
@@ -354,7 +366,7 @@ export function KanbanBoard({
       return;
     }
 
-    if (!isItemStatus(overId)) {
+    if (!isWorkflowStatus(workflow, overId)) {
       reorderInColumn(activeItemId, overId, overStatus);
     }
   };
@@ -368,7 +380,7 @@ export function KanbanBoard({
     const serverRow = serverItemsRef.current.find((item) => item.id === itemId);
     if (!row || !serverRow) return;
 
-    const status = isItemStatus(row.status) ? row.status : null;
+    const status = isWorkflowStatus(workflow, row.status) ? row.status : null;
     if (!status) return;
 
     const statusChanged = row.status !== serverRow.status;
@@ -390,7 +402,7 @@ export function KanbanBoard({
         );
       }
       if (!(await persistColumnIfNeeded(status))) return;
-      if (statusChanged && isItemStatus(serverRow.status)) {
+      if (statusChanged && isWorkflowStatus(workflow, serverRow.status)) {
         await persistColumnIfNeeded(serverRow.status);
       }
     });
@@ -423,6 +435,7 @@ export function KanbanBoard({
               label={lane.label}
               localItems={lane.items}
               statuses={statuses}
+              workflow={workflow}
               writable={writable}
               pending={pending}
               activeId={activeId}

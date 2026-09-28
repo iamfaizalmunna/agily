@@ -19,6 +19,15 @@ import { validateParentLink, wouldCreateCycle } from "@/lib/items/hierarchy";
 import { parseIssueType, type IssueType } from "@/lib/items/issue-type";
 import { parseItemPriority } from "@/lib/items/priority";
 import { isItemStatus } from "@/lib/items/status";
+import {
+  collectCustomFieldsFromForm,
+  parseFieldSchema,
+  serializeCustomFields,
+} from "@/lib/custom-fields/fields";
+import {
+  isWorkflowStatus,
+  resolveWorkflow,
+} from "@/lib/workflow/workflow";
 import { parseDueOn, parseItemTitle } from "@/lib/items/validate";
 import {
   collectAssigneeIds,
@@ -253,7 +262,6 @@ export async function updateItemAction(
   const titleParsed = parseItemTitle(String(formData.get("title") ?? ""));
   if ("error" in titleParsed) return { error: titleParsed.error };
   const status = String(formData.get("status") ?? "");
-  if (!isItemStatus(status)) return { error: "Unknown status" };
   const priority = parseItemPriority(String(formData.get("priority") ?? ""));
   const due = parseDueOn(String(formData.get("dueOn") ?? ""));
   if ("error" in due) return { error: due.error };
@@ -265,9 +273,17 @@ export async function updateItemAction(
       id: itemId,
       project: { teamId: ctx.team.id, slug: projectSlug },
     },
-    include: { assignees: true },
+    include: {
+      assignees: true,
+      project: { select: { workflow: true, fieldSchema: true } },
+    },
   });
   if (!item) return { error: "Ticket not found" };
+  const workflow = resolveWorkflow(item.project.workflow);
+  if (!isWorkflowStatus(workflow, status)) return { error: "Unknown status" };
+  const fieldDefs = parseFieldSchema(item.project.fieldSchema);
+  const customCollected = collectCustomFieldsFromForm(fieldDefs, formData);
+  if ("error" in customCollected) return { error: customCollected.error };
   const teamIds = ctx.team.members.map((m) => m.userId);
   const nextIds = filterAssignableIds(collectAssigneeIds(formData), teamIds);
   const current = item.assignees.map((row) => row.userId);
@@ -305,6 +321,7 @@ export async function updateItemAction(
         parentId: parentResolved.parentId,
         dueOn: due.dueOn,
         body: String(formData.get("body") ?? item.body),
+        customFields: serializeCustomFields(customCollected.values),
       },
     }),
     prisma.itemAssignee.deleteMany({ where: { itemId: item.id } }),
@@ -388,7 +405,6 @@ export async function moveItemStatusQuickAction(
   itemId: string,
   status: string,
 ): Promise<{ error?: string }> {
-  if (!isItemStatus(status)) return { error: "Unknown status" };
   const user = await requireUser();
   const ctx = await getMembership(user.id, slug);
   if (!ctx) return { error: "Studio not found" };
@@ -404,10 +420,13 @@ export async function moveItemStatusQuickAction(
       status: true,
       priority: true,
       dueOn: true,
+      project: { select: { workflow: true } },
       assignees: { select: { userId: true } },
     },
   });
   if (!item) return { error: "Ticket not found" };
+  const workflow = resolveWorkflow(item.project.workflow);
+  if (!isWorkflowStatus(workflow, status)) return { error: "Unknown status" };
   const position = await nextPositionInStatus(item.projectId, status);
   const names = memberNameMap(ctx.team.members);
   const assigneeIds = item.assignees.map((row) => row.userId);
@@ -441,7 +460,6 @@ export async function reorderKanbanColumnAction(
   status: string,
   orderedIds: string[],
 ): Promise<{ error?: string }> {
-  if (!isItemStatus(status)) return { error: "Unknown status" };
   if (!orderedIds.length) return {};
   const user = await requireUser();
   const ctx = await getMembership(user.id, slug);
@@ -449,9 +467,11 @@ export async function reorderKanbanColumnAction(
   if (!canWriteBoard(ctx.role)) return { error: "Read only" };
   const project = await prisma.project.findFirst({
     where: { teamId: ctx.team.id, slug: projectSlug, archived: false },
-    select: { id: true },
+    select: { id: true, workflow: true },
   });
   if (!project) return { error: "Board not found" };
+  const workflow = resolveWorkflow(project.workflow);
+  if (!isWorkflowStatus(workflow, status)) return { error: "Unknown status" };
   const rows = await prisma.item.findMany({
     where: {
       projectId: project.id,
@@ -480,7 +500,6 @@ export async function moveItemStatusAction(formData: FormData) {
   const projectSlug = String(formData.get("projectSlug") ?? "");
   const itemId = String(formData.get("itemId") ?? "");
   const status = String(formData.get("status") ?? "");
-  if (!isItemStatus(status)) return;
   const ctx = await getMembership(user.id, slug);
   if (!ctx) redirect("/home");
   if (!canWriteBoard(ctx.role)) return;
@@ -489,9 +508,14 @@ export async function moveItemStatusAction(formData: FormData) {
       id: itemId,
       project: { teamId: ctx.team.id, slug: projectSlug },
     },
-    include: { assignees: true },
+    include: {
+      assignees: true,
+      project: { select: { workflow: true } },
+    },
   });
   if (!item) return;
+  const workflow = resolveWorkflow(item.project.workflow);
+  if (!isWorkflowStatus(workflow, status)) return;
   const names = memberNameMap(ctx.team.members);
   const assigneeIds = item.assignees.map((row) => row.userId);
   await prisma.item.update({

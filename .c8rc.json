@@ -27,6 +27,8 @@
     "src/lib/cn.ts",
     "src/lib/chrome/keyboard.ts",
     "src/lib/board/kanban.ts",
+    "src/lib/workflow/workflow.ts",
+    "src/lib/custom-fields/fields.ts",
     "src/lib/labels/labels.ts",
     "src/lib/subtasks/subtasks.ts",
     "src/lib/items/issue-type.ts",

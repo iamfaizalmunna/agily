@@ -31,5 +31,10 @@ export function CommandPaletteProvider({ slug }: { slug?: string }) {
     return () => window.removeEventListener("keydown", onKeyDown);
   }, [open, setOpen, toggle]);
 
-  return <CommandPalette slug={teamSlug} projectSlug={projectSlug} />;
+  return (
+    <CommandPalette
+      slug={teamSlug ?? undefined}
+      projectSlug={projectSlug ?? undefined}
+    />
+  );
 }

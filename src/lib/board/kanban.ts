@@ -4,6 +4,12 @@ import {
   type ItemStatus,
 } from "@/lib/items/status";
 import { PRIORITY_LABEL, isItemPriority, type ItemPriority } from "@/lib/items/priority";
+import {
+  defaultWorkflow,
+  isWorkflowStatus,
+  visibleWorkflowStatuses,
+  type Workflow,
+} from "@/lib/workflow/workflow";
 
 export const SWIMLANE_MODES = ["none", "assignee", "priority"] as const;
 export type SwimlaneMode = (typeof SWIMLANE_MODES)[number];
@@ -55,9 +61,9 @@ export function boardDisplayQuery(prefs: BoardDisplayPrefs): Record<string, stri
 
 export function visibleKanbanStatuses(
   hideDone: boolean,
-): readonly ItemStatus[] {
-  if (!hideDone) return ITEM_STATUSES;
-  return ITEM_STATUSES.filter((status) => status !== "done");
+  workflow: Workflow = defaultWorkflow(),
+): readonly string[] {
+  return visibleWorkflowStatuses(workflow, hideDone);
 }
 
 export function sortKanbanColumn<T extends { position: number; id: string }>(
@@ -69,20 +75,33 @@ export function sortKanbanColumn<T extends { position: number; id: string }>(
   });
 }
 
-export function groupByStatusSorted<T extends KanbanTicket>(items: T[]) {
+export function groupByWorkflowSorted<T extends KanbanTicket>(
+  items: T[],
+  workflow: Workflow = defaultWorkflow(),
+) {
+  const statuses = workflow.statuses.map((row) => row.id);
   const columns = Object.fromEntries(
-    ITEM_STATUSES.map((status) => [status, [] as T[]]),
-  ) as Record<ItemStatus, T[]>;
+    statuses.map((status) => [status, [] as T[]]),
+  ) as Record<string, T[]>;
   for (const item of items) {
-    if (isItemStatus(item.status)) columns[item.status].push(item);
+    if (isWorkflowStatus(workflow, item.status)) {
+      columns[item.status].push(item);
+    }
   }
-  for (const status of ITEM_STATUSES) {
+  for (const status of statuses) {
     columns[status] = sortKanbanColumn(columns[status]);
   }
   return columns;
 }
 
-export function wipLimitFor(status: ItemStatus, limits = DEFAULT_WIP_LIMITS) {
+export function groupByStatusSorted<T extends KanbanTicket>(items: T[]) {
+  return groupByWorkflowSorted(items, defaultWorkflow());
+}
+
+export function wipLimitFor(
+  status: string,
+  limits: Partial<Record<string, number>> = DEFAULT_WIP_LIMITS,
+) {
   return limits[status];
 }
 

@@ -1,0 +1,4 @@
+-- AlterTable
+ALTER TABLE "Project" ADD COLUMN "workflow" TEXT NOT NULL DEFAULT '';
+ALTER TABLE "Project" ADD COLUMN "fieldSchema" TEXT NOT NULL DEFAULT '[]';
+ALTER TABLE "Item" ADD COLUMN "customFields" TEXT NOT NULL DEFAULT '{}';

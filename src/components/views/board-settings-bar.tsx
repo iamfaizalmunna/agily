@@ -7,6 +7,7 @@ import {
   type BoardDisplayPrefs,
   type SwimlaneMode,
 } from "@/lib/board/kanban";
+import Link from "next/link";
 import { boardViewHref } from "@/lib/views/views";
 
 export function BoardSettingsBar({
@@ -71,6 +72,12 @@ export function BoardSettingsBar({
       >
         By priority
       </ChipButton>
+      <Link
+        href={`/t/${slug}/p/${projectSlug}/settings`}
+        className="ml-auto text-xs font-medium text-primary hover:underline"
+      >
+        Workflow & fields
+      </Link>
     </div>
   );
 }
