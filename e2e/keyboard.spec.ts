@@ -1,9 +1,8 @@
 import { test, expect } from "@playwright/test";
-import { E2E, signIn } from "./helpers";
+import { E2E } from "./helpers";
 
 test.describe("keyboard chrome", () => {
   test("opens the shortcut sheet with ?", async ({ page }) => {
-    await signIn(page);
     await page.goto(`/t/${E2E.teamSlug}`);
     await expect(page.getByRole("heading", { name: "Northwind" })).toBeVisible();
     await page.locator("body").click();

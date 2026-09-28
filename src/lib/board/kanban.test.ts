@@ -141,4 +141,22 @@ describe("board/kanban", () => {
     );
     assert.equal(stacked.find((row) => row.key === "u1")?.items.length, 2);
   });
+
+  it("groups 100 tickets into workflow columns quickly", () => {
+    const workflow = defaultWorkflow();
+    const statuses = workflow.statuses.map((row) => row.id);
+    const items = Array.from({ length: 100 }, (_, i) => ({
+      id: `load-${i}`,
+      status: statuses[i % statuses.length],
+      position: i,
+      priority: "minor",
+      people: [],
+    }));
+    const start = performance.now();
+    const columns = groupByWorkflowSorted(items, workflow);
+    const elapsed = performance.now() - start;
+    const total = Object.values(columns).reduce((sum, col) => sum + col.length, 0);
+    assert.equal(total, 100);
+    assert.ok(elapsed < 100, `groupByWorkflowSorted took ${elapsed}ms`);
+  });
 });

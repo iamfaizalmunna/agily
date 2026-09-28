@@ -12,29 +12,29 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 |---|---------|-----|--------|------|-----|-------|
 | 1 | Tasks / issues | ✓ | ✓ | ✓ | ✓ | **Have** |
 | 2 | Title + description | ✓ | ✓ | ✓ | ✓ | **Have** (body text) |
-| 3 | Status workflow | ✓ | ✓ | ✓ | ✓ | **Have** (5 fixed statuses) |
+| 3 | Status workflow | ✓ | ✓ | ✓ | ✓ | **Have** (per-project workflow, R9) |
 | 4 | Priority | ✓ | ○ | ✓ | ○ | **Have** |
 | 5 | Due date | ✓ | ✓ | ✓ | ○ | **Have** |
 | 6 | Assignees (multi) | ✓ | ✓ | ✓ | ✓ | **Have** |
-| 7 | Subtasks / checklists | ✓ | ✓ | ✓ | ○ | **Missing** |
-| 8 | Parent / child (epic → story) | ✓ | ✓ | ✓ | ○ | **Missing** |
+| 7 | Subtasks / checklists | ✓ | ✓ | ✓ | ○ | **Have** (R3) |
+| 8 | Parent / child (epic → story) | ✓ | ✓ | ✓ | ○ | **Have** (R4) |
 | 9 | Issue keys (PROJ-123) | ○ | ○ | ✓ | ✓ | **Partial** (display only) |
-| 10 | Issue types (bug, story, epic) | ○ | ○ | ✓ | ○ | **Missing** |
-| 11 | Labels / tags | ✓ | ✓ | ✓ | ✓ | **Missing** |
-| 12 | Custom fields | ✓ | ✓ | ✓ | ○ | **Missing** |
+| 10 | Issue types (bug, story, epic) | ○ | ○ | ✓ | ○ | **Have** (R4) |
+| 11 | Labels / tags | ✓ | ✓ | ✓ | ✓ | **Have** (R2) |
+| 12 | Custom fields | ✓ | ✓ | ✓ | ○ | **Have** (R9) |
 | 13 | Story points / estimates | ○ | ○ | ✓ | ○ | **Missing** |
 | 14 | Time tracking / timers | ✓ | ○ | ✓ | ○ | **Missing** |
 | 15 | Attachments / files | ✓ | ✓ | ✓ | ✓ | **Missing** |
 | 16 | @mentions in description | ✓ | ✓ | ✓ | ✓ | **Missing** |
 | 17 | Rich markdown / WYSIWYG | ✓ | ✓ | ✓ | ✓ | **Partial** (plain + textarea) |
-| 18 | Templates for new items | ✓ | ✓ | ✓ | ○ | **Missing** |
+| 18 | Templates for new items | ✓ | ✓ | ✓ | ○ | **Have** (R10 team templates) |
 | 19 | Recurring tasks | ✓ | ○ | ○ | ○ | **Missing** |
 | 20 | Dependencies (blocks / blocked by) | ✓ | ○ | ✓ | ○ | **Missing** |
 | 21 | Watchers / subscribers | ○ | ○ | ✓ | ✓ | **Partial** (assignees get notices) |
 | 22 | Voting / reactions | ○ | ○ | ○ | ✓ | **Missing** |
 | 23 | Archive / trash | ✓ | ✓ | ✓ | ○ | **Partial** (project archive) |
 | 24 | Bulk edit | ✓ | ○ | ✓ | ○ | **Missing** |
-| 25 | Import / export CSV | ✓ | ✓ | ✓ | ○ | **Missing** |
+| 25 | Import / export CSV | ✓ | ✓ | ✓ | ○ | **Have** (R10) |
 
 ---
 
@@ -47,17 +47,17 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 | 28 | Calendar | **Have** (orbit month) |
 | 29 | Timeline / Gantt | **Have** (gantt-task-react) |
 | 30 | Summary / dashboard | **Have** |
-| 31 | Swimlanes (by assignee / epic) | **Missing** |
-| 32 | Group by / sort in list | **Missing** |
-| 33 | Column reorder on board | **Missing** |
-| 34 | WIP limits per column | **Missing** |
+| 31 | Swimlanes (by assignee / epic) | **Have** (assignee / priority, R1) |
+| 32 | Group by / sort in list | **Partial** (groups + lens sort) |
+| 33 | Column reorder on board | **Have** (R1 DnD ordering) |
+| 34 | WIP limits per column | **Have** (R1 soft limits) |
 | 35 | Card cover / color | **Missing** |
 | 36 | Compact vs comfortable density | **Missing** |
 | 37 | Full-screen focus mode | **Partial** (focus panel) |
 | 38 | Split pane list + detail | **Have** (desktop) |
 | 39 | Personal “My work” across boards | **Partial** (Pulse) |
 | 40 | Roadmap across projects | **Missing** |
-| 41 | Burndown / burnup charts | **Missing** |
+| 41 | Burndown / burnup charts | **Partial** (Summary burndown, R6) |
 | 42 | Cumulative flow diagram | **Missing** |
 | 43 | Velocity chart | **Missing** |
 | 44 | Cycle / lead time analytics | **Missing** |
@@ -74,8 +74,8 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 | 48 | Text search | **Have** |
 | 49 | Saved filters (lenses) | **Have** |
 | 50 | JQL / advanced query language | **Missing** |
-| 51 | Global search across studio | **Missing** |
-| 52 | Command palette (⌘K) | **Missing** |
+| 51 | Global search across studio | **Have** (R8 team search) |
+| 52 | Command palette (⌘K) | **Have** (R8) |
 | 53 | Automation rules (when → then) | **Missing** |
 | 54 | Webhooks | **Missing** |
 | 55 | Email notifications | **Missing** (local-only) |
@@ -90,13 +90,13 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 | # | Feature | Agily |
 |---|---------|-------|
 | 59 | Comments on items | **Have** |
-| 60 | Comment threads / replies | **Missing** (flat list) |
-| 61 | Activity log / history | **Partial** (updates + notices) |
+| 60 | Comment threads / replies | **Have** (R5) |
+| 61 | Activity log / history | **Have** (R5 `ItemEvent` feed) |
 | 62 | Real-time presence | **Missing** |
 | 63 | Real-time multi-user sync | **Missing** |
 | 64 | In-app notifications | **Have** |
 | 65 | Notification preferences | **Missing** |
-| 66 | @mention in comments | **Missing** |
+| 66 | @mention in comments | **Have** (R5) |
 
 ---
 

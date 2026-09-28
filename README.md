@@ -76,7 +76,7 @@ Two tracks on the same app: **foundation** (auth → ship chrome) is frozen on `
 
 Full index: [docs/phases/README.md](docs/phases/README.md)
 
-### Revamp v2 — R1–R12 (in progress)
+### Revamp v2 — R1–R12 (complete)
 
 | | Phase | Status | What shipped |
 |:--:|:------|:------:|:-------------|
@@ -91,7 +91,9 @@ Full index: [docs/phases/README.md](docs/phases/README.md)
 | [![R9](https://img.shields.io/badge/R9-10b981?style=flat-square)](docs/phases/revamp-09-custom.md) | **[Custom fields & workflows](docs/phases/revamp-09-custom.md)** | done | Per-project workflow, custom fields, board settings |
 | [![R10](https://img.shields.io/badge/R10-10b981?style=flat-square)](docs/phases/revamp-10-data.md) | **[Import / export](docs/phases/revamp-10-data.md)** | done | CSV in/out, templates, duplicate board |
 | [![R11](https://img.shields.io/badge/R11-10b981?style=flat-square)](docs/phases/revamp-11-shell.md) | **[Shell & visual parity](docs/phases/revamp-11-shell.md)** | done | Sidebar, topbar, empty states, settings layout |
-| [![R12](https://img.shields.io/badge/R12-c9844a?style=flat-square)](docs/phases/revamp-12-ship.md) | **[Ship revamp](docs/phases/revamp-12-ship.md)** | **next** | QA & e2e |
+| [![R12](https://img.shields.io/badge/R12-10b981?style=flat-square)](docs/phases/revamp-12-ship.md) | **[Ship revamp](docs/phases/revamp-12-ship.md)** | done | E2E revamp paths, 100-ticket seed, [changelog](docs/REVAMP_CHANGELOG.md) |
+
+**Revamp views on a board:** Summary · List (`?view=list`) · Board (`?view=flow`) · Calendar (`?view=orbit`) · Timeline (`?view=timeline`). See [REVAMP_CHANGELOG.md](docs/REVAMP_CHANGELOG.md).
 
 ---
 
