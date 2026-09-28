@@ -7,7 +7,6 @@ import {
   Activity,
   Bell,
   ChevronLeft,
-  ChevronRight,
   FolderKanban,
   LayoutDashboard,
   Settings,
@@ -70,35 +69,46 @@ export function StudioSidebar({
       )}
       aria-label="Studio navigation"
     >
-      <div className="flex items-center justify-between gap-2 border-b border-sidebar-border px-3 py-3">
-        <Link
-          href={activeSlug ? `/t/${activeSlug}` : "/home"}
-          className={cn(
-            "flex min-w-0 items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring",
-            collapsed && "justify-center",
-          )}
-          title={teamName ?? "Agily"}
-        >
-          <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sidebar-accent text-sm font-semibold text-sidebar-accent-foreground">
+      <div
+        className={cn(
+          "flex items-center border-b border-sidebar-border px-3 py-3",
+          collapsed ? "justify-center" : "justify-between gap-2",
+        )}
+      >
+        {collapsed ? (
+          <button
+            type="button"
+            onClick={toggleCollapsed}
+            className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sidebar-accent text-sm font-semibold text-sidebar-accent-foreground hover:bg-sidebar-accent/90 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+            aria-expanded={false}
+            aria-label="Expand sidebar"
+            title={teamName ?? "Agily"}
+          >
             {mark}
-          </span>
-          {!collapsed ? (
-            <span className="truncate text-sm font-semibold">{teamName ?? "Agily"}</span>
-          ) : null}
-        </Link>
-        <button
-          type="button"
-          onClick={toggleCollapsed}
-          className="flex size-8 shrink-0 items-center justify-center rounded-md text-sidebar-foreground/80 hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
-          aria-expanded={!collapsed}
-          aria-label={collapsed ? "Expand sidebar" : "Collapse sidebar"}
-        >
-          {collapsed ? (
-            <ChevronRight className="size-4" aria-hidden />
-          ) : (
-            <ChevronLeft className="size-4" aria-hidden />
-          )}
-        </button>
+          </button>
+        ) : (
+          <>
+            <Link
+              href={activeSlug ? `/t/${activeSlug}` : "/home"}
+              className="flex min-w-0 items-center gap-3 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+              title={teamName ?? "Agily"}
+            >
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-sidebar-accent text-sm font-semibold text-sidebar-accent-foreground">
+                {mark}
+              </span>
+              <span className="truncate text-sm font-semibold">{teamName ?? "Agily"}</span>
+            </Link>
+            <button
+              type="button"
+              onClick={toggleCollapsed}
+              className="flex size-8 shrink-0 items-center justify-center rounded-md text-sidebar-foreground/80 hover:bg-sidebar-accent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-sidebar-ring"
+              aria-expanded={true}
+              aria-label="Collapse sidebar"
+            >
+              <ChevronLeft className="size-4" aria-hidden />
+            </button>
+          </>
+        )}
       </div>
 
       <nav className="flex flex-1 flex-col gap-0.5 overflow-y-auto px-2 py-3 text-sm">

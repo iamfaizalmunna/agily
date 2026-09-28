@@ -39,8 +39,10 @@ export function serializeWorkflow(workflow: Workflow): string {
   return JSON.stringify(workflow);
 }
 
-export function parseProjectWorkflow(raw: string): Workflow | null {
-  const trimmed = raw.trim();
+export function parseProjectWorkflow(
+  raw: string | null | undefined,
+): Workflow | null {
+  const trimmed = String(raw ?? "").trim();
   if (!trimmed) return null;
   try {
     const data = JSON.parse(trimmed) as unknown;

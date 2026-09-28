@@ -25,6 +25,8 @@ describe("workflow/workflow", () => {
     assert.deepEqual(parsed!.statuses.map((row) => row.id), workflowStatusIds(base));
     assert.equal(resolveWorkflow("").statuses.length, 5);
     assert.equal(resolveWorkflow("{").statuses.length, 5);
+    assert.equal(parseProjectWorkflow(null), null);
+    assert.equal(parseProjectWorkflow(undefined), null);
   });
 
   it("validates workflow payloads", () => {

@@ -18,7 +18,6 @@ import { createProjectForTeam } from "@/lib/items/create";
 import { validateParentLink, wouldCreateCycle } from "@/lib/items/hierarchy";
 import { parseIssueType, type IssueType } from "@/lib/items/issue-type";
 import { parseItemPriority } from "@/lib/items/priority";
-import { isItemStatus } from "@/lib/items/status";
 import {
   collectCustomFieldsFromForm,
   parseFieldSchema,
