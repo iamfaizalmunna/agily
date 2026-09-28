@@ -2,10 +2,13 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { CommandPaletteTrigger } from "@/components/chrome/command-palette-trigger";
+import { StudioCreateMenu } from "@/components/chrome/studio-create-menu";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { SignOutButton } from "@/components/chrome/sign-out-button";
 import { studioCrumbs } from "@/lib/nav/breadcrumbs";
 import { projectSlugFromPath, teamSlugFromPath } from "@/lib/nav/studio";
+import type { TeamRole } from "@/lib/rbac/roles";
 
 export function StudioTopbar({
   userEmail,
@@ -13,12 +16,16 @@ export function StudioTopbar({
   teamName,
   projectName,
   pageLabel,
+  slug,
+  projectSlug,
 }: {
   userEmail: string;
-  role?: string;
+  role?: TeamRole;
   teamName?: string;
   projectName?: string;
   pageLabel?: string;
+  slug?: string;
+  projectSlug?: string;
 }) {
   const path = usePathname();
   const crumbs = studioCrumbs(path, {
@@ -26,14 +33,18 @@ export function StudioTopbar({
     project: projectName,
     page: pageLabel,
   });
+  const canCreateBoard = role !== "viewer";
 
   return (
     <header className="flex flex-col gap-3 border-b border-border bg-card px-4 py-3 md:px-6">
-      <div className="flex items-center justify-between gap-3">
-        <nav className="flex min-w-0 flex-wrap items-center gap-1 text-sm text-muted-foreground">
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <nav
+          className="flex min-w-0 flex-wrap items-center gap-1 text-sm text-muted-foreground"
+          aria-label="Breadcrumb"
+        >
           {crumbs.map((crumb, index) => (
             <span key={`${crumb.label}-${index}`} className="flex items-center gap-1">
-              {index > 0 ? <span>/</span> : null}
+              {index > 0 ? <span aria-hidden>/</span> : null}
               {crumb.href ? (
                 <Link href={crumb.href} className="hover:text-foreground">
                   {crumb.label}
@@ -44,7 +55,13 @@ export function StudioTopbar({
             </span>
           ))}
         </nav>
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          <CommandPaletteTrigger compact />
+          <StudioCreateMenu
+            slug={slug}
+            projectSlug={projectSlug}
+            canCreateBoard={canCreateBoard}
+          />
           <ThemeToggle compact />
           <SignOutButton />
         </div>

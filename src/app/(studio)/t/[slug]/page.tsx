@@ -157,7 +157,7 @@ export default async function TeamHomePage({
       </section>
 
       {mayCreate ? (
-        <Card className="p-6">
+        <Card id="create-board" className="scroll-mt-6 p-6">
           <h2 className="text-lg font-semibold">Open a board</h2>
           <p className="mt-1 text-sm text-muted-foreground">
             Each board gets Summary, List, Board, Calendar, and Timeline views.

@@ -26,6 +26,7 @@
     "src/lib/notices/notices.ts",
     "src/lib/cn.ts",
     "src/lib/chrome/keyboard.ts",
+    "src/lib/chrome/sidebar.ts",
     "src/lib/board/kanban.ts",
     "src/lib/workflow/workflow.ts",
     "src/lib/custom-fields/fields.ts",

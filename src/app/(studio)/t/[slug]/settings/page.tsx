@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import { LabelsSettings } from "@/components/labels/labels-settings";
 import { TicketTemplatesInfo } from "@/components/teams/ticket-templates-info";
 import { SettingsForm } from "@/components/teams/settings-form";
+import { SettingsLayout } from "@/components/settings/settings-layout";
 import { listTeamLabels } from "@/lib/labels/queries";
 import { requireUser } from "@/lib/auth/session";
 import {
@@ -24,24 +25,32 @@ export default async function SettingsPage({
   const settings = parseTeamSettings(ctx.team.settings);
   const editable = canEditSettings(ctx.role);
   const labels = await listTeamLabels(ctx.team.id);
+  const base = `/t/${slug}/settings`;
+
+  const nav = [
+    { id: "general", label: "General", href: `${base}#general` },
+    { id: "labels", label: "Labels", href: `${base}#labels` },
+    { id: "templates", label: "Templates", href: `${base}#templates` },
+  ];
 
   return (
-    <section className="mx-auto flex max-w-2xl flex-col gap-8">
-      <div>
-        <p className="text-xs font-semibold uppercase tracking-wide text-primary">
-          Settings
-        </p>
-        <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">{ctx.team.name}</h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Control who can create boards and invite people.
-        </p>
-      </div>
-
+    <SettingsLayout
+      title="Studio settings"
+      description={ctx.team.name}
+      items={nav}
+      defaultSection="general"
+    >
       {editable ? (
         <>
-          <SettingsForm slug={slug} settings={settings} />
-          <LabelsSettings slug={slug} labels={labels} />
-          <TicketTemplatesInfo settingsJson={ctx.team.settings} />
+          <section id="general" className="scroll-mt-6">
+            <SettingsForm slug={slug} settings={settings} />
+          </section>
+          <section id="labels" className="scroll-mt-6">
+            <LabelsSettings slug={slug} labels={labels} />
+          </section>
+          <section id="templates" className="scroll-mt-6">
+            <TicketTemplatesInfo settingsJson={ctx.team.settings} />
+          </section>
         </>
       ) : (
         <div className="rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">
@@ -60,6 +69,6 @@ export default async function SettingsPage({
           </ul>
         </div>
       )}
-    </section>
+    </SettingsLayout>
   );
 }

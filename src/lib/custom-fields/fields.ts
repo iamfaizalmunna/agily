@@ -18,8 +18,8 @@ export function serializeFieldSchema(defs: CustomFieldDef[]): string {
   return JSON.stringify(defs);
 }
 
-export function parseFieldSchema(raw: string): CustomFieldDef[] {
-  const trimmed = raw.trim();
+export function parseFieldSchema(raw: string | null | undefined): CustomFieldDef[] {
+  const trimmed = String(raw ?? "").trim();
   if (!trimmed) return [];
   try {
     const data = JSON.parse(trimmed) as unknown;
@@ -73,8 +73,8 @@ export function serializeCustomFields(values: CustomFieldValues): string {
   return JSON.stringify(values);
 }
 
-export function parseCustomFields(raw: string): CustomFieldValues {
-  const trimmed = raw.trim();
+export function parseCustomFields(raw: string | null | undefined): CustomFieldValues {
+  const trimmed = String(raw ?? "").trim();
   if (!trimmed) return {};
   try {
     const data = JSON.parse(trimmed) as unknown;

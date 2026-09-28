@@ -1,8 +1,4 @@
-import {
-  ITEM_STATUSES,
-  isItemStatus,
-  type ItemStatus,
-} from "@/lib/items/status";
+import { type ItemStatus } from "@/lib/items/status";
 import { PRIORITY_LABEL, isItemPriority, type ItemPriority } from "@/lib/items/priority";
 import {
   defaultWorkflow,

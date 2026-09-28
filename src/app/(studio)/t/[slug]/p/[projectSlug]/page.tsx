@@ -5,6 +5,7 @@ import { buildActivityFeed } from "@/lib/activity/feed";
 import { CreateGroupForm } from "@/components/items/create-group-form";
 import { CreateItemForm } from "@/components/items/create-item-form";
 import { ItemRow } from "@/components/items/item-row";
+import { EmptyState } from "@/components/chrome/empty-state";
 import { FilterBar } from "@/components/lenses/filter-bar";
 import { Button } from "@/components/ui/button";
 import { BoardSettingsBar } from "@/components/views/board-settings-bar";
@@ -340,7 +341,19 @@ export default async function ProjectBoardPage({
         />
       ) : null}
 
-      {view === "list" ? (
+      {view === "list" && !items.length ? (
+        <EmptyState
+          title="No tickets yet"
+          body="Add your first ticket in a section below, or clear filters if you are using a lens."
+          action={
+            writable
+              ? { href: "#create-ticket", label: "Add a ticket" }
+              : undefined
+          }
+        />
+      ) : null}
+
+      {view === "list" && items.length ? (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
           <TicketList
             items={items.map((item) => ({
@@ -410,6 +423,23 @@ export default async function ProjectBoardPage({
             prefs={boardPrefs}
             lensExtra={lensExtra}
           />
+          {!items.length ? (
+            <EmptyState
+              title="Board is empty"
+              body="Create tickets from List view or import CSV from board settings."
+              action={
+                writable
+                  ? {
+                      href: boardViewHref(slug, projectSlug, "list", yearMonth, {
+                        ...lensExtra,
+                      }) + "#create-ticket",
+                      label: "Go to List",
+                    }
+                  : undefined
+              }
+            />
+          ) : null}
+          {items.length ? (
           <FlowRiver
             slug={slug}
             projectSlug={projectSlug}
@@ -432,6 +462,7 @@ export default async function ProjectBoardPage({
             prefs={boardPrefs}
             nameByUserId={nameByUserId}
           />
+          ) : null}
         </div>
       ) : null}
 
@@ -472,8 +503,12 @@ export default async function ProjectBoardPage({
 
       {view === "list" && writable ? (
         <>
-          {project.groups.map((group) => (
-            <section key={group.id} id={`group-${group.id}`} className="flex flex-col gap-2">
+          {project.groups.map((group, index) => (
+            <section
+              key={group.id}
+              id={index === 0 ? "create-ticket" : `group-${group.id}`}
+              className="scroll-mt-6 flex flex-col gap-2"
+            >
               <h2 className="text-sm font-semibold">{group.name}</h2>
               <CreateItemForm
                 slug={slug}

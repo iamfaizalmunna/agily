@@ -15,6 +15,8 @@ import {
 describe("custom-fields/fields", () => {
   it("parses and serializes field schema", () => {
     assert.deepEqual(parseFieldSchema(""), []);
+    assert.deepEqual(parseFieldSchema(null), []);
+    assert.deepEqual(parseFieldSchema(undefined), []);
     assert.deepEqual(parseFieldSchema("[]"), []);
     assert.deepEqual(parseFieldSchema("{"), []);
     const defs = [
@@ -48,6 +50,8 @@ describe("custom-fields/fields", () => {
 
   it("parses custom field values", () => {
     assert.deepEqual(parseCustomFields(""), {});
+    assert.deepEqual(parseCustomFields(null), {});
+    assert.deepEqual(parseCustomFields(undefined), {});
     assert.deepEqual(parseCustomFields("{"), {});
     const values = { f_story_points: 3, f_note: "ok", f_empty: null };
     assert.deepEqual(

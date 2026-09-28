@@ -1,6 +1,6 @@
 # R11 — Shell & visual parity
 
-**Status:** planned  
+**Status:** done  
 **Branch:** `revamp/r11-shell`
 
 ## Goal
@@ -9,9 +9,9 @@ One coherent Jira-light theme: sidebar, topbar, empty states, mobile.
 
 ## Deliverables
 
-- [ ] Unify typography (drop mixed paper/copper leftovers)
-- [ ] Topbar: global search trigger, “Create” split button
-- [ ] Sidebar: collapse, icons (lucide), active board highlight
-- [ ] Empty states per view with CTA
-- [ ] Notion-style settings layout
-- [ ] Accessibility pass (focus rings, aria on kanban)
+- [x] Unify typography (drop mixed paper/copper leftovers)
+- [x] Topbar: global search trigger, “Create” split button
+- [x] Sidebar: collapse, icons (lucide), active board highlight
+- [x] Empty states per view with CTA
+- [x] Notion-style settings layout
+- [x] Accessibility pass (focus rings, aria on kanban)
