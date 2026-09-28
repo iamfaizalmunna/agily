@@ -417,6 +417,35 @@ async function seedAtlasDependencies(prisma: PrismaClient, projectId: string) {
   }
 }
 
+const ATLAS_VOLUME_TARGET = 100;
+
+/** Ensures Atlas has enough tickets to sanity-check board performance (R12). */
+async function ensureAtlasVolume(
+  prisma: PrismaClient,
+  projectId: string,
+  groupId: string,
+  base: Date,
+) {
+  const count = await prisma.item.count({ where: { projectId } });
+  if (count >= ATLAS_VOLUME_TARGET) return;
+
+  const statuses = ["backlog", "ready", "doing", "review", "done"];
+  const priorities = ["trivial", "minor", "major", "critical"];
+  for (let i = count; i < ATLAS_VOLUME_TARGET; i++) {
+    await prisma.item.create({
+      data: {
+        projectId,
+        groupId,
+        title: `Volume seed ${i + 1}`,
+        status: statuses[i % statuses.length],
+        priority: priorities[i % priorities.length],
+        position: 300 + i,
+        dueOn: dueFromDays((i % 21) - 5, base),
+      },
+    });
+  }
+}
+
 async function seedEpicHierarchy(
   prisma: PrismaClient,
   projectId: string,
@@ -504,6 +533,7 @@ export async function seedDemoStudio(
   const atlasEpicGroup = atlas.groups.find((group) => group.name === "Now") ?? atlas.groups[0];
   if (atlasEpicGroup) {
     await seedEpicHierarchy(prisma, atlas.id, atlasEpicGroup.id);
+    await ensureAtlasVolume(prisma, atlas.id, atlasEpicGroup.id, base);
   }
   await seedTickets(
     prisma,

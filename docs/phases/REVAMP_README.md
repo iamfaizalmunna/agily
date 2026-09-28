@@ -1,6 +1,6 @@
 # Revamp phases (v2) — one at a time
 
-**Progress on `main`:** R1–R11 **complete** · R12 **next**.  
+**Progress on `main`:** R1–R12 **complete**.  
 **Overview tables & badges:** [README.md](../../README.md#roadmap) · **Cursor install:** [Run in Cursor](../../README.md#run-in-cursor-agent).
 
 **Foundation (phases 1–10)** is done and stays on `main`. We do **not** rewrite auth, teams, or the ticket model from scratch.
@@ -33,7 +33,7 @@ GitHub loop (push branch → PR → merge): [REVAMP_GIT_LOOP.md](REVAMP_GIT_LOOP
 | R9 | Custom fields & workflows | **complete** | [revamp-09-custom.md](revamp-09-custom.md) |
 | R10 | Import / export & templates | **complete** | [revamp-10-data.md](revamp-10-data.md) |
 | R11 | Shell & visual parity | **complete** | [revamp-11-shell.md](revamp-11-shell.md) |
-| R12 | Ship revamp (QA + e2e) | **next** | [revamp-12-ship.md](revamp-12-ship.md) |
+| R12 | Ship revamp (QA + e2e) | **complete** | [revamp-12-ship.md](revamp-12-ship.md) |
 
 ## References
 

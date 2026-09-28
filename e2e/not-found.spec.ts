@@ -1,9 +1,6 @@
 import { test, expect } from "@playwright/test";
-import { signIn } from "./helpers";
-
 test.describe("empty and error chrome", () => {
   test("shows a friendly 404", async ({ page }) => {
-    await signIn(page);
     await page.goto("/t/not-a-real-studio");
     await expect(page.getByRole("heading", { name: "Not here" })).toBeVisible();
     await expect(page.getByTestId("not-found-home")).toBeVisible();
