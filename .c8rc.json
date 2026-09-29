@@ -27,6 +27,7 @@
     "src/lib/search/recent.ts",
     "src/lib/lenses/lenses.ts",
     "src/lib/focus/focus.ts",
+    "src/lib/hub/board-hub.ts",
     "src/lib/notices/notices.ts",
     "src/lib/cn.ts",
     "src/lib/ui/mobile.ts",

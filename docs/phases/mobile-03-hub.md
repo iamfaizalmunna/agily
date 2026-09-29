@@ -1,6 +1,6 @@
 # MF3 — Projects & board hub
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `mobile/mf3-hub`
 
 ## Goal
@@ -9,10 +9,10 @@ Mobile **“Your boards”** hub — like Jira’s project list — not only sid
 
 ## Deliverables
 
-- [ ] `/t/[slug]` mobile section: searchable project cards with ticket counts.
-- [ ] “Recent” boards (last visited, localStorage or server preference).
-- [ ] Tap project → last view (or default Summary) with clear back to hub.
-- [ ] Empty studio CTA to create first project.
+- [x] `/t/[slug]` mobile section: searchable project cards with ticket counts.
+- [x] “Recent” boards (last visited, localStorage or server preference).
+- [x] Tap project → last view (or default Summary) with clear back to hub.
+- [x] Empty studio CTA to create first project.
 
 ## Acceptance
 
