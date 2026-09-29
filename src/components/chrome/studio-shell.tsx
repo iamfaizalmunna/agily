@@ -2,19 +2,17 @@
 
 import { Suspense, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
-import { CommandPaletteTrigger } from "@/components/chrome/command-palette-trigger";
 import { StudioSidebar } from "@/components/chrome/studio-sidebar";
 import { StudioTopbar } from "@/components/chrome/studio-topbar";
 import { CommandPaletteProvider } from "@/components/chrome/command-palette-provider";
 import { KeyboardProvider } from "@/components/chrome/keyboard-provider";
-import { LensPanel, LensTrigger } from "@/components/lens/lens-panel";
-import { NoticeBell } from "@/components/chrome/notice-bell";
-import { SignOutButton } from "@/components/chrome/sign-out-button";
-import { ThemeToggle } from "@/components/theme/theme-toggle";
-import Link from "next/link";
-import { cn } from "@/lib/cn";
-import { mobileBottomNavClass, mobileStudioMainClass } from "@/lib/ui/mobile";
-import { projectSlugFromPath, studioMark, teamSlugFromPath } from "@/lib/nav/studio";
+import { LensPanel } from "@/components/lens/lens-panel";
+import { MobileBottomNav } from "@/components/chrome/mobile-bottom-nav";
+import { MobileShellHeader } from "@/components/chrome/mobile-shell-header";
+import { useLensStore } from "@/lib/lens/store";
+import { mobileStudioMainClass } from "@/lib/ui/mobile";
+import { projectSlugFromPath, teamSlugFromPath } from "@/lib/nav/studio";
+
 import type { TeamRole } from "@/lib/rbac/roles";
 
 type TeamMark = {
@@ -42,36 +40,31 @@ export function StudioShell({
   const unread = current ? (unreadBySlug[current.slug] ?? 0) : 0;
   const noticesHref = current ? `/t/${current.slug}/notices` : "/home";
   const onBell = path.endsWith("/notices");
-  const mark = studioMark(current?.name);
+  const projectSlug = projectSlugFromPath(path) ?? undefined;
   const pageLabel = path.endsWith("/people")
     ? "People"
     : path.endsWith("/notices")
       ? "Notices"
       : path.endsWith("/settings")
         ? "Settings"
-        : projectSlugFromPath(path)
+        : projectSlug
           ? "Board"
           : slug
             ? "Pulse"
             : undefined;
+  const headerTitle = current?.name ?? "Agily";
+  const setLensOpen = useLensStore((s) => s.setOpen);
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col md:flex-row">
-      <header className="flex items-center justify-between gap-3 border-b border-border bg-card px-4 py-3 md:hidden">
-        <Link
-          href={current ? `/t/${current.slug}` : "/home"}
-          className="flex h-9 w-9 items-center justify-center rounded-md bg-primary/10 text-sm font-semibold text-primary"
-        >
-          {mark}
-        </Link>
-        <p className="min-w-0 flex-1 truncate text-sm font-medium">
-          {current?.name ?? "Agily"}
-        </p>
-        <CommandPaletteTrigger compact />
-        <LensTrigger />
-        <NoticeBell href={noticesHref} count={unread} on={onBell} compact />
-        <SignOutButton />
-      </header>
+      <MobileShellHeader
+        teams={teams}
+        current={current}
+        unread={unread}
+        noticesHref={noticesHref}
+        onBell={onBell}
+        title={headerTitle}
+      />
 
       <StudioSidebar
         teamName={current?.name}
@@ -86,9 +79,9 @@ export function StudioShell({
             role={current?.role}
             teamName={current?.name}
             slug={slug}
-            projectSlug={projectSlugFromPath(path) ?? undefined}
+            projectSlug={projectSlug}
             projectName={
-              projectSlugFromPath(path)
+              projectSlug
                 ?.replace(/-/g, " ")
                 .replace(/\b\w/g, (c) => c.toUpperCase())
             }
@@ -99,33 +92,17 @@ export function StudioShell({
         <main className={mobileStudioMainClass()}>{children}</main>
       </div>
 
-      <nav className={mobileBottomNavClass()}>
-        <Link
-          href={current ? `/t/${current.slug}` : "/home"}
-          className={cn(
-            "flex min-h-14 min-w-11 flex-1 items-center justify-center text-xs font-medium",
-            path === "/home" || path === `/t/${slug}`
-              ? "text-primary"
-              : "text-muted-foreground",
-          )}
-        >
-          Pulse
-        </Link>
-        {slug ? (
-          <Link
-            href={`/t/${slug}/people`}
-            className={cn(
-              "flex min-h-14 flex-1 items-center justify-center text-xs font-medium",
-              path.endsWith("/people") ? "text-primary" : "text-muted-foreground",
-            )}
-          >
-            People
-          </Link>
-        ) : null}
-        <NoticeBell href={noticesHref} count={unread} on={onBell} />
-        <ThemeToggle compact />
-        <span className="hidden">{userName}</span>
-      </nav>
+      <MobileBottomNav
+        path={path}
+        slug={slug}
+        projectSlug={projectSlug}
+        unread={unread}
+        noticesHref={noticesHref}
+        teams={teams}
+        userName={userName}
+        userEmail={userEmail}
+        onOpenLens={() => setLensOpen(true)}
+      />
 
       <Suspense fallback={null}>
         <KeyboardProvider slug={slug} />

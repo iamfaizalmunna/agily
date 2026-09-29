@@ -130,7 +130,7 @@ export default async function TeamHomePage({
         </PulseCard>
       </div>
 
-      <section className="flex flex-col gap-3">
+      <section id="studio-boards" className="flex scroll-mt-6 flex-col gap-3">
         <div className="flex items-center justify-between">
           <h2 className="text-lg font-semibold">Boards</h2>
           <Badge variant="secondary">{projects.length}</Badge>

@@ -32,6 +32,7 @@
     "src/lib/ui/mobile.ts",
     "src/lib/chrome/keyboard.ts",
     "src/lib/chrome/sidebar.ts",
+    "src/lib/chrome/mobile-nav.ts",
     "src/lib/board/kanban.ts",
     "src/lib/workflow/workflow.ts",
     "src/lib/custom-fields/fields.ts",
