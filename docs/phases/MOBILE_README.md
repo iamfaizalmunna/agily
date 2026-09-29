@@ -8,14 +8,19 @@
 
 ---
 
-## How we work (same as revamp)
+## How we work — the loop
 
-1. One phase at a time — **do not open MF3 while MF2 is in review.**
-2. Branch: `mobile/mf{N}-{short-name}` (example: `mobile/mf1-touch-tokens`).
-3. Each PR: code + **unit tests** (coverage pack where logic lives) + **Playwright mobile viewport** when UI changes + update phase doc **Status** → `complete`.
-4. Merge to `main`, then cut the next branch.
+**Branch → push → PR → merge → `main` → next phase.** Repeat for MF1…MF12.
 
-Git loop: [REVAMP_GIT_LOOP.md](REVAMP_GIT_LOOP.md) (same PR discipline).
+Each phase must pass:
+
+1. **Unit tests** — `npm test` + `npm run test:coverage` (100% lines on the pack).
+2. **Hardening** — sensible defaults per [HARDENING.md](../HARDENING.md) (auth, exports, env) when that phase touches those areas.
+3. **UI check** — run `npm run dev`; verify phone (~390px) and desktop; no broken nav or clipped content.
+
+Details: **[MOBILE_GIT_LOOP.md](MOBILE_GIT_LOOP.md)** · Revamp equivalent: [REVAMP_GIT_LOOP.md](REVAMP_GIT_LOOP.md).
+
+**Rules:** one mobile PR at a time; do not start MF{N+1} until MF{N} is merged on `main`.
 
 ---
 
