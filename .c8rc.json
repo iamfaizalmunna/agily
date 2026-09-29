@@ -29,6 +29,7 @@
     "src/lib/focus/focus.ts",
     "src/lib/notices/notices.ts",
     "src/lib/cn.ts",
+    "src/lib/ui/mobile.ts",
     "src/lib/chrome/keyboard.ts",
     "src/lib/chrome/sidebar.ts",
     "src/lib/board/kanban.ts",

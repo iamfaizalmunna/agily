@@ -67,7 +67,7 @@
 
 ## Roadmap
 
-**Foundation (phases 1–10)** and **Revamp v2 (R1–R12)** are finished on `main`. Further work (e.g. hardening, new features) ships in small PRs.
+**Foundation (phases 1–10)** and **Revamp v2 (R1–R12)** are finished on `main`. **Next track:** [Mobile-first & solid UI (MF1–MF12)](docs/phases/MOBILE_README.md) — Jira-like phone experience, site-wide.
 
 **Charts (browser):** [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases) · [docs/phases/index.html](docs/phases/index.html)  
 **Gap matrix:** [docs/FEATURE_GAP.md](docs/FEATURE_GAP.md) · **Git loop:** [docs/phases/REVAMP_GIT_LOOP.md](docs/phases/REVAMP_GIT_LOOP.md)

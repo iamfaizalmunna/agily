@@ -12,6 +12,8 @@ import {
   DEMO_PASSWORD,
 } from "@/lib/auth/demo-accounts";
 import { demoLoginsEnabledClient } from "@/lib/demo/mode";
+import { mobilePrimaryTouchClass } from "@/lib/ui/mobile";
+import { cn } from "@/lib/cn";
 
 const initial: AuthFormState = {};
 
@@ -67,7 +69,11 @@ export function SignInForm() {
           {state.error}
         </p>
       ) : null}
-      <Button className="min-h-12 w-full" disabled={pending} data-testid="signin-submit">
+      <Button
+        className={cn(mobilePrimaryTouchClass())}
+        disabled={pending}
+        data-testid="signin-submit"
+      >
         {pending ? "Signing in…" : "Enter"}
       </Button>
       <p className="text-center text-sm text-paper/45">

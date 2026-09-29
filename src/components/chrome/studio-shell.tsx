@@ -13,6 +13,7 @@ import { SignOutButton } from "@/components/chrome/sign-out-button";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { mobileBottomNavClass, mobileStudioMainClass } from "@/lib/ui/mobile";
 import { projectSlugFromPath, studioMark, teamSlugFromPath } from "@/lib/nav/studio";
 import type { TeamRole } from "@/lib/rbac/roles";
 
@@ -95,16 +96,14 @@ export function StudioShell({
           />
         </div>
 
-        <main className="flex-1 px-4 pb-24 pt-4 md:px-6 md:pb-8 md:pt-6">
-          {children}
-        </main>
+        <main className={mobileStudioMainClass()}>{children}</main>
       </div>
 
-      <nav className="fixed inset-x-0 bottom-0 z-20 flex border-t border-border bg-card pb-[env(safe-area-inset-bottom)] md:hidden">
+      <nav className={mobileBottomNavClass()}>
         <Link
           href={current ? `/t/${current.slug}` : "/home"}
           className={cn(
-            "flex min-h-14 flex-1 items-center justify-center text-xs font-medium",
+            "flex min-h-14 min-w-11 flex-1 items-center justify-center text-xs font-medium",
             path === "/home" || path === `/t/${slug}`
               ? "text-primary"
               : "text-muted-foreground",
