@@ -51,9 +51,9 @@ export function mobilePageStackClass(extra?: string) {
 /** Auth / marketing full-screen centers with safe areas. */
 export function mobileAuthShellClass(extra?: string) {
   return cn(
-    "flex min-h-dvh flex-1 items-center justify-center bg-ink",
-    "px-4 pb-[env(safe-area-inset-bottom,0px)] pt-[env(safe-area-inset-top,0px)]",
-    "py-10",
+    "flex min-h-dvh flex-1 items-center justify-center bg-ink px-4 py-10",
+    "pt-[max(2.5rem,env(safe-area-inset-top,0px))]",
+    "pb-[max(2.5rem,env(safe-area-inset-bottom,0px))]",
     extra,
   );
 }
