@@ -1,6 +1,5 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { EmptyState } from "@/components/chrome/empty-state";
 import { CreateProjectForm } from "@/components/items/create-project-form";
 import { TicketChip } from "@/components/views/ticket-chip";
 import { Badge } from "@/components/ui/badge";
@@ -15,6 +14,7 @@ import {
   studioOverdueTotal,
 } from "@/lib/views/analytics";
 import { pulseBuckets } from "@/lib/views/views";
+import { PulseBoardHub } from "@/components/hub/pulse-board-hub";
 import { MobilePage } from "@/components/ui/mobile-page";
 import { MobileStickyFooter } from "@/components/ui/mobile-sticky-footer";
 
@@ -130,33 +130,15 @@ export default async function TeamHomePage({
         </PulseCard>
       </div>
 
-      <section id="studio-boards" className="flex scroll-mt-6 flex-col gap-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-lg font-semibold">Boards</h2>
-          <Badge variant="secondary">{projects.length}</Badge>
-        </div>
-        {projects.length ? (
-          <ul className="grid gap-3 sm:grid-cols-2">
-            {projects.map((project) => (
-              <li key={project.id}>
-                <Link href={`/t/${slug}/p/${project.slug}`}>
-                  <Card className="flex items-center justify-between p-4 transition-colors hover:border-primary/40 hover:bg-muted/30">
-                    <span className="font-medium">{project.name}</span>
-                    <span className="text-sm text-muted-foreground">
-                      {project._count.items} tickets
-                    </span>
-                  </Card>
-                </Link>
-              </li>
-            ))}
-          </ul>
-        ) : (
-          <EmptyState
-            title="No boards yet"
-            body="Open a board to add sections and tickets."
-          />
-        )}
-      </section>
+      <PulseBoardHub
+        slug={slug}
+        mayCreate={mayCreate}
+        projects={projects.map((project) => ({
+          slug: project.slug,
+          name: project.name,
+          ticketCount: project._count.items,
+        }))}
+      />
 
       {mayCreate ? (
         <MobileStickyFooter>

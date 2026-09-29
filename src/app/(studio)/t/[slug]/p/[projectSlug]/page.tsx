@@ -8,6 +8,8 @@ import { ItemRow } from "@/components/items/item-row";
 import { EmptyState } from "@/components/chrome/empty-state";
 import { FilterBar } from "@/components/lenses/filter-bar";
 import { Button } from "@/components/ui/button";
+import { MobileBoardBack } from "@/components/hub/mobile-board-back";
+import { RecentBoardTracker } from "@/components/hub/recent-board-tracker";
 import { MobilePage } from "@/components/ui/mobile-page";
 import { BoardSettingsBar } from "@/components/views/board-settings-bar";
 import { BoardExportLink } from "@/components/views/board-export-link";
@@ -272,6 +274,13 @@ export default async function ProjectBoardPage({
 
   return (
     <MobilePage className="gap-4">
+      <RecentBoardTracker
+        teamSlug={slug}
+        projectSlug={projectSlug}
+        projectName={project.name}
+        view={view}
+      />
+      <MobileBoardBack slug={slug} />
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-primary">
