@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { mobileAuthShellClass } from "@/lib/ui/mobile";
 
 export function AuthShell({
   title,
@@ -10,7 +11,7 @@ export function AuthShell({
   children: ReactNode;
 }) {
   return (
-    <main className="flex min-h-dvh flex-1 items-center justify-center bg-ink px-4 py-10">
+    <main className={mobileAuthShellClass()}>
       <div
         className="grid w-full max-w-4xl overflow-hidden rounded-lg border border-[var(--border)] bg-surface shadow-[var(--shadow-card-hover)] md:grid-cols-[1.1fr_0.9fr]"
       >

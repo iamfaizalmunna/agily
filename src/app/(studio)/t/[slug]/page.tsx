@@ -15,6 +15,8 @@ import {
   studioOverdueTotal,
 } from "@/lib/views/analytics";
 import { pulseBuckets } from "@/lib/views/views";
+import { MobilePage } from "@/components/ui/mobile-page";
+import { MobileStickyFooter } from "@/components/ui/mobile-sticky-footer";
 
 export default async function TeamHomePage({
   params,
@@ -72,7 +74,7 @@ export default async function TeamHomePage({
   };
 
   return (
-    <section className="flex flex-col gap-8">
+    <MobilePage className="gap-8">
       <div>
         <p className="text-xs font-semibold uppercase tracking-wide text-primary">
           Pulse
@@ -157,17 +159,19 @@ export default async function TeamHomePage({
       </section>
 
       {mayCreate ? (
-        <Card id="create-board" className="scroll-mt-6 p-6">
-          <h2 className="text-lg font-semibold">Open a board</h2>
-          <p className="mt-1 text-sm text-muted-foreground">
-            Each board gets Summary, List, Board, Calendar, and Timeline views.
-          </p>
-          <div className="mt-4">
-            <CreateProjectForm slug={slug} />
-          </div>
-        </Card>
+        <MobileStickyFooter>
+          <Card id="create-board" className="scroll-mt-6 p-6 md:shadow-none">
+            <h2 className="text-lg font-semibold">Open a board</h2>
+            <p className="mt-1 text-sm text-muted-foreground">
+              Each board gets Summary, List, Board, Calendar, and Timeline views.
+            </p>
+            <div className="mt-4">
+              <CreateProjectForm slug={slug} />
+            </div>
+          </Card>
+        </MobileStickyFooter>
       ) : null}
-    </section>
+    </MobilePage>
   );
 }
 

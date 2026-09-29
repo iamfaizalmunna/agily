@@ -8,6 +8,7 @@ import { ItemRow } from "@/components/items/item-row";
 import { EmptyState } from "@/components/chrome/empty-state";
 import { FilterBar } from "@/components/lenses/filter-bar";
 import { Button } from "@/components/ui/button";
+import { MobilePage } from "@/components/ui/mobile-page";
 import { BoardSettingsBar } from "@/components/views/board-settings-bar";
 import { BoardExportLink } from "@/components/views/board-export-link";
 import { FlowRiver } from "@/components/views/flow-river";
@@ -270,7 +271,7 @@ export default async function ProjectBoardPage({
   const showFilters = view !== "summary";
 
   return (
-    <section className="flex flex-col gap-4">
+    <MobilePage className="gap-4">
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="text-xs font-semibold uppercase tracking-wide text-primary">
@@ -593,6 +594,6 @@ export default async function ProjectBoardPage({
           </FocusStage>
         </div>
       ) : null}
-    </section>
+    </MobilePage>
   );
 }
