@@ -1,6 +1,6 @@
 # Mobile-first & solid UI (MF1–MF12)
 
-**Progress on `main`:** MF1 **complete** · MF2 **next** (merge `mobile/mf1-touch-tokens` when PR lands).
+**Progress on `main`:** MF1–MF2 **complete** on merge of `mobile/mf2-shell` · MF3 **next**.
 
 **Goal:** Site-wide UI that feels **solid on phone first** — Jira-mobile patterns (clear nav, one-hand use, fast ticket access) — while **desktop stays the power layout** you have today.
 
@@ -42,7 +42,7 @@ Details: **[MOBILE_GIT_LOOP.md](MOBILE_GIT_LOOP.md)** · Revamp equivalent: [REV
 
 | Area | Today | Gap |
 |------|--------|-----|
-| Shell | Sidebar desktop; **text-only bottom nav** on mobile | No icons, no “Boards”, no Create in nav; top bar crowded |
+| Shell | Jira-like **icon bottom nav** + compact header on mobile | MF3 hub polish; board column UX in MF4 |
 | Board | Kanban with DnD | Columns tight on phone; drag hard without long-press |
 | List / focus | Split pane desktop | Mobile needs full-screen ticket flow |
 | Filters | Full `FilterBar` always visible | Overwhelming on narrow screens |
@@ -56,8 +56,8 @@ Details: **[MOBILE_GIT_LOOP.md](MOBILE_GIT_LOOP.md)** · Revamp equivalent: [REV
 | Phase | Name | Status | Doc |
 |:-----:|------|--------|-----|
 | MF1 | Touch tokens & layout primitives | **complete** | [mobile-01-tokens.md](mobile-01-tokens.md) |
-| MF2 | Mobile shell (Jira-like nav) | **next** | [mobile-02-shell.md](mobile-02-shell.md) |
-| MF3 | Projects & board hub | planned | [mobile-03-hub.md](mobile-03-hub.md) |
+| MF2 | Mobile shell (Jira-like nav) | **complete** | [mobile-02-shell.md](mobile-02-shell.md) |
+| MF3 | Projects & board hub | **next** | [mobile-03-hub.md](mobile-03-hub.md) |
 | MF4 | Board (flow) mobile | planned | [mobile-04-board.md](mobile-04-board.md) |
 | MF5 | List & ticket detail | planned | [mobile-05-ticket.md](mobile-05-ticket.md) |
 | MF6 | Filters & search sheets | planned | [mobile-06-filters.md](mobile-06-filters.md) |
