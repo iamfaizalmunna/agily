@@ -1,6 +1,7 @@
 # MF11 — PWA & installable shell
 
-**Status:** planned  
+**Status:** complete  
+**Branch:** `mobile/mf7-mf12-ship`  
 **Branch:** `mobile/mf11-pwa`
 
 ## Goal

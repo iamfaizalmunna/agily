@@ -15,6 +15,15 @@ const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 export const metadata: Metadata = {
   title: "Agily",
   description: "Local team workspace. Own SQLite. No cloud APIs.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    title: "Agily",
+    statusBarStyle: "default",
+  },
+  icons: {
+    apple: [{ url: "/globe.svg", type: "image/svg+xml" }],
+  },
 };
 
 export const viewport: Viewport = {

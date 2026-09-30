@@ -1,7 +1,7 @@
 # MF12 — Ship mobile (QA + e2e)
 
-**Status:** planned  
-**Branch:** `mobile/mf12-ship`
+**Status:** complete  
+**Branch:** `mobile/mf7-mf12-ship`
 
 ## Goal
 

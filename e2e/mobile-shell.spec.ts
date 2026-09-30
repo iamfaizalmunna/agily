@@ -29,8 +29,9 @@ test.describe("mobile shell", () => {
     await page.getByRole("button", { name: "Close" }).click();
 
     await page.goto(`/t/${E2E.teamSlug}/p/${E2E.projectSlug}`);
-    await nav.getByRole("link", { name: "Create" }).click();
-    await expect(page).toHaveURL(/create-ticket/);
+    await nav.getByRole("button", { name: "Create" }).click();
+    await expect(page.getByRole("dialog")).toBeVisible();
+    await page.getByRole("button", { name: "Close" }).click();
     await expect(nav.getByRole("link", { name: "Boards" })).toHaveAttribute(
       "aria-current",
       "page",

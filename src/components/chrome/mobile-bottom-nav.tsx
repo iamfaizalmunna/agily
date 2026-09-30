@@ -12,13 +12,14 @@ import { mobileBottomNavClass } from "@/lib/ui/mobile";
 import { unreadBadge } from "@/lib/notices/notices";
 import {
   mobileBoardsHref,
-  mobileCreateHref,
   mobileNavBoardsActive,
   mobileNavHomeActive,
   mobileNavInboxActive,
 } from "@/lib/chrome/mobile-nav";
 import { MobileNavItem } from "@/components/chrome/mobile-nav-item";
+import { MobileCreateSheet } from "@/components/chrome/mobile-create-sheet";
 import { MobileMoreSheet } from "@/components/chrome/mobile-more-sheet";
+import type { QuickCreateTarget } from "@/lib/create/quick-create";
 import type { TeamRole } from "@/lib/rbac/roles";
 
 type TeamMark = { name: string; slug: string; role: TeamRole };
@@ -33,6 +34,8 @@ export function MobileBottomNav({
   userName,
   userEmail,
   onOpenLens,
+  quickCreateProjects,
+  canCreateBoard,
 }: {
   path: string;
   slug?: string;
@@ -43,13 +46,14 @@ export function MobileBottomNav({
   userName: string;
   userEmail: string;
   onOpenLens: () => void;
+  quickCreateProjects: QuickCreateTarget[];
+  canCreateBoard: boolean;
 }) {
   const [moreOpen, setMoreOpen] = useState(false);
+  const [createOpen, setCreateOpen] = useState(false);
   const badge = unreadBadge(unread);
   const homeHref = slug ? `/t/${slug}` : "/home";
   const boardsHref = slug ? mobileBoardsHref(slug) : "/home";
-  const createHref = slug ? mobileCreateHref(slug, projectSlug) : "/home";
-
   return (
     <>
       <nav className={mobileBottomNavClass()} aria-label="Main">
@@ -68,7 +72,11 @@ export function MobileBottomNav({
           />
         ) : null}
         {slug ? (
-          <MobileNavItem href={createHref} label="Create" icon={Plus} />
+          <MobileNavItem
+            label="Create"
+            icon={Plus}
+            onClick={() => setCreateOpen(true)}
+          />
         ) : null}
         <MobileNavItem
           href={noticesHref}
@@ -83,6 +91,16 @@ export function MobileBottomNav({
           onClick={() => setMoreOpen(true)}
         />
       </nav>
+      {slug ? (
+        <MobileCreateSheet
+          open={createOpen}
+          onClose={() => setCreateOpen(false)}
+          slug={slug}
+          projects={quickCreateProjects}
+          canCreateBoard={canCreateBoard}
+          currentProjectSlug={projectSlug}
+        />
+      ) : null}
       <MobileMoreSheet
         open={moreOpen}
         onClose={() => setMoreOpen(false)}

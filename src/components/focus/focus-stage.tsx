@@ -44,6 +44,7 @@ export function FocusStage({
       <div
         role="dialog"
         aria-modal="true"
+        aria-label="Ticket detail"
         className={cn(
           "relative z-10 flex h-full w-full flex-col overflow-y-auto bg-card shadow-xl",
           mobile

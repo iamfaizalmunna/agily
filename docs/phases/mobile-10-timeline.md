@@ -1,6 +1,7 @@
 # MF10 — Timeline & calendar
 
-**Status:** planned  
+**Status:** complete  
+**Branch:** `mobile/mf7-mf12-ship`  
 **Branch:** `mobile/mf10-timeline`
 
 ## Goal
