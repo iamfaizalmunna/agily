@@ -36,6 +36,7 @@ export function TicketCard({
   dragAttributes,
   dragListeners,
   compact = false,
+  className,
 }: {
   ticket: TicketCardData;
   draggable?: boolean;
@@ -43,6 +44,7 @@ export function TicketCard({
   dragAttributes?: DraggableAttributes;
   dragListeners?: SyntheticListenerMap;
   compact?: boolean;
+  className?: string;
 }) {
   const tone = priorityTone(ticket.priority);
   const key = formatIssueKey(ticket.projectSlug, ticket.position);
@@ -55,6 +57,7 @@ export function TicketCard({
         "group rounded-lg border border-border bg-card shadow-sm transition-all",
         dragging && "rotate-1 opacity-95 shadow-lg ring-2 ring-primary/30",
         !dragging && draggable && "hover:shadow-md hover:border-primary/30",
+        className,
       )}
     >
       <div className={cn("flex items-start gap-1", compact ? "p-2.5" : "p-3")}>

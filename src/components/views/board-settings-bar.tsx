@@ -7,32 +7,55 @@ import {
   type BoardDisplayPrefs,
   type SwimlaneMode,
 } from "@/lib/board/kanban";
+import { effectiveKanbanCompact } from "@/lib/board/mobile-kanban";
+import { BoardOptionsSheet } from "@/components/views/board-options-sheet";
+import { useMdDown } from "@/lib/ui/use-md-down";
 import Link from "next/link";
 import { boardViewHref } from "@/lib/views/views";
+
+function flowPrefsHref(
+  slug: string,
+  projectSlug: string,
+  prefs: BoardDisplayPrefs,
+  lensExtra: Record<string, string | undefined>,
+  compactRaw?: string,
+) {
+  const extra: Record<string, string | undefined> = {
+    ...lensExtra,
+    ...boardDisplayQuery(prefs),
+  };
+  if (compactRaw === "0") extra.compact = "0";
+  else if (compactRaw === "1") extra.compact = "1";
+  return boardViewHref(slug, projectSlug, "flow", undefined, extra);
+}
 
 export function BoardSettingsBar({
   slug,
   projectSlug,
   prefs,
   lensExtra,
+  compactQuery,
 }: {
   slug: string;
   projectSlug: string;
   prefs: BoardDisplayPrefs;
   lensExtra: Record<string, string | undefined>;
+  compactQuery?: string;
 }) {
   const router = useRouter();
+  const isMobile = useMdDown();
+  const compact = effectiveKanbanCompact(compactQuery, isMobile);
 
-  const pushPrefs = (next: BoardDisplayPrefs) => {
-    const href = boardViewHref(slug, projectSlug, "flow", undefined, {
-      ...lensExtra,
-      ...boardDisplayQuery(next),
-    });
-    router.push(href);
+  const pushPrefs = (next: BoardDisplayPrefs, compactRaw = compactQuery) => {
+    router.push(flowPrefsHref(slug, projectSlug, next, lensExtra, compactRaw));
   };
 
   const toggle = (key: "hideDone" | "compact") => {
-    pushPrefs({ ...prefs, [key]: !prefs[key] });
+    if (key === "compact") {
+      pushPrefs(prefs, compact ? "0" : "1");
+      return;
+    }
+    pushPrefs({ ...prefs, hideDone: !prefs.hideDone });
   };
 
   const setLane = (swimlane: SwimlaneMode) => {
@@ -41,9 +64,17 @@ export function BoardSettingsBar({
 
   return (
     <div className="flex flex-wrap items-center gap-2">
+      <BoardOptionsSheet
+        slug={slug}
+        projectSlug={projectSlug}
+        prefs={prefs}
+        compactQuery={compactQuery}
+        onPrefsChange={pushPrefs}
+      />
+      <div className="hidden flex-wrap items-center gap-2 md:flex">
       <span className="text-xs font-medium text-muted-foreground">Board</span>
       <ChipButton
-        active={prefs.compact}
+        active={compact}
         onClick={() => toggle("compact")}
       >
         Compact
@@ -78,6 +109,7 @@ export function BoardSettingsBar({
       >
         Workflow & fields
       </Link>
+      </div>
     </div>
   );
 }
