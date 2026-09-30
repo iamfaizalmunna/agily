@@ -2,8 +2,10 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   endOfUtcWeek,
+  countActiveLensFilters,
   filterItemsByLens,
   isDueThisWeek,
+  lensFilterPills,
   isEmptyLens,
   isLensKind,
   itemMatchesLens,
@@ -217,5 +219,37 @@ describe("phase 6 lenses", () => {
       itemMatchesLens(mine, { kind: "blocked" }, blockedCtx),
       false,
     );
+  });
+
+  it("counts active filters and builds removable pills", () => {
+    const spec = {
+      kind: "mine" as const,
+      priority: "critical" as const,
+      status: "doing" as const,
+      personId: "u1",
+      parentId: "e1",
+      find: "auth",
+      labelIds: ["l1", "l2"],
+    };
+    assert.equal(countActiveLensFilters(spec), 8);
+    assert.equal(countActiveLensFilters(spec, "saved-1"), 1);
+    const hrefFor = () => "/clear";
+    const pills = lensFilterPills(spec, undefined, [], {
+      personName: "Ada",
+      epicTitle: "Payments",
+      labelNames: ["Bug", "UI"],
+    }, hrefFor);
+    assert.equal(pills.length, 8);
+    assert.ok(pills.some((pill) => pill.label === "Ada"));
+    assert.ok(pills.some((pill) => pill.label === "“auth”"));
+    const saved = lensFilterPills(
+      {},
+      "saved-1",
+      [{ id: "saved-1", name: "My lens" }],
+      {},
+      hrefFor,
+    );
+    assert.deepEqual(saved, [{ label: "My lens", href: "/clear" }]);
+    assert.deepEqual(lensFilterPills({}, "missing", [], {}, hrefFor), []);
   });
 });

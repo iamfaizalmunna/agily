@@ -6,8 +6,16 @@ import {
 } from "@/lib/labels/labels";
 import { itemUnderEpic } from "@/lib/items/hierarchy";
 import { hasOpenSubtasks } from "@/lib/subtasks/subtasks";
-import { isItemPriority, type ItemPriority } from "@/lib/items/priority";
-import { isItemStatus, type ItemStatus } from "@/lib/items/status";
+import {
+  isItemPriority,
+  PRIORITY_LABEL,
+  type ItemPriority,
+} from "@/lib/items/priority";
+import {
+  isItemStatus,
+  STATUS_LABEL,
+  type ItemStatus,
+} from "@/lib/items/status";
 import { dueDayKey, isOverdue, startOfUtcDay } from "@/lib/views/views";
 
 export const LENS_KINDS = [
@@ -113,6 +121,88 @@ export function isEmptyLens(spec: LensSpec) {
     !clean.labelIds?.length &&
     !clean.parentId
   );
+}
+
+export function countActiveLensFilters(spec: LensSpec, savedId?: string) {
+  if (savedId) return 1;
+  const clean = sanitizeLensSpec(spec);
+  let count = 0;
+  if (clean.kind) count += 1;
+  if (clean.status) count += 1;
+  if (clean.personId) count += 1;
+  if (clean.priority) count += 1;
+  if (clean.find) count += 1;
+  if (clean.parentId) count += 1;
+  count += clean.labelIds?.length ?? 0;
+  return count;
+}
+
+export type LensFilterPill = { label: string; href: string };
+
+export function lensFilterPills(
+  spec: LensSpec,
+  savedId: string | undefined,
+  saved: { id: string; name: string }[],
+  names: {
+    personName?: string;
+    epicTitle?: string;
+    labelNames?: string[];
+  },
+  hrefFor: (next: LensSpec, id?: string) => string,
+): LensFilterPill[] {
+  if (savedId) {
+    const row = saved.find((lens) => lens.id === savedId);
+    return row
+      ? [{ label: row.name, href: hrefFor({}, undefined) }]
+      : [];
+  }
+  const clean = sanitizeLensSpec(spec);
+  const pills: LensFilterPill[] = [];
+  if (clean.kind) {
+    pills.push({
+      label: LENS_KIND_LABEL[clean.kind],
+      href: hrefFor(pickLensKind(spec)),
+    });
+  }
+  if (clean.priority) {
+    pills.push({
+      label: PRIORITY_LABEL[clean.priority],
+      href: hrefFor(pickLensPriority(spec)),
+    });
+  }
+  if (clean.status) {
+    pills.push({
+      label: STATUS_LABEL[clean.status],
+      href: hrefFor(pickLensStatus(spec)),
+    });
+  }
+  if (clean.personId) {
+    pills.push({
+      label: names.personName ?? "Assignee",
+      href: hrefFor(pickLensPerson(spec)),
+    });
+  }
+  if (clean.parentId) {
+    pills.push({
+      label: names.epicTitle ?? "Epic",
+      href: hrefFor(pickEpicFilter(spec)),
+    });
+  }
+  if (clean.find) {
+    pills.push({
+      label: `“${clean.find}”`,
+      href: hrefFor(withLensFind(spec, "")),
+    });
+  }
+  if (clean.labelIds?.length) {
+    clean.labelIds.forEach((labelId, index) => {
+      pills.push({
+        label: names.labelNames?.[index] ?? "Label",
+        href: hrefFor(toggleLensLabel(spec, labelId)),
+      });
+    });
+  }
+  return pills;
 }
 
 export function sameLensSpec(a: LensSpec, b: LensSpec) {
