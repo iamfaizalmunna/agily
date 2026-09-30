@@ -1,6 +1,6 @@
 # Mobile-first & solid UI (MF1–MF12)
 
-**Progress on `main`:** MF1–MF3 **complete** · MF4 **on branch** `mobile/mf4-board`.
+**Progress on `main`:** MF1–MF4 **complete** · MF5–MF6 **on branch** `mobile/mf5-mf6-ticket-filters`.
 
 **Goal:** Site-wide UI that feels **solid on phone first** — Jira-mobile patterns (clear nav, one-hand use, fast ticket access) — while **desktop stays the power layout** you have today.
 
@@ -59,9 +59,9 @@ Details: **[MOBILE_GIT_LOOP.md](MOBILE_GIT_LOOP.md)** · Revamp equivalent: [REV
 | MF2 | Mobile shell (Jira-like nav) | **complete** | [mobile-02-shell.md](mobile-02-shell.md) |
 | MF3 | Projects & board hub | **complete** (PR pending) | [mobile-03-hub.md](mobile-03-hub.md) |
 | MF4 | Board (flow) mobile | **complete** (PR pending) | [mobile-04-board.md](mobile-04-board.md) |
-| MF5 | List & ticket detail | **next** | [mobile-05-ticket.md](mobile-05-ticket.md) |
-| MF6 | Filters & search sheets | planned | [mobile-06-filters.md](mobile-06-filters.md) |
-| MF7 | Create & quick actions | planned | [mobile-07-create.md](mobile-07-create.md) |
+| MF5 | List & ticket detail | **complete** (PR pending) | [mobile-05-ticket.md](mobile-05-ticket.md) |
+| MF6 | Filters & search sheets | **complete** (PR pending) | [mobile-06-filters.md](mobile-06-filters.md) |
+| MF7 | Create & quick actions | **next** | [mobile-07-create.md](mobile-07-create.md) |
 | MF8 | Settings, people, notices | planned | [mobile-08-settings.md](mobile-08-settings.md) |
 | MF9 | Summary & analytics | planned | [mobile-09-summary.md](mobile-09-summary.md) |
 | MF10 | Timeline & calendar | planned | [mobile-10-timeline.md](mobile-10-timeline.md) |

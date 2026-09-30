@@ -1,6 +1,7 @@
 import { notFound } from "next/navigation";
 import { FocusDiscussion } from "@/components/focus/focus-discussion";
 import { FocusStage } from "@/components/focus/focus-stage";
+import { MobileFocusDetail } from "@/components/focus/mobile-focus-detail";
 import { buildActivityFeed } from "@/lib/activity/feed";
 import { CreateGroupForm } from "@/components/items/create-group-form";
 import { CreateItemForm } from "@/components/items/create-item-form";
@@ -572,7 +573,7 @@ export default async function ProjectBoardPage({
 
       {focused && view === "list" ? (
         <div className="lg:hidden">
-          <FocusStage closeHref={closeHref}>
+          <MobileFocusDetail closeHref={closeHref} canSave={writable}>
             <ul>
               <ItemRow
                 slug={slug}
@@ -590,6 +591,7 @@ export default async function ProjectBoardPage({
                 item={focused}
                 readOnly={!writable}
                 next={focusHref}
+                focusDetail
               />
             </ul>
             <FocusDiscussion
@@ -602,7 +604,7 @@ export default async function ProjectBoardPage({
               feed={focusFeed}
               comments={focused.updates}
             />
-          </FocusStage>
+          </MobileFocusDetail>
         </div>
       ) : null}
     </MobilePage>

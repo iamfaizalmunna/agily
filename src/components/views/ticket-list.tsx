@@ -11,6 +11,7 @@ import { STATUS_LABEL, type ItemStatus } from "@/lib/items/status";
 import { formatIssueKey } from "@/lib/items/issue-key";
 import { formatDueOn } from "@/lib/items/validate";
 import { priorityTone } from "@/lib/ui/priority-tone";
+import { TicketListMobileFeed } from "@/components/views/ticket-list-mobile-feed";
 import { cn } from "@/lib/cn";
 
 export type TicketListItem = {
@@ -37,7 +38,9 @@ export function TicketList({
   selectedId?: string;
 }) {
   return (
-    <ScrollArea className="h-[min(70vh,720px)] rounded-lg border border-border bg-card">
+    <>
+      <TicketListMobileFeed items={items} selectedId={selectedId} />
+      <ScrollArea className="hidden h-[min(70vh,720px)] rounded-lg border border-border bg-card md:block">
       <table className="w-full min-w-[640px] text-sm">
         <thead className="sticky top-0 z-10 bg-muted/80 backdrop-blur">
           <tr className="border-b border-border text-left text-xs text-muted-foreground">
@@ -114,5 +117,6 @@ export function TicketList({
         </tbody>
       </table>
     </ScrollArea>
+    </>
   );
 }

@@ -61,6 +61,7 @@ export function ItemRow({
   workflow,
   fieldSchema = [],
   customFields = {},
+  focusDetail = false,
 }: {
   slug: string;
   projectSlug: string;
@@ -95,6 +96,7 @@ export function ItemRow({
   openHref?: string;
   next?: string;
   noteCount?: number;
+  focusDetail?: boolean;
 }) {
   const [state, action, pending] = useActionState(updateItemAction, initial);
   const assignedIds = item.assignees.map((row) => row.user.id);
@@ -149,7 +151,11 @@ export function ItemRow({
           childType={item.type}
         />
       ) : null}
-      <form action={action} className="flex flex-col gap-3">
+      <form
+        id={focusDetail ? "focus-item-form" : undefined}
+        action={action}
+        className="flex flex-col gap-3"
+      >
         <input type="hidden" name="slug" value={slug} />
         <input type="hidden" name="projectSlug" value={projectSlug} />
         <input type="hidden" name="itemId" value={item.id} />
@@ -197,9 +203,10 @@ export function ItemRow({
             ))}
           </Select>
           <Select
+            id={focusDetail ? "focus-status" : undefined}
             name="status"
             defaultValue={item.status}
-            className="h-10 px-3 text-sm"
+            className="h-12 px-3 text-base md:h-10 md:text-sm"
           >
             {workflow.statuses.map((status) => (
               <option key={status.id} value={status.id}>

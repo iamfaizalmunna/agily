@@ -1,7 +1,7 @@
 # MF5 — List & ticket detail
 
-**Status:** planned  
-**Branch:** `mobile/mf5-ticket`
+**Status:** complete  
+**Branch:** `mobile/mf5-mf6-ticket-filters`
 
 ## Goal
 
@@ -9,10 +9,10 @@
 
 ## Deliverables
 
-- [ ] List view: single column; tap row → full-screen detail (or focus route) with back.
-- [ ] Sticky footer on detail: status, assignee, comment (primary actions).
-- [ ] `?focus=` works as mobile sheet with scroll lock.
-- [ ] Comments & activity tabs swipe or segmented control.
+- [x] List view: single column; tap row → full-screen detail (or focus route) with back.
+- [x] Sticky footer on detail: status, assignee, comment (primary actions).
+- [x] `?focus=` works as mobile sheet with scroll lock.
+- [x] Comments & activity tabs swipe or segmented control.
 
 ## Acceptance
 

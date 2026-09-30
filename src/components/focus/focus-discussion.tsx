@@ -41,15 +41,22 @@ export function FocusDiscussion({
   const [tab, setTab] = useState<"activity" | "comments">("activity");
 
   return (
-    <section className="mt-6 flex flex-col gap-3">
-      <div className="flex gap-2 border-b border-paper/10 pb-2">
+    <section id="focus-discussion" className="mt-6 flex flex-col gap-3 scroll-mt-4">
+      <div
+        className="flex gap-1 rounded-lg border border-border bg-muted/40 p-1"
+        role="tablist"
+        aria-label="Ticket discussion"
+      >
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === "activity"}
+          data-focus-tab="activity"
           className={cn(
-            "rounded-full px-3 py-1 text-sm",
+            "min-h-10 flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors",
             tab === "activity"
-              ? "bg-copper/20 text-paper"
-              : "text-paper/50 hover:text-paper",
+              ? "bg-card text-foreground shadow-sm"
+              : "text-muted-foreground",
           )}
           onClick={() => setTab("activity")}
         >
@@ -57,11 +64,14 @@ export function FocusDiscussion({
         </button>
         <button
           type="button"
+          role="tab"
+          aria-selected={tab === "comments"}
+          data-focus-tab="comments"
           className={cn(
-            "rounded-full px-3 py-1 text-sm",
+            "min-h-10 flex-1 rounded-md px-3 py-2 text-sm font-medium transition-colors",
             tab === "comments"
-              ? "bg-copper/20 text-paper"
-              : "text-paper/50 hover:text-paper",
+              ? "bg-card text-foreground shadow-sm"
+              : "text-muted-foreground",
           )}
           onClick={() => setTab("comments")}
         >
@@ -74,14 +84,14 @@ export function FocusDiscussion({
             {feed.map((row) => (
               <li
                 key={row.id}
-                className="rounded-2xl border border-paper/10 px-3 py-2 text-sm text-paper/80"
+                className="rounded-lg border border-border px-3 py-2 text-sm text-muted-foreground"
               >
                 {row.line}
               </li>
             ))}
           </ol>
         ) : (
-          <p className="text-sm text-paper/40">No activity yet.</p>
+          <p className="text-sm text-muted-foreground">No activity yet.</p>
         )
       ) : (
         <CommentThread
