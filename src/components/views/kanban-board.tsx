@@ -46,6 +46,13 @@ import {
   workflowStatusLabel,
   type Workflow,
 } from "@/lib/workflow/workflow";
+import {
+  effectiveKanbanCompact,
+  kanbanColumnClass,
+  kanbanColumnStripClass,
+  kanbanMoveTargets,
+} from "@/lib/board/mobile-kanban";
+import { useMdDown } from "@/lib/ui/use-md-down";
 import { cn } from "@/lib/cn";
 import { KanbanSortableTicket } from "@/components/views/kanban-sortable-ticket";
 
@@ -73,6 +80,11 @@ function KanbanColumn({
   compact,
   overWip,
   wipLimit,
+  workflow,
+  visibleStatuses,
+  touchDrag,
+  pending,
+  onMoveStatus,
 }: {
   status: string;
   label: string;
@@ -83,6 +95,11 @@ function KanbanColumn({
   compact: boolean;
   overWip: boolean;
   wipLimit?: number;
+  workflow: Workflow;
+  visibleStatuses: readonly string[];
+  touchDrag: boolean;
+  pending: boolean;
+  onMoveStatus: (itemId: string, status: string) => void;
 }) {
   const tone = statusTone(status);
   const headingId = `kanban-heading-${status}`;
@@ -96,14 +113,15 @@ function KanbanColumn({
       data-testid={`kanban-column-${status}`}
       style={{ borderTopColor: accentColor }}
       className={cn(
-        "flex w-72 shrink-0 flex-col rounded-lg border border-border bg-muted/20 transition-[background,box-shadow,transform] duration-200",
+        kanbanColumnClass(),
+        "flex flex-col rounded-lg border border-border bg-muted/20 transition-[background,box-shadow,transform] duration-200",
         "border-t-4",
         tone.column,
         overWip && "ring-2 ring-amber-400/60",
         isOver && writable && "scale-[1.01] bg-primary/5 shadow-md ring-2 ring-primary/25",
       )}
     >
-      <header className="flex items-center justify-between px-3 py-2.5">
+      <header className="sticky top-0 z-10 flex items-center justify-between rounded-t-lg bg-muted/20 px-3 py-2.5 backdrop-blur-sm">
         <h2 id={headingId} className="text-sm font-semibold">{label}</h2>
         <span
           className={cn(
@@ -129,6 +147,14 @@ function KanbanColumn({
                 writable={writable}
                 isGhost={activeId === item.id}
                 compact={compact}
+                touchDrag={touchDrag}
+                pending={pending}
+                moveTargets={kanbanMoveTargets(
+                  workflow,
+                  visibleStatuses,
+                  item.status,
+                )}
+                onMoveStatus={(nextStatus) => onMoveStatus(item.id, nextStatus)}
               />
             ))
           ) : (
@@ -156,6 +182,8 @@ function KanbanRow({
   pending,
   activeId,
   compact,
+  touchDrag,
+  onMoveStatus,
 }: {
   label: string;
   localItems: KanbanItem[];
@@ -165,6 +193,8 @@ function KanbanRow({
   pending: boolean;
   activeId: string | null;
   compact: boolean;
+  touchDrag: boolean;
+  onMoveStatus: (itemId: string, status: string) => void;
 }) {
   const columns = useMemo(
     () => groupByWorkflowSorted(localItems, workflow),
@@ -178,7 +208,7 @@ function KanbanRow({
           {label}
         </h3>
       ) : null}
-      <div className="flex min-w-max gap-3">
+      <div className={kanbanColumnStripClass()}>
         {statuses.map((status) => {
           const items = columns[status] ?? [];
           const limit = wipLimitFor(status);
@@ -194,6 +224,11 @@ function KanbanRow({
               compact={compact}
               wipLimit={limit}
               overWip={isOverWip(items.length, limit)}
+              workflow={workflow}
+              visibleStatuses={statuses}
+              touchDrag={touchDrag}
+              pending={pending}
+              onMoveStatus={onMoveStatus}
             />
           );
         })}
@@ -208,6 +243,7 @@ export function KanbanBoard({
   items,
   writable,
   prefs,
+  compactQuery,
   nameByUserId,
   workflow,
 }: {
@@ -216,9 +252,13 @@ export function KanbanBoard({
   items: KanbanItem[];
   writable: boolean;
   prefs: BoardDisplayPrefs;
+  compactQuery?: string;
   nameByUserId: Map<string, string>;
   workflow: Workflow;
 }) {
+  const isMobile = useMdDown();
+  const compact = effectiveKanbanCompact(compactQuery, isMobile);
+  const touchDrag = !isMobile;
   const [pending, startTransition] = useTransition();
   const [activeId, setActiveId] = useState<string | null>(null);
   const [localItems, setLocalItems] = useState(items);
@@ -226,10 +266,10 @@ export function KanbanBoard({
 
   const sensors = useSensors(
     useSensor(PointerSensor, {
-      activationConstraint: { distance: 4 },
+      activationConstraint: { distance: touchDrag ? 4 : 999 },
     }),
     useSensor(TouchSensor, {
-      activationConstraint: { delay: 120, tolerance: 6 },
+      activationConstraint: { delay: touchDrag ? 120 : 9999, tolerance: 6 },
     }),
     useSensor(KeyboardSensor),
   );
@@ -443,7 +483,9 @@ export function KanbanBoard({
               writable={writable}
               pending={pending}
               activeId={activeId}
-              compact={prefs.compact}
+              compact={compact}
+              touchDrag={touchDrag}
+              onMoveStatus={(itemId, status) => moveToColumn(itemId, status, true)}
             />
           ))}
         </div>
@@ -456,7 +498,7 @@ export function KanbanBoard({
               ticket={activeItem}
               draggable
               dragging
-              compact={prefs.compact}
+              compact={compact}
             />
           </div>
         ) : null}

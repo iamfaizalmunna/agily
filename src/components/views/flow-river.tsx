@@ -20,6 +20,7 @@ export function FlowRiver({
   items,
   writable,
   prefs,
+  compactQuery,
   nameByUserId,
   workflow,
 }: {
@@ -28,6 +29,7 @@ export function FlowRiver({
   items: FlowItem[];
   writable: boolean;
   prefs: BoardDisplayPrefs;
+  compactQuery?: string;
   nameByUserId: Map<string, string>;
   workflow: Workflow;
 }) {
@@ -38,6 +40,7 @@ export function FlowRiver({
       items={items}
       writable={writable}
       prefs={prefs}
+      compactQuery={compactQuery}
       nameByUserId={nameByUserId}
       workflow={workflow}
     />

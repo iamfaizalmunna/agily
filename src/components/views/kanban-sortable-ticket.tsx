@@ -2,7 +2,9 @@
 
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
+import { KanbanMoveMenu } from "@/components/views/kanban-move-menu";
 import { TicketCard, type TicketCardData } from "@/components/views/ticket-card";
+import type { MoveStatusChoice } from "@/lib/board/mobile-kanban";
 import { cn } from "@/lib/cn";
 
 type KanbanItem = TicketCardData & { status: string };
@@ -12,11 +14,19 @@ export function KanbanSortableTicket({
   writable,
   isGhost,
   compact = false,
+  touchDrag,
+  moveTargets,
+  onMoveStatus,
+  pending,
 }: {
   item: KanbanItem;
   writable: boolean;
   isGhost: boolean;
   compact?: boolean;
+  touchDrag?: boolean;
+  moveTargets?: MoveStatusChoice[];
+  onMoveStatus?: (statusId: string) => void;
+  pending?: boolean;
 }) {
   const {
     attributes,
@@ -27,7 +37,7 @@ export function KanbanSortableTicket({
     isDragging,
   } = useSortable({
     id: item.id,
-    disabled: !writable,
+    disabled: !writable || !touchDrag,
     transition: {
       duration: 220,
       easing: "cubic-bezier(0.22, 1, 0.36, 1)",
@@ -49,14 +59,25 @@ export function KanbanSortableTicket({
         !isDragging && "will-change-transform",
       )}
     >
-      <TicketCard
-        ticket={item}
-        draggable={writable}
-        dragging={isDragging}
-        dragAttributes={attributes}
-        dragListeners={listeners}
-        compact={compact}
-      />
+      <div className="flex items-start gap-0.5">
+        <TicketCard
+          ticket={item}
+          draggable={writable && touchDrag}
+          dragging={isDragging}
+          dragAttributes={attributes}
+          dragListeners={listeners}
+          compact={compact}
+          className="min-w-0 flex-1"
+        />
+        {writable && moveTargets?.length && onMoveStatus ? (
+          <KanbanMoveMenu
+            title={item.title}
+            targets={moveTargets}
+            disabled={pending}
+            onMove={onMoveStatus}
+          />
+        ) : null}
+      </div>
     </div>
   );
 }

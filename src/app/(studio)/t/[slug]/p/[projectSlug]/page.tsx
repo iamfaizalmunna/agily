@@ -432,6 +432,7 @@ export default async function ProjectBoardPage({
             projectSlug={projectSlug}
             prefs={boardPrefs}
             lensExtra={lensExtra}
+            compactQuery={query.compact}
           />
           {!items.length ? (
             <EmptyState
@@ -470,6 +471,7 @@ export default async function ProjectBoardPage({
             }))}
             writable={writable}
             prefs={boardPrefs}
+            compactQuery={query.compact}
             nameByUserId={nameByUserId}
           />
           ) : null}

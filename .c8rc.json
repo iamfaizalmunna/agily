@@ -35,6 +35,7 @@
     "src/lib/chrome/sidebar.ts",
     "src/lib/chrome/mobile-nav.ts",
     "src/lib/board/kanban.ts",
+    "src/lib/board/mobile-kanban.ts",
     "src/lib/workflow/workflow.ts",
     "src/lib/custom-fields/fields.ts",
     "src/lib/data/csv.ts",

@@ -1,6 +1,6 @@
 # MF4 — Board (flow) mobile
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `mobile/mf4-board`
 
 ## Goal
@@ -9,11 +9,11 @@ Kanban that **works on a phone**: readable cards, scrollable columns, reliable s
 
 ## Deliverables
 
-- [ ] Column strip: horizontal scroll, snap, column headers sticky.
-- [ ] **Compact cards** default on `< md`; density toggle in board prefs.
-- [ ] Move ticket: keep DnD for pointer devices; add **“Move to…”** menu on mobile (status picker).
-- [ ] WIP / swimlane UI collapsed behind “Board options” sheet on mobile.
-- [ ] Playwright: change status via menu; optional drag on desktop project only.
+- [x] Column strip: horizontal scroll, snap, column headers sticky.
+- [x] **Compact cards** default on `< md`; density toggle in board prefs.
+- [x] Move ticket: keep DnD for pointer devices; add **“Move to…”** menu on mobile (status picker).
+- [x] WIP / swimlane UI collapsed behind “Board options” sheet on mobile.
+- [x] Playwright: change status via menu; optional drag on desktop project only.
 
 ## Acceptance
 
