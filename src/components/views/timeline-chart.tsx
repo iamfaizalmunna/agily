@@ -1,4 +1,4 @@
-import { ProjectGantt } from "@/components/views/project-gantt";
+import { TimelineMobileView } from "@/components/views/timeline-mobile-view";
 import type { GanttSourceRow } from "@/lib/views/gantt";
 
 export function TimelineChart({
@@ -13,7 +13,7 @@ export function TimelineChart({
   canWrite: boolean;
 }) {
   return (
-    <ProjectGantt
+    <TimelineMobileView
       slug={slug}
       projectSlug={projectSlug}
       items={items}

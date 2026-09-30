@@ -1,7 +1,7 @@
 # MF7 — Create & quick actions
 
-**Status:** planned  
-**Branch:** `mobile/mf7-create`
+**Status:** complete  
+**Branch:** `mobile/mf7-mf12-ship`
 
 ## Goal
 

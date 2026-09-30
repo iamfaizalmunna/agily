@@ -6,6 +6,7 @@ import { prisma } from "@/lib/db/prisma";
 import { requireUser } from "@/lib/auth/session";
 import { getMembership } from "@/lib/teams/queries";
 import { parseTeamSettings } from "@/lib/rbac/roles";
+import { quickCreateFocusHref } from "@/lib/create/quick-create";
 import { parseCommentBody } from "@/lib/focus/focus";
 import {
   canArchiveProject,
@@ -248,6 +249,46 @@ export async function createItemAction(
   });
   await replaceItemLabels(item.id, ctx.team.id, collectLabelIds(formData));
   redirect(boardNext(slug, projectSlug, formData));
+}
+
+export async function quickCreateItemAction(
+  _prev: BoardFormState,
+  formData: FormData,
+): Promise<BoardFormState> {
+  const user = await requireUser();
+  const slug = String(formData.get("slug") ?? "");
+  const projectSlug = String(formData.get("projectSlug") ?? "");
+  const groupId = String(formData.get("groupId") ?? "");
+  const titleParsed = parseItemTitle(String(formData.get("title") ?? ""));
+  if ("error" in titleParsed) return { error: titleParsed.error };
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) return { error: "Studio not found" };
+  if (!canWriteBoard(ctx.role)) return { error: "Read only" };
+  const group = await prisma.group.findFirst({
+    where: { id: groupId, project: { teamId: ctx.team.id, slug: projectSlug } },
+  });
+  if (!group) return { error: "Section not found" };
+  const last = await prisma.item.aggregate({
+    where: { groupId: group.id },
+    _max: { position: true },
+  });
+  const type = parseIssueType(String(formData.get("type") ?? ""));
+  const item = await prisma.item.create({
+    data: {
+      projectId: group.projectId,
+      groupId: group.id,
+      title: titleParsed.title,
+      body: "",
+      type,
+      status: "backlog",
+      priority: parseItemPriority(String(formData.get("priority") ?? "")),
+      position: (last._max.position ?? -1) + 1,
+      assignees: formData.get("assignMe") === "on"
+        ? { create: { userId: user.id } }
+        : undefined,
+    },
+  });
+  redirect(quickCreateFocusHref(slug, projectSlug, item.id));
 }
 
 export async function updateItemAction(

@@ -1,7 +1,7 @@
 # MF8 — Settings, people, notices
 
-**Status:** planned  
-**Branch:** `mobile/mf8-settings`
+**Status:** complete  
+**Branch:** `mobile/mf7-mf12-ship`
 
 ## Goal
 

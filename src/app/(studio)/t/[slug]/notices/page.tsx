@@ -45,7 +45,7 @@ export default async function NoticesPage({
       </div>
 
       {rows.length ? (
-        <ul className="flex flex-col gap-2">
+        <ul className="flex flex-col gap-3">
           {rows.map((row) => (
             <li key={row.id}>
               <form action={openNoticeAction}>

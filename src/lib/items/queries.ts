@@ -1,5 +1,28 @@
 import { prisma } from "@/lib/db/prisma";
 
+export async function listQuickCreateTargets(teamId: string) {
+  const projects = await prisma.project.findMany({
+    where: { teamId, archived: false },
+    orderBy: { name: "asc" },
+    select: {
+      slug: true,
+      name: true,
+      groups: {
+        orderBy: { position: "asc" },
+        take: 1,
+        select: { id: true },
+      },
+    },
+  });
+  return projects
+    .filter((project) => project.groups[0])
+    .map((project) => ({
+      projectSlug: project.slug,
+      projectName: project.name,
+      groupId: project.groups[0]!.id,
+    }));
+}
+
 export async function listProjects(teamId: string, includeArchived = false) {
   return prisma.project.findMany({
     where: includeArchived ? { teamId } : { teamId, archived: false },

@@ -1,6 +1,6 @@
 # Mobile-first & solid UI (MF1–MF12)
 
-**Progress on `main`:** MF1–MF4 **complete** · MF5–MF6 **on branch** `mobile/mf5-mf6-ticket-filters`.
+**Progress on `main`:** MF1–MF6 **complete** · MF7–MF12 **on branch** `mobile/mf7-mf12-ship` (PR pending).
 
 **Goal:** Site-wide UI that feels **solid on phone first** — Jira-mobile patterns (clear nav, one-hand use, fast ticket access) — while **desktop stays the power layout** you have today.
 
@@ -38,35 +38,22 @@ Details: **[MOBILE_GIT_LOOP.md](MOBILE_GIT_LOOP.md)** · Revamp equivalent: [REV
 
 ---
 
-## Current baseline (honest)
-
-| Area | Today | Gap |
-|------|--------|-----|
-| Shell | Jira-like **icon bottom nav** + compact header on mobile | MF3 hub polish; board column UX in MF4 |
-| Board | Kanban with DnD | Columns tight on phone; drag hard without long-press |
-| List / focus | Split pane desktop | Mobile needs full-screen ticket flow |
-| Filters | Full `FilterBar` always visible | Overwhelming on narrow screens |
-| Auth | Responsive forms | OK; keep 48px+ inputs on mobile |
-| Tests | Desktop Playwright | Need **390×844** (or similar) suite per phase |
-
----
-
 ## Progress
 
 | Phase | Name | Status | Doc |
 |:-----:|------|--------|-----|
 | MF1 | Touch tokens & layout primitives | **complete** | [mobile-01-tokens.md](mobile-01-tokens.md) |
 | MF2 | Mobile shell (Jira-like nav) | **complete** | [mobile-02-shell.md](mobile-02-shell.md) |
-| MF3 | Projects & board hub | **complete** (PR pending) | [mobile-03-hub.md](mobile-03-hub.md) |
-| MF4 | Board (flow) mobile | **complete** (PR pending) | [mobile-04-board.md](mobile-04-board.md) |
-| MF5 | List & ticket detail | **complete** (PR pending) | [mobile-05-ticket.md](mobile-05-ticket.md) |
-| MF6 | Filters & search sheets | **complete** (PR pending) | [mobile-06-filters.md](mobile-06-filters.md) |
-| MF7 | Create & quick actions | **next** | [mobile-07-create.md](mobile-07-create.md) |
-| MF8 | Settings, people, notices | planned | [mobile-08-settings.md](mobile-08-settings.md) |
-| MF9 | Summary & analytics | planned | [mobile-09-summary.md](mobile-09-summary.md) |
-| MF10 | Timeline & calendar | planned | [mobile-10-timeline.md](mobile-10-timeline.md) |
-| MF11 | PWA & installable shell | planned | [mobile-11-pwa.md](mobile-11-pwa.md) |
-| MF12 | Ship mobile (QA + e2e) | planned | [mobile-12-ship.md](mobile-12-ship.md) |
+| MF3 | Projects & board hub | **complete** | [mobile-03-hub.md](mobile-03-hub.md) |
+| MF4 | Board (flow) mobile | **complete** | [mobile-04-board.md](mobile-04-board.md) |
+| MF5 | List & ticket detail | **complete** | [mobile-05-ticket.md](mobile-05-ticket.md) |
+| MF6 | Filters & search sheets | **complete** | [mobile-06-filters.md](mobile-06-filters.md) |
+| MF7 | Create & quick actions | **complete** (PR pending) | [mobile-07-create.md](mobile-07-create.md) |
+| MF8 | Settings, people, notices | **complete** (PR pending) | [mobile-08-settings.md](mobile-08-settings.md) |
+| MF9 | Summary & analytics | **complete** (PR pending) | [mobile-09-summary.md](mobile-09-summary.md) |
+| MF10 | Timeline & calendar | **complete** (PR pending) | [mobile-10-timeline.md](mobile-10-timeline.md) |
+| MF11 | PWA & installable shell | **complete** (PR pending) | [mobile-11-pwa.md](mobile-11-pwa.md) |
+| MF12 | Ship mobile (QA + e2e) | **complete** (PR pending) | [mobile-12-ship.md](mobile-12-ship.md) |
 
 ---
 
@@ -89,6 +76,5 @@ Check these when you touch a surface:
 | [HARDENING.md](../HARDENING.md) | Security baseline (headers, auth throttle) |
 | [FEATURE_GAP.md](../FEATURE_GAP.md) | Feature matrix |
 | [REVAMP_CHANGELOG.md](../REVAMP_CHANGELOG.md) | What R1–R12 already shipped |
+| [MOBILE_CHANGELOG.md](../MOBILE_CHANGELOG.md) | MF7–MF12 batch notes |
 | `src/components/chrome/studio-shell.tsx` | Today’s mobile header + bottom nav |
-
-**Say `next` in chat to start MF1** (`mobile/mf1-touch-tokens`).

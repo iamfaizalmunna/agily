@@ -37,6 +37,14 @@ function barEnd(row: GanttSourceRow) {
   return end;
 }
 
+export function timelineAgendaRows(items: GanttSourceRow[]) {
+  return items.slice().sort((left, right) => {
+    const leftAt = left.dueOn?.getTime() ?? left.createdAt.getTime();
+    const rightAt = right.dueOn?.getTime() ?? right.createdAt.getTime();
+    return leftAt - rightAt;
+  });
+}
+
 export function itemsToGanttTasks(items: GanttSourceRow[]): Task[] {
   return items.map((item) => {
     const status = item.status as ItemStatus;

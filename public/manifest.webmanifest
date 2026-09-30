@@ -1,0 +1,17 @@
+{
+  "name": "Agily",
+  "short_name": "Agily",
+  "description": "Local team workspace on SQLite.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0f1117",
+  "theme_color": "#c17f59",
+  "icons": [
+    {
+      "src": "/globe.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    }
+  ]
+}

@@ -28,6 +28,14 @@ export default defineConfig({
         storageState: "e2e/.auth/owner.json",
       },
     },
+    {
+      name: "mobile-chromium",
+      dependencies: ["setup"],
+      use: {
+        ...devices["iPhone 14"],
+        storageState: "e2e/.auth/owner.json",
+      },
+    },
   ],
   webServer: [
     {

@@ -80,7 +80,7 @@ export function OrbitMonth({
           return (
             <div
               key={cell.key}
-              className={`min-h-20 rounded-xl border border-paper/8 p-1 ${
+              className={`min-h-14 rounded-xl border border-paper/8 p-1 md:min-h-20 ${
                 cell.inMonth ? "" : "opacity-35"
               }`}
             >

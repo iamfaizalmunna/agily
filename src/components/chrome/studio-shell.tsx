@@ -13,6 +13,7 @@ import { useLensStore } from "@/lib/lens/store";
 import { mobileStudioMainClass } from "@/lib/ui/mobile";
 import { projectSlugFromPath, teamSlugFromPath } from "@/lib/nav/studio";
 
+import type { QuickCreateTarget } from "@/lib/create/quick-create";
 import type { TeamRole } from "@/lib/rbac/roles";
 
 type TeamMark = {
@@ -26,12 +27,17 @@ export function StudioShell({
   userEmail,
   teams,
   unreadBySlug,
+  createBySlug,
   children,
 }: {
   userName: string;
   userEmail: string;
   teams: TeamMark[];
   unreadBySlug: Record<string, number>;
+  createBySlug: Record<
+    string,
+    { projects: QuickCreateTarget[]; canCreateBoard: boolean }
+  >;
   children: ReactNode;
 }) {
   const path = usePathname();
@@ -54,6 +60,7 @@ export function StudioShell({
             : undefined;
   const headerTitle = current?.name ?? "Agily";
   const setLensOpen = useLensStore((s) => s.setOpen);
+  const createCtx = slug ? createBySlug[slug] : undefined;
 
   return (
     <div className="flex min-h-dvh flex-1 flex-col md:flex-row">
@@ -102,6 +109,8 @@ export function StudioShell({
         userName={userName}
         userEmail={userEmail}
         onOpenLens={() => setLensOpen(true)}
+        quickCreateProjects={createCtx?.projects ?? []}
+        canCreateBoard={createCtx?.canCreateBoard ?? false}
       />
 
       <Suspense fallback={null}>

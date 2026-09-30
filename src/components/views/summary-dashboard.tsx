@@ -68,8 +68,8 @@ export function SummaryDashboard({
 
       <SummaryEpics items={hierarchyItems} focusHref={focusHref} />
 
-      <div className="grid gap-4 lg:grid-cols-2">
-        <Card className="p-4">
+      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card className="min-h-[12rem] overflow-x-auto p-4">
           <p className="mb-1 text-sm font-medium">Burndown (14 days)</p>
           <p className="mb-3 text-xs text-muted-foreground">
             Scope {burndown.scope} · velocity {velocity}/day
@@ -77,7 +77,7 @@ export function SummaryDashboard({
           <BurndownChart points={burndown.points} scope={burndown.scope} />
         </Card>
 
-        <Card className="p-4">
+        <Card className="min-h-[10rem] overflow-x-auto p-4">
           <p className="mb-1 text-sm font-medium">Completed this week</p>
           <p className="mb-3 text-xs text-muted-foreground">
             {completed} done since Sunday UTC
@@ -88,7 +88,7 @@ export function SummaryDashboard({
           />
         </Card>
 
-        <Card className="p-4">
+        <Card className="min-h-[12rem] overflow-x-auto p-4">
           <p className="mb-3 text-sm font-medium">Status distribution</p>
           <StatusDonut segments={donut} />
         </Card>

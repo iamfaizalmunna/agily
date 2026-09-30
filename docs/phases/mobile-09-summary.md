@@ -1,7 +1,7 @@
 # MF9 — Summary & analytics
 
-**Status:** planned  
-**Branch:** `mobile/mf9-summary`
+**Status:** complete  
+**Branch:** `mobile/mf7-mf12-ship`
 
 ## Goal
 

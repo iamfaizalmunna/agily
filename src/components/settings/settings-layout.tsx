@@ -1,8 +1,10 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { resolveSettingsSection } from "@/lib/settings/section-nav";
+import { Select } from "@/components/ui/select";
 
 export type SettingsNavItem = {
   id: string;
@@ -24,17 +26,19 @@ export function SettingsLayout({
   defaultSection: string;
   children: React.ReactNode;
 }) {
+  const validIds = useMemo(() => items.map((item) => item.id), [items]);
   const [currentId, setCurrentId] = useState(defaultSection);
 
   useEffect(() => {
     const sync = () => {
-      const hash = window.location.hash.replace("#", "");
-      setCurrentId(hash || defaultSection);
+      setCurrentId(
+        resolveSettingsSection(window.location.hash, defaultSection, validIds),
+      );
     };
     sync();
     window.addEventListener("hashchange", sync);
     return () => window.removeEventListener("hashchange", sync);
-  }, [defaultSection]);
+  }, [defaultSection, validIds]);
 
   return (
     <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row lg:gap-10">
@@ -44,7 +48,31 @@ export function SettingsLayout({
           {description ? (
             <p className="mt-1 text-sm text-muted-foreground">{description}</p>
           ) : null}
-          <nav className="mt-6 flex flex-col gap-0.5" aria-label="Settings">
+          <div className="mt-4 lg:hidden">
+            <label className="sr-only" htmlFor="settings-section-jump">
+              Settings section
+            </label>
+            <Select
+              id="settings-section-jump"
+              className="min-h-12 w-full"
+              value={currentId}
+              onChange={(event) => {
+                const next = event.target.value;
+                window.location.hash = next;
+                setCurrentId(next);
+              }}
+            >
+              {items.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.label}
+                </option>
+              ))}
+            </Select>
+          </div>
+          <nav
+            className="mt-6 hidden flex-col gap-0.5 lg:flex"
+            aria-label="Settings"
+          >
             {items.map((item) => {
               const on = item.id === currentId;
               return (
