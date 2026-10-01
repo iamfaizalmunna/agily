@@ -22,7 +22,7 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 | 10 | Issue types (bug, story, epic) | ○ | ○ | ✓ | ○ | **Have** (R4) |
 | 11 | Labels / tags | ✓ | ✓ | ✓ | ✓ | **Have** (R2) |
 | 12 | Custom fields | ✓ | ✓ | ✓ | ○ | **Have** (R9) |
-| 13 | Story points / estimates | ○ | ○ | ✓ | ○ | **Missing** |
+| 13 | Story points / estimates | ○ | ○ | ✓ | ○ | **Have** (G2) |
 | 14 | Time tracking / timers | ✓ | ○ | ✓ | ○ | **Missing** |
 | 15 | Attachments / files | ✓ | ✓ | ✓ | ✓ | **Missing** |
 | 16 | @mentions in description | ✓ | ✓ | ✓ | ✓ | **Missing** |

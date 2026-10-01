@@ -101,6 +101,7 @@ model Item {
   body      String    @default("")
   type      String    @default("task")
   priority  String    @default("minor")
+  storyPoints   Int?
   status        String
   customFields  String    @default("{}")
   dueOn         DateTime?

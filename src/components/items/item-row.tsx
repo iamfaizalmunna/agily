@@ -37,6 +37,10 @@ import {
   type IssueType,
 } from "@/lib/items/issue-type";
 import { formatDueOn } from "@/lib/items/validate";
+import {
+  formatStoryPoints,
+  storyPointsLabel,
+} from "@/lib/items/story-points";
 
 const initial: BoardFormState = {};
 
@@ -87,6 +91,7 @@ export function ItemRow({
     status: string;
     type: string;
     priority: string;
+    storyPoints?: number | null;
     parentId?: string | null;
     dueOn: Date | null;
     assignees: { user: Person }[];
@@ -114,6 +119,9 @@ export function ItemRow({
             {" · "}
             {workflowStatusLabel(workflow, item.status)}
             {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
+            {item.storyPoints != null
+              ? ` · ${storyPointsLabel(item.storyPoints)}`
+              : ""}
             {` · ${noteLabel(noteCount)}`}
           </p>
           <AssigneeMarks people={assignedPeople} />
@@ -132,6 +140,9 @@ export function ItemRow({
           {" · "}
           {workflowStatusLabel(workflow, item.status)}
           {item.dueOn ? ` · ${formatDueOn(item.dueOn)}` : ""}
+          {item.storyPoints != null
+            ? ` · ${storyPointsLabel(item.storyPoints)}`
+            : ""}
         </p>
         <div className="mt-2">
           <AssigneeMarks people={assignedPeople} />
@@ -190,7 +201,7 @@ export function ItemRow({
             <input type="hidden" name="parentId" value="" />
           )}
         </div>
-        <div className="grid grid-cols-1 gap-2 sm:grid-cols-3">
+        <div className="grid grid-cols-1 gap-2 sm:grid-cols-2 lg:grid-cols-4">
           <Select
             name="priority"
             defaultValue={item.priority}
@@ -214,6 +225,16 @@ export function ItemRow({
               </option>
             ))}
           </Select>
+          <Input
+            name="storyPoints"
+            type="number"
+            min={0}
+            max={999}
+            inputMode="numeric"
+            placeholder="Points"
+            defaultValue={formatStoryPoints(item.storyPoints)}
+            className="h-10"
+          />
           <Input name="dueOn" type="date" defaultValue={formatDueOn(item.dueOn)} />
         </div>
         <fieldset>

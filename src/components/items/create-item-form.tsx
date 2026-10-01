@@ -122,6 +122,14 @@ export function CreateItemForm({
           ))}
         </Select>
         <Input name="dueOn" type="date" />
+        <Input
+          name="storyPoints"
+          type="number"
+          min={0}
+          max={999}
+          placeholder="Story points"
+          className="h-10"
+        />
       </div>
       <textarea
         name="body"

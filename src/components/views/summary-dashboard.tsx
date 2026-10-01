@@ -22,6 +22,7 @@ import {
   weekStart,
   type SummaryRow,
 } from "@/lib/views/summary";
+import { storyPointTotals } from "@/lib/items/story-points";
 import { cn } from "@/lib/cn";
 
 const STATUS_BADGE: Record<ItemStatus, "default" | "secondary" | "outline" | "destructive"> = {
@@ -49,6 +50,7 @@ export function SummaryDashboard({
   const burndown = burndownSeries(items, now);
   const recent = recentUpdates(items);
   const stats = summaryStats(items, now);
+  const points = storyPointTotals(items);
   const hierarchyItems: HierarchyNode[] = items.map((item) => ({
     id: item.id,
     title: item.title,
@@ -59,11 +61,20 @@ export function SummaryDashboard({
 
   return (
     <div className="flex flex-col gap-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard label="Total tickets" value={stats.total} />
         <StatCard label="Open" value={stats.open} />
         <StatCard label="Overdue" value={stats.overdue} tone="destructive" />
         <StatCard label="Done this week" value={completed} tone="success" />
+        <StatCard
+          label="Story points"
+          value={points.scope}
+          hint={
+            points.estimated
+              ? `${points.open} open · ${points.done} done`
+              : "Add points on tickets"
+          }
+        />
       </div>
 
       <SummaryEpics items={hierarchyItems} focusHref={focusHref} />
@@ -153,10 +164,12 @@ function StatCard({
   label,
   value,
   tone,
+  hint,
 }: {
   label: string;
   value: number;
   tone?: "destructive" | "success";
+  hint?: string;
 }) {
   return (
     <Card className="p-4">
@@ -172,6 +185,9 @@ function StatCard({
       >
         {value}
       </p>
+      {hint ? (
+        <p className="mt-1 text-xs text-muted-foreground">{hint}</p>
+      ) : null}
     </Card>
   );
 }
