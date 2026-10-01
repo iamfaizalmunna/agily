@@ -8,7 +8,7 @@ This track ships high-impact gaps from [FEATURE_GAP.md](../FEATURE_GAP.md) — o
 
 | Phase | Focus | Status | Branch |
 |:-----:|-------|--------|--------|
-| G1 | List multi-select + bulk status / priority / assignee | **complete** (PR pending) | `growth/g1-list-bulk` |
+| G1 | List multi-select + bulk status / priority / assignee | **complete** | `growth/g1-list-bulk` |
 
 ## Loop
 

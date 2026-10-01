@@ -33,7 +33,7 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 | 21 | Watchers / subscribers | ○ | ○ | ✓ | ✓ | **Partial** (assignees get notices) |
 | 22 | Voting / reactions | ○ | ○ | ○ | ✓ | **Missing** |
 | 23 | Archive / trash | ✓ | ✓ | ✓ | ○ | **Partial** (project archive) |
-| 24 | Bulk edit | ✓ | ○ | ✓ | ○ | **Missing** |
+| 24 | Bulk edit | ✓ | ○ | ✓ | ○ | **Have** (G1 list bulk) |
 | 25 | Import / export CSV | ✓ | ✓ | ✓ | ○ | **Have** (R10) |
 
 ---

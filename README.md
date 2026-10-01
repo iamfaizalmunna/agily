@@ -2,7 +2,7 @@
 
 <p align="center">
   Local agile planner — teams, boards, filters, and optional on-device AI.<br>
-  <strong>Foundation (1–10)</strong> and <strong>Revamp (R1–R12)</strong> are <strong>complete</strong> on <code>main</code>.
+  <strong>Foundation (1–10)</strong>, <strong>Revamp (R1–R12)</strong>, and <strong>Mobile (MF1–MF12)</strong> are <strong>complete</strong> on <code>main</code>.
 </p>
 
 <p align="center">

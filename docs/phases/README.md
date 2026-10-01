@@ -8,7 +8,7 @@ All **10 foundation phases are on `main`.** New work uses **Revamp v2**:
 
 | | |
 |--|--|
-| **Active roadmap** | **[MOBILE_README.md](MOBILE_README.md)** — MF1–MF12 mobile-first (current) · [REVAMP_README.md](REVAMP_README.md) — R1–R12 **complete** |
+| **Active roadmap** | **[GROWTH_README.md](GROWTH_README.md)** — G1+ gaps · [MOBILE_README.md](MOBILE_README.md) — MF1–MF12 **complete** · [REVAMP_README.md](REVAMP_README.md) — R1–R12 **complete** |
 | Feature checklist | [FEATURE_GAP.md](../FEATURE_GAP.md) |
 
 | | Phase | In one sentence | Story |
