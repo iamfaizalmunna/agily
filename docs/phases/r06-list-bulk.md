@@ -1,7 +1,7 @@
 # R6 — List power & bulk edit
 
-**Status:** planned  
-**Branch:** `revamp/r06-list-bulk`  
+**Status:** complete (Growth G1)  
+**Branch:** `growth/g1-list-bulk`  
 **Goal:** Jira list view productivity.
 
 ## Deliverables

@@ -1,6 +1,6 @@
 # Mobile-first & solid UI (MF1–MF12)
 
-**Progress on `main`:** MF1–MF6 **complete** · MF7–MF12 **on branch** `mobile/mf7-mf12-ship` (PR pending).
+**Progress on `main`:** MF1–MF12 **complete**.
 
 **Goal:** Site-wide UI that feels **solid on phone first** — Jira-mobile patterns (clear nav, one-hand use, fast ticket access) — while **desktop stays the power layout** you have today.
 
@@ -48,12 +48,12 @@ Details: **[MOBILE_GIT_LOOP.md](MOBILE_GIT_LOOP.md)** · Revamp equivalent: [REV
 | MF4 | Board (flow) mobile | **complete** | [mobile-04-board.md](mobile-04-board.md) |
 | MF5 | List & ticket detail | **complete** | [mobile-05-ticket.md](mobile-05-ticket.md) |
 | MF6 | Filters & search sheets | **complete** | [mobile-06-filters.md](mobile-06-filters.md) |
-| MF7 | Create & quick actions | **complete** (PR pending) | [mobile-07-create.md](mobile-07-create.md) |
-| MF8 | Settings, people, notices | **complete** (PR pending) | [mobile-08-settings.md](mobile-08-settings.md) |
-| MF9 | Summary & analytics | **complete** (PR pending) | [mobile-09-summary.md](mobile-09-summary.md) |
-| MF10 | Timeline & calendar | **complete** (PR pending) | [mobile-10-timeline.md](mobile-10-timeline.md) |
-| MF11 | PWA & installable shell | **complete** (PR pending) | [mobile-11-pwa.md](mobile-11-pwa.md) |
-| MF12 | Ship mobile (QA + e2e) | **complete** (PR pending) | [mobile-12-ship.md](mobile-12-ship.md) |
+| MF7 | Create & quick actions | **complete** | [mobile-07-create.md](mobile-07-create.md) |
+| MF8 | Settings, people, notices | **complete** | [mobile-08-settings.md](mobile-08-settings.md) |
+| MF9 | Summary & analytics | **complete** | [mobile-09-summary.md](mobile-09-summary.md) |
+| MF10 | Timeline & calendar | **complete** | [mobile-10-timeline.md](mobile-10-timeline.md) |
+| MF11 | PWA & installable shell | **complete** | [mobile-11-pwa.md](mobile-11-pwa.md) |
+| MF12 | Ship mobile (QA + e2e) | **complete** | [mobile-12-ship.md](mobile-12-ship.md) |
 
 ---
 

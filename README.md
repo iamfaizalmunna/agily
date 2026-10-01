@@ -2,7 +2,7 @@
 
 <p align="center">
   Local agile planner — teams, boards, filters, and optional on-device AI.<br>
-  <strong>Foundation (1–10)</strong> and <strong>Revamp (R1–R12)</strong> are <strong>complete</strong> on <code>main</code>.
+  <strong>Foundation (1–10)</strong>, <strong>Revamp (R1–R12)</strong>, and <strong>Mobile (MF1–MF12)</strong> are <strong>complete</strong> on <code>main</code>.
 </p>
 
 <p align="center">
@@ -67,7 +67,7 @@
 
 ## Roadmap
 
-**Foundation (phases 1–10)** and **Revamp v2 (R1–R12)** are finished on `main`. **Next track:** [Mobile-first & solid UI (MF1–MF12)](docs/phases/MOBILE_README.md) — Jira-like phone experience, site-wide.
+**Foundation (phases 1–10)** and **Revamp v2 (R1–R12)** are finished on `main`. **Mobile (MF1–MF12)** is complete. **Current track:** [Growth G1+](docs/phases/GROWTH_README.md) — list bulk edit, story points, and other high-impact gaps.
 
 **Charts (browser):** [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases) · [docs/phases/index.html](docs/phases/index.html)  
 **Gap matrix:** [docs/FEATURE_GAP.md](docs/FEATURE_GAP.md) · **Git loop:** [docs/phases/REVAMP_GIT_LOOP.md](docs/phases/REVAMP_GIT_LOOP.md)

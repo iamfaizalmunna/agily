@@ -87,6 +87,7 @@ export default async function ProjectBoardPage({
     lane?: string;
     hideDone?: string;
     compact?: string;
+    bulkError?: string;
   }>;
 }) {
   const { slug, projectSlug } = await params;
@@ -366,7 +367,35 @@ export default async function ProjectBoardPage({
 
       {view === "list" && items.length ? (
         <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+          {query.bulkError ? (
+            <p
+              className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive lg:col-span-2"
+              role="alert"
+            >
+              {query.bulkError}
+            </p>
+          ) : null}
           <TicketList
+            bulk={
+              writable
+                ? {
+                    slug,
+                    projectSlug,
+                    listNext: boardViewHref(
+                      slug,
+                      projectSlug,
+                      "list",
+                      yearMonth,
+                      focusId ? withFocus(lensExtra, focusId) : lensExtra,
+                    ),
+                    statuses: workflow.statuses.map((row) => ({
+                      id: row.id,
+                      label: row.label,
+                    })),
+                    members: people,
+                  }
+                : undefined
+            }
             items={items.map((item) => ({
               id: item.id,
               title: item.title,

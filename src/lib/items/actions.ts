@@ -39,6 +39,11 @@ import { parseMentionUserIds, type MentionMember } from "@/lib/activity/mentions
 import { writeItemEvents } from "@/lib/activity/write-events";
 import { writeNotices } from "@/lib/notices/write";
 import { safeStudioNext } from "@/lib/views/views";
+import {
+  parseBulkItemIds,
+  parseBulkPatch,
+  validateBulkPatchForWorkflow,
+} from "@/lib/items/bulk";
 
 function memberNameMap(
   members: { userId: string; user: { id: string; name: string } }[],
@@ -709,4 +714,121 @@ export async function updateGanttDueAction(
     names,
   );
   return {};
+}
+
+function redirectWithBulkError(next: string, message: string): never {
+  const url = new URL(next, "http://agily.local");
+  url.searchParams.set("bulkError", message);
+  redirect(`${url.pathname}${url.search}`);
+}
+
+export async function bulkUpdateItemsAction(formData: FormData) {
+  const user = await requireUser();
+  const slug = String(formData.get("slug") ?? "");
+  const projectSlug = String(formData.get("projectSlug") ?? "");
+  const next = boardNext(slug, projectSlug, formData);
+  const ctx = await getMembership(user.id, slug);
+  if (!ctx) redirect("/home");
+  if (!canWriteBoard(ctx.role)) redirectWithBulkError(next, "Read only");
+
+  const idsParsed = parseBulkItemIds(
+    formData.getAll("itemId").map((value) => String(value)),
+  );
+  if ("error" in idsParsed) redirectWithBulkError(next, idsParsed.error);
+  const bulkIds = idsParsed.ids;
+
+  const patchParsed = parseBulkPatch({
+    status: String(formData.get("bulkStatus") ?? ""),
+    priority: String(formData.get("bulkPriority") ?? ""),
+    assignee: String(formData.get("bulkAssignee") ?? "unchanged"),
+  });
+  if ("error" in patchParsed) redirectWithBulkError(next, patchParsed.error);
+  const patch = patchParsed.patch;
+
+  const project = await prisma.project.findFirst({
+    where: { teamId: ctx.team.id, slug: projectSlug, archived: false },
+    select: { id: true, workflow: true },
+  });
+  if (!project) redirectWithBulkError(next, "Board not found");
+
+  const workflow = resolveWorkflow(project.workflow);
+  const gate = validateBulkPatchForWorkflow(patch, workflow);
+  if ("error" in gate) redirectWithBulkError(next, gate.error);
+
+  const teamIds = new Set(ctx.team.members.map((member) => member.userId));
+  if (
+    patch.assignee.mode === "set" &&
+    (!patch.assignee.userId || !teamIds.has(patch.assignee.userId))
+  ) {
+    redirectWithBulkError(next, "Assignee not in studio");
+  }
+
+  const items = await prisma.item.findMany({
+    where: {
+      id: { in: bulkIds },
+      projectId: project.id,
+    },
+    include: { assignees: true },
+  });
+  if (items.length !== bulkIds.length) {
+    redirectWithBulkError(next, "Some tickets were not found");
+  }
+
+  const names = memberNameMap(ctx.team.members);
+
+  for (const item of items) {
+    const before = {
+      status: item.status,
+      priority: item.priority,
+      dueOn: item.dueOn,
+      assigneeIds: item.assignees.map((row) => row.userId),
+    };
+    const data: { status?: string; priority?: string } = {};
+    if (patch.status) data.status = patch.status;
+    if (patch.priority) data.priority = patch.priority;
+
+    let assigneeIds = before.assigneeIds;
+    if (patch.assignee.mode === "clear") {
+      assigneeIds = [];
+    } else if (patch.assignee.mode === "set" && patch.assignee.userId) {
+      assigneeIds = [patch.assignee.userId];
+    }
+
+    if (Object.keys(data).length) {
+      await prisma.item.update({ where: { id: item.id }, data });
+    }
+    if (patch.assignee.mode !== "unchanged") {
+      await prisma.itemAssignee.deleteMany({ where: { itemId: item.id } });
+      for (const userId of assigneeIds) {
+        await prisma.itemAssignee.create({
+          data: { itemId: item.id, userId },
+        });
+      }
+    }
+
+    const after = {
+      status: data.status ?? item.status,
+      priority: data.priority ?? item.priority,
+      dueOn: item.dueOn,
+      assigneeIds,
+    };
+    await writeItemEvents(item.id, user.id, before, after, names);
+
+    const added = assigneeIds.filter((id) => !before.assigneeIds.includes(id));
+    if (added.length) {
+      await writeNotices({
+        teamId: ctx.team.id,
+        slug,
+        projectSlug,
+        itemId: item.id,
+        itemTitle: item.title,
+        actorId: user.id,
+        actorName: user.name,
+        kind: "assigned",
+        userIds: added,
+      });
+    }
+  }
+
+  redirect(next);
 }
