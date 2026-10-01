@@ -20,6 +20,7 @@
     "src/lib/items/validate.ts",
     "src/lib/items/assign.ts",
     "src/lib/items/bulk.ts",
+    "src/lib/items/story-points.ts",
     "src/lib/nav/studio.ts",
     "src/lib/views/views.ts",
     "src/lib/views/analytics.ts",

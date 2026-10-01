@@ -44,6 +44,7 @@ import {
   parseBulkPatch,
   validateBulkPatchForWorkflow,
 } from "@/lib/items/bulk";
+import { parseStoryPoints } from "@/lib/items/story-points";
 
 function memberNameMap(
   members: { userId: string; user: { id: string; name: string } }[],
@@ -237,6 +238,8 @@ export async function createItemAction(
     String(formData.get("parentId") ?? ""),
   );
   if ("error" in parentResolved) return { error: parentResolved.error };
+  const pointsParsed = parseStoryPoints(String(formData.get("storyPoints") ?? ""));
+  if ("error" in pointsParsed) return { error: pointsParsed.error };
   const item = await prisma.item.create({
     data: {
       projectId: group.projectId,
@@ -247,6 +250,7 @@ export async function createItemAction(
       type,
       status: "backlog",
       priority: parseItemPriority(String(formData.get("priority") ?? "")),
+      storyPoints: pointsParsed.storyPoints,
       dueOn: due.dueOn,
       position: (last._max.position ?? -1) + 1,
       assignees: assignMe ? { create: { userId: user.id } } : undefined,
@@ -310,6 +314,8 @@ export async function updateItemAction(
   const priority = parseItemPriority(String(formData.get("priority") ?? ""));
   const due = parseDueOn(String(formData.get("dueOn") ?? ""));
   if ("error" in due) return { error: due.error };
+  const pointsParsed = parseStoryPoints(String(formData.get("storyPoints") ?? ""));
+  if ("error" in pointsParsed) return { error: pointsParsed.error };
   const ctx = await getMembership(user.id, slug);
   if (!ctx) return { error: "Studio not found" };
   if (!canWriteBoard(ctx.role)) return { error: "Read only" };
@@ -365,6 +371,7 @@ export async function updateItemAction(
         type,
         parentId: parentResolved.parentId,
         dueOn: due.dueOn,
+        storyPoints: pointsParsed.storyPoints,
         body: String(formData.get("body") ?? item.body),
         customFields: serializeCustomFields(customCollected.values),
       },

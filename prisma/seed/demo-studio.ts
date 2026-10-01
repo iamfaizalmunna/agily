@@ -21,6 +21,7 @@ type TicketSeed = {
   labels?: string[];
   checklist?: { title: string; done?: boolean }[];
   dueDays?: number;
+  storyPoints?: number;
   comments?: { role: TeamRole; body: string }[];
 };
 
@@ -40,6 +41,7 @@ const ATLAS_TICKETS: TicketSeed[] = [
     title: "Redesign sprint board filters",
     status: "doing",
     priority: "major",
+    storyPoints: 5,
     group: "Now",
     labels: ["Feature", "Design"],
     checklist: [
@@ -311,6 +313,7 @@ async function seedTickets(
         type: ticket.type ?? "task",
         status: ticket.status,
         priority: ticket.priority,
+        storyPoints: ticket.storyPoints ?? null,
         dueOn: dueFromDays(ticket.dueDays, base),
         position,
         assignees: assigneeIds.length

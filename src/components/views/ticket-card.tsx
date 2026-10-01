@@ -27,6 +27,7 @@ export type TicketCardData = {
   labels?: LabelChip[];
   subtasks?: { done: boolean }[];
   type?: string;
+  storyPoints?: number | null;
 };
 
 export function TicketCard({
@@ -85,6 +86,11 @@ export function TicketCard({
             {checklist.total ? (
               <span className="normal-case text-muted-foreground">
                 {formatSubtaskProgress(checklist.done, checklist.total)}
+              </span>
+            ) : null}
+            {ticket.storyPoints != null ? (
+              <span className="normal-case text-muted-foreground">
+                {ticket.storyPoints} pts
               </span>
             ) : null}
           </div>

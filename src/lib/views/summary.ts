@@ -13,6 +13,7 @@ export type SummaryRow = {
   type?: string;
   parentId?: string | null;
   priority?: string;
+  storyPoints?: number | null;
   dueOn: Date | null;
   updatedAt: Date;
   createdAt: Date;

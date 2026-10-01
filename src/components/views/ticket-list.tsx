@@ -8,6 +8,7 @@ export type TicketListItem = {
   title: string;
   status: string;
   priority: string;
+  storyPoints?: number | null;
   dueOn: Date | null;
   href: string;
   people: { id: string; name: string }[];

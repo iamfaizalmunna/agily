@@ -14,6 +14,7 @@ import { PRIORITY_LABEL, type ItemPriority } from "@/lib/items/priority";
 import { STATUS_LABEL, type ItemStatus } from "@/lib/items/status";
 import { formatIssueKey } from "@/lib/items/issue-key";
 import { formatDueOn } from "@/lib/items/validate";
+import { storyPointsLabel } from "@/lib/items/story-points";
 import { priorityTone } from "@/lib/ui/priority-tone";
 import { cn } from "@/lib/cn";
 import type { TicketListItem } from "@/components/views/ticket-list";
@@ -142,6 +143,7 @@ export function TicketListBulkTable({
               </th>
               <th className="px-4 py-2.5 font-medium">Ticket</th>
               <th className="px-4 py-2.5 font-medium">Priority</th>
+              <th className="px-4 py-2.5 font-medium">Pts</th>
               <th className="px-4 py-2.5 font-medium">Status</th>
               <th className="px-4 py-2.5 font-medium">Due</th>
               <th className="px-4 py-2.5 font-medium">Assignee</th>
@@ -203,6 +205,9 @@ export function TicketListBulkTable({
                           item.priority}
                       </span>
                     </td>
+                    <td className="px-4 py-3 text-muted-foreground">
+                      {storyPointsLabel(item.storyPoints)}
+                    </td>
                     <td className="px-4 py-3">
                       <Badge variant="outline">
                         {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
@@ -220,7 +225,7 @@ export function TicketListBulkTable({
             ) : (
               <tr>
                 <td
-                  colSpan={6}
+                  colSpan={7}
                   className="px-4 py-8 text-center text-muted-foreground"
                 >
                   No tickets match this filter.
