@@ -25,6 +25,7 @@
     "src/lib/views/views.ts",
     "src/lib/views/analytics.ts",
     "src/lib/views/gantt.ts",
+    "src/lib/views/list-sort.ts",
     "src/lib/dependencies/dependencies.ts",
     "src/lib/search/search.ts",
     "src/lib/search/recent.ts",
