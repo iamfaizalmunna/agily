@@ -6,7 +6,7 @@
 
 ## Deliverables
 
-- Sort by due, priority, updated, key
+- Sort by due, priority, updated, key (**G3**)
 - Group by status, assignee, label
 - Multi-select rows + bulk: status, assignee, priority
 - Column picker (show/hide fields)

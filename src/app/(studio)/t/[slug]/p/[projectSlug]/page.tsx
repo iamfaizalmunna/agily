@@ -30,6 +30,7 @@ import { listTeamLabels } from "@/lib/labels/queries";
 import { OrbitMonth } from "@/components/views/orbit-month";
 import { ProjectTabs } from "@/components/views/project-tabs";
 import { SummaryDashboard } from "@/components/views/summary-dashboard";
+import { ListSortBar } from "@/components/views/list-sort-bar";
 import { TicketList } from "@/components/views/ticket-list";
 import { TimelineChart } from "@/components/views/timeline-chart";
 import { requireUser } from "@/lib/auth/session";
@@ -66,6 +67,11 @@ import {
   parseBoardView,
   parseYearMonth,
 } from "@/lib/views/views";
+import {
+  listSortQuery,
+  parseListSort,
+  sortListItems,
+} from "@/lib/views/list-sort";
 
 export default async function ProjectBoardPage({
   params,
@@ -88,6 +94,8 @@ export default async function ProjectBoardPage({
     hideDone?: string;
     compact?: string;
     bulkError?: string;
+    sort?: string;
+    sortDir?: string;
   }>;
 }) {
   const { slug, projectSlug } = await params;
@@ -119,6 +127,8 @@ export default async function ProjectBoardPage({
     : parseLensQuery(query);
   const savedId = pinned?.id;
   const lensExtra = lensQueryRecord(spec, savedId);
+  const listSortConfig = parseListSort(query.sort, query.sortDir);
+  const listSortExtra = listSortQuery(listSortConfig);
   const focusId = parseFocusId(query.focus);
   const focused = focusId
     ? await getItemFocus(ctx.team.id, projectSlug, focusId)
@@ -237,6 +247,9 @@ export default async function ProjectBoardPage({
       matchCtx,
     );
 
+  const hrefLensExtra =
+    view === "list" ? { ...lensExtra, ...listSortExtra } : lensExtra;
+
   const items = flattenBoardItems(project.groups)
     .filter(visible)
     .map((item) => ({
@@ -246,7 +259,7 @@ export default async function ProjectBoardPage({
         projectSlug,
         view,
         yearMonth,
-        withFocus(lensExtra, item.id),
+        withFocus(hrefLensExtra, item.id),
       ),
       people: item.assignees.map((row) => row.user),
       groupName: groupNameByItem.get(item.id),
@@ -259,6 +272,11 @@ export default async function ProjectBoardPage({
         position: row.position,
       })),
     }));
+
+  const listItems =
+    view === "list" && listSortConfig
+      ? sortListItems(items, listSortConfig)
+      : items;
 
   const summaryRows = items.map((item) => ({
     id: item.id,
@@ -376,6 +394,16 @@ export default async function ProjectBoardPage({
               {query.bulkError}
             </p>
           ) : null}
+          <div className="flex min-w-0 flex-col gap-3">
+            <ListSortBar
+              slug={slug}
+              projectSlug={projectSlug}
+              yearMonth={yearMonth}
+              lensExtra={lensExtra}
+              sort={query.sort}
+              sortDir={query.sortDir}
+              focusId={focusId}
+            />
           <TicketList
             bulk={
               writable
@@ -387,7 +415,9 @@ export default async function ProjectBoardPage({
                       projectSlug,
                       "list",
                       yearMonth,
-                      focusId ? withFocus(lensExtra, focusId) : lensExtra,
+                      focusId
+                        ? withFocus({ ...lensExtra, ...listSortExtra }, focusId)
+                        : { ...lensExtra, ...listSortExtra },
                     ),
                     statuses: workflow.statuses.map((row) => ({
                       id: row.id,
@@ -397,7 +427,7 @@ export default async function ProjectBoardPage({
                   }
                 : undefined
             }
-            items={items.map((item) => ({
+            items={listItems.map((item) => ({
               id: item.id,
               title: item.title,
               status: item.status,
@@ -415,6 +445,7 @@ export default async function ProjectBoardPage({
             }))}
             selectedId={focusId ?? undefined}
           />
+          </div>
           <div className="hidden rounded-lg border border-border bg-card lg:block">
             {focused ? (
               <div className="flex flex-col gap-4 p-4">
