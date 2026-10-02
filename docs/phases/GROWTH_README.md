@@ -10,7 +10,7 @@ This track ships high-impact gaps from [FEATURE_GAP.md](../FEATURE_GAP.md) — o
 |:-----:|-------|--------|--------|
 | G1 | List multi-select + bulk status / priority / assignee | **complete** | `growth/g1-list-bulk` |
 | G2 | Story points on tickets + summary totals | **complete** | `growth/g2-story-points` |
-| G3 | List sort (due, priority, updated, key) | **complete** (PR pending) | `growth/g3-list-sort` |
+| G3 | List sort (due, priority, updated, key) | **complete** | `growth/g3-list-sort` |
 
 ## Loop
 
