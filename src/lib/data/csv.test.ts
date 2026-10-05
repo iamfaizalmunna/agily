@@ -54,9 +54,55 @@ describe("data/csv", () => {
           type: "task",
           groupName: "Now",
         },
+        {
+          title: "No due",
+          status: "",
+          priority: "",
+          dueOn: null,
+          assigneeEmails: [],
+          type: "",
+          groupName: "",
+        },
       ]),
     );
     assert.match(csv, /title,status/);
     assert.match(csv, /Ship/);
+    assert.match(csv, /No due/);
+  });
+
+  it("covers parseCsv line endings and import edge cases", () => {
+    assert.deepEqual(parseCsv("a\r\nb"), [["a", "b"]]);
+    assert.deepEqual(parseCsv("x\ry"), [["x", "y"]]);
+    assert.deepEqual(parseCsv("\r\n"), []);
+    assert.deepEqual(parseCsv('in,"q""uote"'), [["in", 'q"uote']]);
+    assert.equal(normalizeImportHeader("unknown"), null);
+    assert.equal(normalizeImportHeader("Name"), "title");
+    const empty = mapCsvToImports([]);
+    assert.deepEqual(empty.errors, ["CSV is empty"]);
+    const withUnknownCol = mapCsvToImports([
+      ["title", "bogus", "status"],
+      ["T", "skip", "done"],
+    ]);
+    assert.equal(withUnknownCol.rows[0].status, "done");
+    const sparse = mapCsvToImports([
+      ["title", "status"],
+      ["Full defaults"],
+    ]);
+    assert.equal(sparse.rows[0].status, "backlog");
+    assert.equal(sparse.rows[0].priority, "minor");
+    assert.equal(sparse.rows[0].type, "task");
+    assert.equal(sparse.rows[0].assigneeEmail, null);
+    const partial = exportRowsToCsv([
+      {
+        title: "x",
+        status: "backlog",
+        priority: "minor",
+        due: "",
+        assignee: "",
+        type: "task",
+        group: "",
+      },
+    ]);
+    assert.ok(partial.includes("x"));
   });
 });

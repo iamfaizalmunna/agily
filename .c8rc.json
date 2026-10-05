@@ -3,6 +3,8 @@
   "check-coverage": true,
   "lines": 100,
   "statements": 100,
+  "functions": 100,
+  "branches": 89,
   "include": [
     "src/lib/auth/identity.ts",
     "src/lib/auth/demo-accounts.ts",
@@ -61,6 +63,6 @@
     "packages/lens/src/index.ts"
   ],
   "exclude": ["**/*.test.ts", "**/node_modules/**"],
-  "reporter": ["text", "text-summary", "lcov", "html"],
+  "reporter": ["text", "text-summary", "lcov", "html", "json"],
   "reportsDir": "coverage"
 }
