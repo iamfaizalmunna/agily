@@ -131,7 +131,7 @@ export async function signInAction(
   }
 
   clearSignInFailures(email);
-  await createSession(user.id);
+  await createSession(user.id, { replaceExistingForUser: true });
   redirect("/home");
 }
 

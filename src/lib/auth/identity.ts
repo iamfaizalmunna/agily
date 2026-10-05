@@ -1,5 +1,7 @@
 /* c8 ignore start */
+/** Default session lifetime; keep at or below MAX_SESSION_DAYS in production. */
 export const SESSION_DAYS = 30;
+export const MAX_SESSION_DAYS = 90;
 export const SESSION_COOKIE = "agily_session";
 /* c8 ignore stop */
 
