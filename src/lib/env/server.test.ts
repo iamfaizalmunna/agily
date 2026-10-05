@@ -37,6 +37,16 @@ describe("env/server", () => {
     );
   });
 
+  it("warns on long SESSION_DAYS in production", () => {
+    const issues = validateServerEnv({
+      NODE_ENV: "production",
+      DATABASE_URL: "file:./x.db",
+      SESSION_SECRET: "x".repeat(32),
+      SESSION_DAYS: "120",
+    });
+    assert.equal(issues.some((row) => row.key === "SESSION_DAYS"), true);
+  });
+
   it("passes when env is valid", () => {
     assert.deepEqual(
       validateServerEnv({

@@ -14,5 +14,5 @@ export async function writeSessionCookie(token: string, expiresAt: Date) {
 }
 
 export async function clearSessionCookie() {
-  (await cookies()).delete(SESSION_COOKIE);
+  (await cookies()).delete({ name: SESSION_COOKIE, path: "/" });
 }

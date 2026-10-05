@@ -1,5 +1,6 @@
 /* c8 ignore next */
 const MIN_SESSION_SECRET_LEN = 32;
+const MAX_SESSION_DAYS = 90;
 
 export type ServerEnvIssue = { key: string; message: string };
 
@@ -26,6 +27,17 @@ export function validateServerEnv(
       key: "SESSION_SECRET",
       message: "SESSION_SECRET is required (use a long random string in .env)",
     });
+  }
+
+  const sessionDaysRaw = env.SESSION_DAYS?.trim();
+  if (sessionDaysRaw && nodeEnv === "production") {
+    const days = Number(sessionDaysRaw);
+    if (!Number.isFinite(days) || days < 1 || days > MAX_SESSION_DAYS) {
+      issues.push({
+        key: "SESSION_DAYS",
+        message: `SESSION_DAYS must be between 1 and ${MAX_SESSION_DAYS} in production`,
+      });
+    }
   }
 
   return issues;

@@ -72,7 +72,7 @@ export async function acceptInviteAction(
   }
 
   if (!sessionUser || sessionUser.id !== user.id) {
-    await createSession(user.id);
+    await createSession(user.id, { replaceExistingForUser: true });
   }
 
   const existing = await prisma.teamMember.findUnique({

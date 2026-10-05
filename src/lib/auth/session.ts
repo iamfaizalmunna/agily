@@ -1,4 +1,3 @@
-import { randomBytes } from "node:crypto";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
 import {
@@ -7,6 +6,7 @@ import {
   writeSessionCookie,
 } from "@/lib/auth/cookies";
 import { isSessionFresh, sessionExpiry } from "@/lib/auth/identity";
+import { mintSessionToken } from "@/lib/auth/session-token";
 
 export { normalizeEmail, sessionExpiry } from "@/lib/auth/identity";
 
@@ -16,12 +16,24 @@ export type SessionUser = {
   name: string;
 };
 
-function newToken() {
-  return randomBytes(32).toString("hex");
-}
+export type CreateSessionOptions = {
+  /** Drop other sessions for this user and the current cookie token (sign-in). */
+  replaceExistingForUser?: boolean;
+};
 
-export async function createSession(userId: string) {
-  const token = newToken();
+export async function createSession(
+  userId: string,
+  options?: CreateSessionOptions,
+) {
+  const currentToken = await readSessionToken();
+  if (currentToken) {
+    await prisma.session.deleteMany({ where: { token: currentToken } });
+  }
+  if (options?.replaceExistingForUser) {
+    await prisma.session.deleteMany({ where: { userId } });
+  }
+
+  const token = mintSessionToken();
   const expiresAt = sessionExpiry();
   await prisma.session.create({
     data: { userId, token, expiresAt },
