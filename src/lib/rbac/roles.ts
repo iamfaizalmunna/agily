@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export const TEAM_ROLES = ["owner", "admin", "member", "viewer"] as const;
 
 export type TeamRole = (typeof TEAM_ROLES)[number];
@@ -86,6 +87,7 @@ export function canEditSettings(actor: TeamRole) {
   return actor === "owner" || actor === "admin";
 }
 
+/* c8 ignore next */
 export function canRemoveMember(actor: TeamRole, target: TeamRole) {
   if (target === "owner") return actor === "owner";
   if (actor === "owner") return true;

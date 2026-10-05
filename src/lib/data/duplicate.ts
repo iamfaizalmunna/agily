@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export function suggestDuplicateProjectName(name: string): string {
   const trimmed = name.trim();
   const copyMatch = / \(copy(?: (\d+))?\)$/.exec(trimmed);

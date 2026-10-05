@@ -49,6 +49,48 @@ describe("workflow/workflow", () => {
       ],
     });
     assert.equal(dup, null);
+    assert.equal(
+      workflowFromPayload({
+        statuses: [{ label: "X", color: "#111111" }],
+      }),
+      null,
+    );
+    assert.equal(
+      workflowFromPayload({
+        statuses: [{ id: "backlog", color: "#111111" }],
+      }),
+      null,
+    );
+    assert.equal(
+      workflowFromPayload({
+        statuses: [{ id: "backlog", label: "X" }],
+      }),
+      null,
+    );
+    assert.equal(
+      workflowFromPayload({
+        statuses: [{ id: "", label: "X", color: "#111111" }],
+      }),
+      null,
+    );
+    assert.equal(
+      workflowFromPayload({
+        statuses: [{ id: "backlog", label: "", color: "#111111" }],
+      }),
+      null,
+    );
+    assert.equal(
+      workflowFromPayload({
+        statuses: [{ id: "backlog", label: "X", color: "not-hex" }],
+      }),
+      null,
+    );
+    assert.equal(
+      workflowFromPayload({
+        statuses: [{ id: "backlog", label: "X", color: "#111111" }],
+      })?.statuses[0].label,
+      "X",
+    );
   });
 
   it("normalizes required core statuses", () => {

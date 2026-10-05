@@ -1,4 +1,5 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
 import { describe, it } from "node:test";
 import { ITEM_EVENT_KINDS } from "@/lib/activity/events";
 import { mentionTokens } from "@/lib/activity/mentions";
@@ -36,7 +37,17 @@ import {
 } from "@/lib/views/list-sort";
 import { BOARD_VIEWS, BOARD_VIEW_LABEL } from "@/lib/views/views";
 
+const packModules = JSON.parse(
+  readFileSync(new URL("../../.c8rc.json", import.meta.url), "utf8"),
+).include as string[];
+
 describe("pack export smoke", () => {
+  it("re-imports every pack module for export branch coverage", async () => {
+    for (const file of packModules) {
+      await import(new URL(`../../${file}`, import.meta.url).href);
+    }
+  });
+
   it("touches module-level exports counted as functions", () => {
     assert.ok(ITEM_EVENT_KINDS.length);
     assert.ok(

@@ -75,5 +75,66 @@ describe("gantt mapping", () => {
       },
     ]);
     assert.equal(rows[0]?.id, "a");
+    const bothDue = timelineAgendaRows([
+      {
+        id: "early",
+        title: "Early due",
+        status: "backlog",
+        createdAt: new Date("2026-09-20T12:00:00.000Z"),
+        dueOn: new Date("2026-09-05T12:00:00.000Z"),
+        href: "/t",
+      },
+      {
+        id: "late",
+        title: "Late due",
+        status: "backlog",
+        createdAt: new Date("2026-09-01T12:00:00.000Z"),
+        dueOn: new Date("2026-09-30T12:00:00.000Z"),
+        href: "/t",
+      },
+    ]);
+    assert.equal(bothDue[0]?.id, "early");
+    const noDue = timelineAgendaRows([
+      {
+        id: "c",
+        title: "Created",
+        status: "backlog",
+        createdAt: new Date("2026-09-01T12:00:00.000Z"),
+        dueOn: null,
+        href: "/t",
+      },
+      {
+        id: "d",
+        title: "Due",
+        status: "backlog",
+        createdAt: new Date("2026-09-20T12:00:00.000Z"),
+        dueOn: new Date("2026-09-05T12:00:00.000Z"),
+        href: "/t",
+      },
+    ]);
+    assert.equal(noDue[0]?.id, "c");
+    const unknownStatus = itemsToGanttTasks([
+      {
+        id: "u",
+        title: "Unknown",
+        status: "custom",
+        createdAt: new Date("2026-09-01T12:00:00.000Z"),
+        dueOn: null,
+        href: "/t",
+      },
+    ]);
+    assert.equal(unknownStatus[0]?.progress, 20);
+    const milestoneNoDue = itemsToGanttTasks([
+      {
+        id: "m2",
+        title: "Milestone",
+        status: "ready",
+        type: "milestone",
+        createdAt: new Date("2026-09-01T12:00:00.000Z"),
+        dueOn: null,
+        href: "/t",
+      },
+    ]);
+    assert.equal(milestoneNoDue[0]?.type, "milestone");
   });
 });

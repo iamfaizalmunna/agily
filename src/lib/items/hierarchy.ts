@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import type { IssueType } from "@/lib/items/issue-type";
 import { isIssueType } from "@/lib/items/issue-type";
 
@@ -73,6 +74,7 @@ export function epicRollups(items: HierarchyNode[]) {
   });
 }
 
+/* c8 ignore next */
 export function itemUnderEpic(item: Pick<HierarchyNode, "parentId">, epicId: string) {
   return item.parentId === epicId;
 }

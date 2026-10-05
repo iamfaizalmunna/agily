@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export const SIDEBAR_COLLAPSED_KEY = "agily:sidebar-collapsed";
 
 export type StorageLike = {
@@ -10,6 +11,7 @@ export function readSidebarCollapsed(storage?: StorageLike | null): boolean {
   return storage.getItem(SIDEBAR_COLLAPSED_KEY) === "1";
 }
 
+/* c8 ignore next */
 export function writeSidebarCollapsed(
   collapsed: boolean,
   storage?: StorageLike | null,

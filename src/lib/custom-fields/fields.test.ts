@@ -187,5 +187,67 @@ describe("custom-fields/fields", () => {
       })(),
     );
     assert.ok("error" in collectedSelect);
+    assert.equal(fieldSchemaFromPayload([{ key: "x", label: "L", type: "text" }]), null);
+    assert.equal(
+      fieldSchemaFromPayload([{ id: "f_x", label: "L", type: "text" }]),
+      null,
+    );
+    assert.equal(
+      fieldSchemaFromPayload([{ id: "f_x", key: "x", type: "text" }]),
+      null,
+    );
+    assert.equal(
+      fieldSchemaFromPayload([{ id: "f_x", key: "x", label: "L" }]),
+      null,
+    );
+    assert.equal(
+      fieldSchemaFromPayload([
+        { id: "9bad", key: "x", label: "X", type: "text" },
+      ]),
+      null,
+    );
+    assert.equal(
+      fieldSchemaFromPayload([
+        { id: "f_x", key: "9bad", label: "X", type: "text" },
+      ]),
+      null,
+    );
+    assert.equal(
+      fieldSchemaFromPayload([
+        { id: "f_x", key: "x", label: "", type: "text" },
+      ]),
+      null,
+    );
+    assert.equal(
+      fieldSchemaFromPayload([
+        {
+          id: "f_x",
+          key: "x",
+          label: "X",
+          type: "select",
+          options: ["  ", "\t"],
+        },
+      ]),
+      null,
+    );
+    const selectNoOpts = {
+      id: "f_tier",
+      key: "tier",
+      label: "Tier",
+      type: "select" as const,
+    };
+    const badSelect = validateFieldValue(selectNoOpts, "a");
+    assert.ok(typeof badSelect === "object" && badSelect !== null && "error" in badSelect);
+    const emptySelectMerge = mergeCustomFieldDefs([], {
+      label: "Tier",
+      type: "select",
+      options: ["  ", ""],
+    });
+    assert.ok("error" in emptySelectMerge);
+    const noOptionsArg = mergeCustomFieldDefs([], {
+      label: "Tier",
+      type: "select",
+    });
+    assert.ok("error" in noOptionsArg);
   });
 });

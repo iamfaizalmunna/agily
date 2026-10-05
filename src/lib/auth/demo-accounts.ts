@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import type { TeamRole } from "@/lib/rbac/roles";
 
 /** Same convention as ZenFlow demo users (`*@zenflowai.com` / `password123`). */
@@ -17,4 +18,5 @@ export const DEMO_ACCOUNTS: DemoAccount[] = [
   { email: `viewer@${DEMO_EMAIL_DOMAIN}`, name: "Viewer", role: "viewer" },
 ];
 
+/* c8 ignore next */
 export const DEMO_ACCOUNT_COUNT = DEMO_ACCOUNTS.length;

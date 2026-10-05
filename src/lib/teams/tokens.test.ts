@@ -40,6 +40,7 @@ describe("phase 2 tokens", () => {
     assert.equal(parseJoinToken("/join/cafe"), "cafe");
     assert.equal(parseJoinToken("http://127.0.0.1:43123/join/"), "join");
     assert.equal(parseJoinToken("not a url at all"), "not a url at all");
+    assert.equal(parseJoinToken("///"), "///");
   });
 
   it("expires invites in fourteen days by default", () => {

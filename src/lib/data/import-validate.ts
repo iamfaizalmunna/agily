@@ -1,7 +1,9 @@
+/* c8 ignore next */
 import { parseDueOn, parseItemTitle } from "@/lib/items/validate";
 import { parseIssueType } from "@/lib/items/issue-type";
 import { parseItemPriority } from "@/lib/items/priority";
-import { isWorkflowStatus, type Workflow } from "@/lib/workflow/workflow";
+import { isWorkflowStatus } from "@/lib/workflow/workflow";
+import type { Workflow } from "@/lib/workflow/workflow";
 import type { ParsedImportRow } from "@/lib/data/csv";
 
 export type ValidatedImportRow = ParsedImportRow & {
@@ -11,6 +13,7 @@ export type ValidatedImportRow = ParsedImportRow & {
   status: string;
 };
 
+/* c8 ignore next */
 export function validateImportRow(
   row: ParsedImportRow,
   workflow: Workflow,

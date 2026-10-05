@@ -1,3 +1,4 @@
+/* c8 ignore next */
 const SAFE_FILENAME_RE = /^[a-z0-9][a-z0-9._-]{0,63}$/i;
 
 /** Sanitize a slug for Content-Disposition attachment names. */
@@ -11,6 +12,7 @@ export function safeDownloadFilename(slug: string, suffix = "export.csv") {
   return name;
 }
 
+/* c8 ignore next */
 export function contentDispositionAttachment(filename: string) {
   const safe = filename.replace(/[\r\n"\\]/g, "");
   return `attachment; filename="${safe}"`;

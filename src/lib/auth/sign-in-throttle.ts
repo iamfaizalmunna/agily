@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import { normalizeEmail } from "@/lib/auth/identity";
 
 const WINDOW_MS = 15 * 60 * 1000;
@@ -32,6 +33,7 @@ export function clearSignInFailures(email: string) {
 }
 
 /** Test-only reset. */
+/* c8 ignore next */
 export function resetSignInThrottle() {
   buckets.clear();
 }

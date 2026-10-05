@@ -87,5 +87,68 @@ describe("data/templates", () => {
       ]),
       null,
     );
+    assert.equal(parseTicketTemplatesFromJson([]), null);
+    assert.equal(parseTicketTemplatesFromJson([null]), null);
+    assert.equal(
+      parseTicketTemplatesFromJson([
+        {
+          id: "x",
+          type: "task",
+          title: "",
+          body: "",
+          priority: "minor",
+        },
+      ]),
+      null,
+    );
+    assert.equal(
+      parseTicketTemplatesFromJson([
+        {
+          id: "only-id",
+          name: undefined,
+          type: "task",
+          title: "T",
+          body: "",
+          priority: "minor",
+        },
+      ]),
+      null,
+    );
+    assert.equal(
+      parseTicketTemplatesFromJson([
+        {
+          id: "x",
+          name: "",
+          type: "task",
+          title: "",
+          body: "",
+          priority: "minor",
+        },
+      ]),
+      null,
+    );
+    assert.equal(
+      ticketTemplatesFromTeamSettings(
+        JSON.stringify({ ticketTemplates: null }),
+      ).length,
+      2,
+    );
+    assert.equal(
+      ticketTemplatesFromTeamSettings(
+        JSON.stringify({
+          ticketTemplates: [
+            {
+              id: "c1",
+              name: "One",
+              type: "task",
+              title: "",
+              body: "",
+              priority: "minor",
+            },
+          ],
+        }),
+      )[0].id,
+      "c1",
+    );
   });
 });

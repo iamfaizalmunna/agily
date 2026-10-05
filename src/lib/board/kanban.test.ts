@@ -140,6 +140,20 @@ describe("board/kanban", () => {
       new Map([["u1", "Ada"]]),
     );
     assert.equal(stacked.find((row) => row.key === "u1")?.items.length, 2);
+    const missingName = groupSwimlanes(
+      [
+        {
+          id: "z",
+          status: "doing",
+          position: 0,
+          priority: "minor",
+          people: [{ id: "u9", name: "Zed" }],
+        },
+      ],
+      "assignee",
+      new Map(),
+    );
+    assert.equal(missingName[0].label, "u9");
   });
 
   it("groups 100 tickets into workflow columns quickly", () => {

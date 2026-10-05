@@ -39,5 +39,13 @@ describe("revamp R8 recent tickets", () => {
       })),
     );
     assert.equal(parseRecentTickets(json).length, RECENT_TICKET_LIMIT);
+    assert.equal(parseRecentTickets(null).length, 0);
+    assert.equal(parseRecentTickets(JSON.stringify({ not: "array" })).length, 0);
+    assert.equal(
+      parseRecentTickets(
+        JSON.stringify([{ id: "x", href: "/t", title: "T" }]),
+      ).length,
+      1,
+    );
   });
 });

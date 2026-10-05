@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import { formatIssueKey } from "@/lib/items/issue-key";
 
 export type SearchableTicket = {
@@ -52,6 +53,7 @@ export function rankSearchHits(query: string, rows: SearchableTicket[]) {
     .map((entry) => entry.row);
 }
 
+/* c8 ignore next */
 export function matchesActionLabel(query: string, label: string) {
   const q = normalizeSearchQuery(query);
   if (!q) return true;

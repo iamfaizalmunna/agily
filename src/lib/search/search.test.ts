@@ -41,5 +41,13 @@ describe("revamp R8 search", () => {
         ?.title,
       "Unrelated",
     );
+    assert.equal(matchesTicketSearch("", row), true);
+    assert.equal(matchesTicketSearch("  ", row), true);
+    assert.deepEqual(rankSearchHits("", [row]), [row]);
+    assert.equal(
+      rankSearchHits("atl", [{ ...row, position: 4 }])[0]?.id,
+      "1",
+    );
+    assert.equal(matchesActionLabel("zzz", "Go to Pulse"), false);
   });
 });

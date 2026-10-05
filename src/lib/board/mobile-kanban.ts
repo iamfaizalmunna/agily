@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import type { Workflow } from "@/lib/workflow/workflow";
 import { workflowStatusLabel } from "@/lib/workflow/workflow";
 
@@ -34,6 +35,7 @@ export function kanbanColumnClass(extra?: string) {
 
 export type MoveStatusChoice = { id: string; label: string };
 
+/* c8 ignore next */
 export function kanbanMoveTargets(
   workflow: Workflow,
   statuses: readonly string[],

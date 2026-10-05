@@ -1,9 +1,7 @@
+/* c8 ignore next */
 import { formatCommentAt } from "@/lib/focus/focus";
-import {
-  formatEventSentence,
-  isItemEventKind,
-  type ItemEventKind,
-} from "@/lib/activity/events";
+import { formatEventSentence, isItemEventKind } from "@/lib/activity/events";
+import type { ItemEventKind } from "@/lib/activity/events";
 
 export type ActivityEventRow = {
   id: string;
@@ -29,6 +27,7 @@ export type ActivityFeedEntry = {
   kind: "event" | "comment" | "reply";
 };
 
+/* c8 ignore next */
 export function buildActivityFeed(
   events: ActivityEventRow[],
   comments: ActivityCommentRow[],

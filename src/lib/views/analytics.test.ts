@@ -80,5 +80,60 @@ describe("revamp R6 analytics", () => {
     );
     assert.equal(boards[0].overdue, 1);
     assert.equal(studioOverdueTotal(boards), 1);
+    assert.equal(velocityLite([]), 0);
+    const doneLate = row({
+      id: "late",
+      status: "done",
+      updatedAt: new Date("2026-08-01T08:00:00.000Z"),
+    });
+    assert.equal(completedPerDay([doneLate], now, 7).every((d) => d.count === 0), true);
+    const emptyBurndown = burndownSeries([], now, 14);
+    assert.equal(emptyBurndown.scope, 0);
+    assert.equal(emptyBurndown.points[0].ideal, 0);
+    const doneBeforeEnd = row({
+      id: "old",
+      status: "done",
+      updatedAt: new Date("2026-09-01T08:00:00.000Z"),
+    });
+    assert.equal(
+      remainingAtEndOfDay([doneBeforeEnd], new Date("2026-09-28T00:00:00.000Z")),
+      0,
+    );
+    const overdueRow = {
+      projectSlug: "atlas",
+      projectName: "Atlas",
+      status: "doing",
+      dueOn: new Date("2026-09-01T00:00:00.000Z"),
+    };
+    const multiBoard = studioOverdueByBoard([overdueRow, { ...overdueRow }], now);
+    assert.equal(multiBoard[0].overdue, 2);
+    assert.equal(
+      studioOverdueByBoard(
+        [
+          {
+            projectSlug: "done",
+            projectName: "Done",
+            status: "done",
+            dueOn: new Date("2020-01-01T00:00:00.000Z"),
+          },
+        ],
+        now,
+      ).length,
+      0,
+    );
+    assert.equal(burndownSeries([], now, 0).scope, 0);
+    const mixed = completedPerDay(
+      [
+        row({ id: "open", status: "doing" }),
+        row({
+          id: "done",
+          status: "done",
+          updatedAt: new Date("2026-09-28T08:00:00.000Z"),
+        }),
+      ],
+      now,
+      7,
+    );
+    assert.equal(mixed.at(-1)?.count, 1);
   });
 });

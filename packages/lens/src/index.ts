@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export {
   DEFAULT_OLLAMA_BASE,
   DEFAULT_OLLAMA_MODEL,

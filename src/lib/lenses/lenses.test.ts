@@ -83,6 +83,7 @@ describe("phase 6 lenses", () => {
     assert.equal(stringifyLensSpec({ kind: "overdue" }), '{"kind":"overdue"}');
     assert.equal(isEmptyLens({}), true);
     assert.equal(isEmptyLens({ kind: "mine" }), false);
+    assert.equal(isEmptyLens({ labelIds: ["l1"] }), false);
     assert.equal(sameLensSpec({ kind: "mine" }, { kind: "mine" }), true);
     assert.equal(sameLensSpec({ kind: "mine" }, { kind: "week" }), false);
   });

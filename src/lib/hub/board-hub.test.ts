@@ -67,5 +67,23 @@ describe("hub/board-hub", () => {
       lastBoardViewForProject(recent, "northwind", "missing"),
       undefined,
     );
+    assert.equal(parseRecentBoards(null).length, 0);
+    assert.equal(parseRecentBoards(JSON.stringify(null)).length, 0);
+    assert.equal(
+      lastBoardViewForProject(
+        [
+          {
+            teamSlug: "northwind",
+            projectSlug: "atlas",
+            projectName: "Atlas",
+            view: "orbit",
+            visitedAt: 1,
+          },
+        ],
+        "northwind",
+        "atlas",
+      ),
+      "orbit",
+    );
   });
 });

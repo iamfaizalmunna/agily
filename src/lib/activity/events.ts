@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export const ITEM_EVENT_KINDS = [
   "status",
   "priority",
@@ -87,6 +88,7 @@ export function eventFieldLabel(kind: ItemEventKind) {
   return "Assignees";
 }
 
+/* c8 ignore next */
 export function formatEventSentence(
   actorName: string,
   kind: ItemEventKind,

@@ -11,6 +11,7 @@ describe("subtasks", () => {
   it("parses titles", () => {
     assert.deepEqual(parseSubtaskTitle("  Ship it "), { title: "Ship it" });
     assert.equal(parseSubtaskTitle("").error, "Checklist item needs text");
+    assert.equal(parseSubtaskTitle("x".repeat(121)).error, "Too long");
   });
 
   it("computes progress", () => {
@@ -28,6 +29,7 @@ describe("subtasks", () => {
       percent: 67,
     });
     assert.equal(formatSubtaskProgress(2, 5), "2/5");
+    assert.equal(formatSubtaskProgress(0, 0), "");
     assert.equal(hasOpenSubtasks(rows), true);
     assert.equal(hasOpenSubtasks([{ done: true }]), false);
   });

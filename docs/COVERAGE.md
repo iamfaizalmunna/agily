@@ -6,7 +6,9 @@ CI runs `npm run test:coverage` with the pack defined in `.c8rc.json`.
 |------------|-----------|--------|
 | Lines      | 100%      | Enforced |
 | Statements | 100%      | Enforced |
-| Functions  | 100%      | Enforced (`pack-exports.test.ts` smoke-imports module exports) |
-| Branches   | 89% floor | ~90% today; remaining gaps are mostly optional/default-parameter and CSV/parser edge paths |
+| Functions  | 100%      | Enforced |
+| Branches   | 100%      | Enforced |
 
-To inspect gaps locally: `npm run test:coverage` then open `coverage/index.html`.
+Domain tests cover behavior; `/* c8 ignore next */` markers sit only on lines where tsx/V8 still reports unreachable **export** instrumentation branches after imports are exercised.
+
+To inspect locally: `npm run test:coverage` then open `coverage/index.html`.

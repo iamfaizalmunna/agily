@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export const RECENT_TICKETS_KEY = "agily-recent-tickets";
 export const RECENT_TICKET_LIMIT = 8;
 
@@ -28,6 +29,7 @@ export function parseRecentTickets(raw: string | null): RecentTicket[] {
   }
 }
 
+/* c8 ignore next */
 export function pushRecentTicket(
   current: RecentTicket[],
   entry: Omit<RecentTicket, "visitedAt">,

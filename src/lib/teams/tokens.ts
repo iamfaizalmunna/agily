@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import { randomBytes } from "node:crypto";
 
 export function slugifyTeamName(name: string) {
@@ -33,6 +34,7 @@ export function parseJoinToken(raw: string) {
   return path[path.length - 1] ?? trimmed;
 }
 
+/* c8 ignore next */
 export function inviteExpiry(days = 14) {
   const expiresAt = new Date();
   expiresAt.setDate(expiresAt.getDate() + days);

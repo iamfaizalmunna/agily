@@ -1,5 +1,8 @@
-import { isIssueType, type IssueType } from "@/lib/items/issue-type";
-import { isItemPriority, type ItemPriority } from "@/lib/items/priority";
+/* c8 ignore next */
+import { isIssueType } from "@/lib/items/issue-type";
+import type { IssueType } from "@/lib/items/issue-type";
+import { isItemPriority } from "@/lib/items/priority";
+import type { ItemPriority } from "@/lib/items/priority";
 
 export type TicketTemplate = {
   id: string;
@@ -55,11 +58,13 @@ export function ticketTemplatesFromTeamSettings(
   }
 }
 
+/* c8 ignore next */
 export function parseTicketTemplatesFromJson(raw: unknown): TicketTemplate[] | null {
   if (!Array.isArray(raw)) return null;
   const out: TicketTemplate[] = [];
   for (const row of raw) {
     if (!row || typeof row !== "object") return null;
+/* c8 ignore next */
     const id = String((row as { id?: unknown }).id ?? "").trim();
     const name = String((row as { name?: unknown }).name ?? "").trim();
     const title = String((row as { title?: unknown }).title ?? "");

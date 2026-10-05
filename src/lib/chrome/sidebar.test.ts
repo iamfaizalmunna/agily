@@ -16,6 +16,7 @@ describe("chrome/sidebar", () => {
       },
     };
     assert.equal(readSidebarCollapsed(null), false);
+    writeSidebarCollapsed(true, null);
     assert.equal(readSidebarCollapsed(storage), false);
     writeSidebarCollapsed(true, storage);
     assert.equal(map.get(SIDEBAR_COLLAPSED_KEY), "1");

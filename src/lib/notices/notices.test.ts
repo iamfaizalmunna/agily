@@ -18,6 +18,8 @@ describe("phase 8 notices", () => {
     assert.equal(isNoticeKind("mention"), true);
     assert.equal(isNoticeKind("reply"), true);
     assert.equal(isNoticeKind("email"), false);
+    assert.equal(isNoticeKind(null), false);
+    assert.equal(isNoticeKind(undefined), false);
     assert.deepEqual(recipientsExcept(["a", "a", "b", ""], "a"), ["b"]);
     assert.deepEqual(recipientsExcept(["me"], "me"), []);
   });
@@ -45,6 +47,10 @@ describe("phase 8 notices", () => {
     });
     assert.deepEqual(noticeCopy("mention", "Ada", "Ticket"), {
       title: "Ada mentioned you",
+      body: "Ticket",
+    });
+    assert.deepEqual(noticeCopy("reply", "Lee", "Ticket", "  "), {
+      title: "Lee replied to your comment",
       body: "Ticket",
     });
   });

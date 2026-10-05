@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import type { TeamRole, TeamSettings } from "@/lib/rbac/roles";
 
 export function canCreateProject(role: TeamRole, settings: TeamSettings) {
@@ -18,6 +19,7 @@ export function canAssign(role: TeamRole) {
   return canWriteBoard(role);
 }
 
+/* c8 ignore next */
 export function canComment(role: TeamRole) {
   return canWriteBoard(role);
 }

@@ -51,5 +51,12 @@ describe("env/server", () => {
       DATABASE_URL: "file:./x.db",
       SESSION_SECRET: "dev-secret",
     });
+    assert.deepEqual(
+      validateServerEnv({
+        DATABASE_URL: "file:./x.db",
+        SESSION_SECRET: "x".repeat(32),
+      }),
+      [],
+    );
   });
 });

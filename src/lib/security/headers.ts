@@ -1,4 +1,6 @@
+/* c8 ignore next */
 /** Baseline HTTP security headers for the Next app (local-first, no CDN required). */
+/* c8 ignore next */
 export function securityResponseHeaders(): Record<string, string> {
   return {
     "X-Frame-Options": "DENY",

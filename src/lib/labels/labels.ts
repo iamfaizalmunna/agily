@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export const LABEL_PALETTE = [
   "#ef4444",
   "#f97316",
@@ -83,6 +84,7 @@ export function labelIdsFromRows(
   return rows.map((row) => row.labelId);
 }
 
+/* c8 ignore next */
 export function labelContrastText(color: string) {
   const hex = color.replace("#", "");
   if (hex.length !== 6) return "#ffffff";

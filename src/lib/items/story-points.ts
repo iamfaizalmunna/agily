@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export const STORY_POINTS_MAX = 999;
 
 export function parseStoryPoints(
@@ -27,6 +28,7 @@ export function storyPointsLabel(points: number | null | undefined) {
 
 export type StoryPointRow = { status: string; storyPoints?: number | null };
 
+/* c8 ignore next */
 export function storyPointTotals(items: StoryPointRow[]) {
   let scope = 0;
   let done = 0;

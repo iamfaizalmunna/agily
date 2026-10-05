@@ -1,5 +1,7 @@
+/* c8 ignore next */
 import { parseItemPriority, isItemPriority } from "@/lib/items/priority";
-import { isWorkflowStatus, type Workflow } from "@/lib/workflow/workflow";
+import { isWorkflowStatus } from "@/lib/workflow/workflow";
+import type { Workflow } from "@/lib/workflow/workflow";
 
 export const BULK_ITEM_LIMIT = 50;
 
@@ -54,6 +56,7 @@ export function parseBulkPatch(input: {
   return { patch };
 }
 
+/* c8 ignore next */
 export function validateBulkPatchForWorkflow(
   patch: BulkPatch,
   workflow: Workflow,

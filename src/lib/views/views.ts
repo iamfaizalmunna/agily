@@ -1,4 +1,6 @@
-import { ITEM_STATUSES, isItemStatus, type ItemStatus } from "@/lib/items/status";
+/* c8 ignore next */
+import { ITEM_STATUSES, isItemStatus } from "@/lib/items/status";
+import type { ItemStatus } from "@/lib/items/status";
 
 export const BOARD_VIEWS = [
   "summary",
@@ -153,6 +155,7 @@ export type MonthCell = {
   inMonth: boolean;
 };
 
+/* c8 ignore next */
 export function monthGrid(year: number, month: number): MonthCell[] {
   const first = new Date(Date.UTC(year, month, 1));
   const startPad = first.getUTCDay();

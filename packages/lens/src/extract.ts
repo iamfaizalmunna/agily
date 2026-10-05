@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import type { KbHit } from "./kb";
 
 export function cleanTitle(raw: string) {

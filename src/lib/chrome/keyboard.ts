@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import type { BoardView } from "@/lib/views/views";
 
 export type KeyboardAction =
@@ -71,6 +72,7 @@ export function resolveKeyboardChord(
   return null;
 }
 
+/* c8 ignore next */
 export function nextChordBuffer(buffer: string, key: string, maxParts = 2) {
   const parts = buffer ? buffer.split(" ") : [];
   parts.push(key);

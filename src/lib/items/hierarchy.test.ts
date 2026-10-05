@@ -81,5 +81,20 @@ describe("hierarchy", () => {
     assert.equal(rollups[0].openChildren, 1);
     assert.equal(rollups[0].totalChildren, 2);
     assert.equal(itemUnderEpic({ parentId: "e1" }, "e1"), true);
+    assert.equal(wouldCreateCycle("c", "b", nodes), false);
+    const broken = new Map([
+      ["a", { id: "a", parentId: "missing", type: "story", status: "doing", title: "A" }],
+    ]);
+    assert.equal(wouldCreateCycle("z", "a", broken), false);
+    const rollupsEmpty = epicRollups([
+      { id: "e2", parentId: null, type: "epic", status: "doing", title: "Empty epic" },
+    ]);
+    assert.equal(rollupsEmpty[0].totalChildren, 0);
+    const rollupsMulti = epicRollups([
+      { id: "e3", parentId: null, type: "epic", status: "doing", title: "Big" },
+      { id: "c1", parentId: "e3", type: "story", status: "doing", title: "One" },
+      { id: "c2", parentId: "e3", type: "task", status: "done", title: "Two" },
+    ]);
+    assert.equal(rollupsMulti[0].totalChildren, 2);
   });
 });

@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export function sessionCookieOptions(
   expiresAt: Date,
   nodeEnv = process.env.NODE_ENV,

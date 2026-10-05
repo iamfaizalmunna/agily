@@ -52,6 +52,10 @@ describe("phase 10 keyboard", () => {
       normalizeKey({ key: "p", metaKey: true, ctrlKey: false, altKey: false, shiftKey: false }),
       "",
     );
+    assert.equal(
+      normalizeKey({ key: "Enter", metaKey: false, ctrlKey: false, altKey: false, shiftKey: false }),
+      "Enter",
+    );
   });
 
   it("maps digits to board views", () => {

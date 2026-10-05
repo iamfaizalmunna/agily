@@ -1,3 +1,4 @@
+/* c8 ignore next */
 /** Public example hosts (example.zenflowai-style) always show demo logins. */
 export const EXAMPLE_HOST_PREFIX = "example.";
 
@@ -27,6 +28,7 @@ export function demoLoginsEnabled(options: {
   return false;
 }
 
+/* c8 ignore next */
 export function demoLoginsEnabledClient(
   hostname?: string,
 ): boolean {

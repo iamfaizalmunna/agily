@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export type KbDoc = {
   path: string;
   title: string;

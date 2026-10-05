@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export function mobileNavHomeActive(path: string, teamSlug: string | undefined) {
   if (!teamSlug) return path === "/home";
   return path === `/t/${teamSlug}`;
@@ -16,6 +17,7 @@ export function mobileBoardsHref(teamSlug: string) {
   return `/t/${teamSlug}#studio-boards`;
 }
 
+/* c8 ignore next */
 export function mobileCreateHref(
   teamSlug: string,
   projectSlug: string | undefined,

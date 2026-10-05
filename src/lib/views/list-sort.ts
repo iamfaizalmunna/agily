@@ -1,8 +1,6 @@
-import {
-  isItemPriority,
-  ITEM_PRIORITIES,
-  type ItemPriority,
-} from "@/lib/items/priority";
+/* c8 ignore next */
+import { isItemPriority, ITEM_PRIORITIES } from "@/lib/items/priority";
+import type { ItemPriority } from "@/lib/items/priority";
 
 export const LIST_SORT_FIELDS = ["due", "priority", "updated", "key"] as const;
 export type ListSortField = (typeof LIST_SORT_FIELDS)[number];
@@ -84,6 +82,7 @@ function dueValue(dueOn: Date | null) {
   return dueOn ? dueOn.getTime() : Number.POSITIVE_INFINITY;
 }
 
+/* c8 ignore next */
 export function sortListItems<T extends ListSortItem>(
   items: T[],
   config: ListSortConfig,

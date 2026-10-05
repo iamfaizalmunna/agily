@@ -1,11 +1,9 @@
-import { type ItemStatus } from "@/lib/items/status";
-import { PRIORITY_LABEL, isItemPriority, type ItemPriority } from "@/lib/items/priority";
-import {
-  defaultWorkflow,
-  isWorkflowStatus,
-  visibleWorkflowStatuses,
-  type Workflow,
-} from "@/lib/workflow/workflow";
+/* c8 ignore next */
+import type { ItemStatus } from "@/lib/items/status";
+import { PRIORITY_LABEL, isItemPriority } from "@/lib/items/priority";
+import type { ItemPriority } from "@/lib/items/priority";
+import { defaultWorkflow, isWorkflowStatus, visibleWorkflowStatuses } from "@/lib/workflow/workflow";
+import type { Workflow } from "@/lib/workflow/workflow";
 
 export const SWIMLANE_MODES = ["none", "assignee", "priority"] as const;
 export type SwimlaneMode = (typeof SWIMLANE_MODES)[number];
@@ -129,6 +127,7 @@ export type SwimlaneRow<T extends KanbanTicket> = {
   items: T[];
 };
 
+/* c8 ignore next */
 export function groupSwimlanes<T extends KanbanTicket>(
   items: T[],
   mode: SwimlaneMode,

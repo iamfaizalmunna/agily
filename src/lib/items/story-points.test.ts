@@ -10,6 +10,8 @@ import {
 describe("story points", () => {
   it("parses empty as null", () => {
     assert.deepEqual(parseStoryPoints(""), { storyPoints: null });
+    assert.deepEqual(parseStoryPoints(undefined), { storyPoints: null });
+    assert.deepEqual(parseStoryPoints(null), { storyPoints: null });
   });
 
   it("parses integers", () => {
@@ -20,6 +22,7 @@ describe("story points", () => {
     assert.ok("error" in parseStoryPoints("1.5"));
     assert.ok("error" in parseStoryPoints("-1"));
     assert.ok("error" in parseStoryPoints("1000"));
+    assert.ok("error" in parseStoryPoints(String(1000)));
   });
 
   it("sums scope and done points", () => {

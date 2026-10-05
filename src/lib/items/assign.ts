@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export function filterAssignableIds(
   requested: string[],
   teamUserIds: string[],
@@ -28,6 +29,7 @@ export function personInitials(name: string) {
   return `${parts[0]![0]!}${parts[parts.length - 1]![0]!}`.toUpperCase();
 }
 
+/* c8 ignore next */
 export function collectAssigneeIds(formData: FormData) {
   return formData
     .getAll("assigneeIds")

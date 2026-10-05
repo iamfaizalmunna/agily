@@ -20,6 +20,8 @@ describe("labels", () => {
     assert.equal(parseLabelName("x".repeat(31)).error, "Name is too long");
     assert.equal(normalizeLabelColor("#AABBCC"), "#aabbcc");
     assert.equal(normalizeLabelColor("nope"), "#ef4444");
+    assert.equal(normalizeLabelColor(null), "#ef4444");
+    assert.equal(normalizeLabelColor(undefined), "#ef4444");
   });
 
   it("round-trips label id query chips", () => {
@@ -54,5 +56,6 @@ describe("labels", () => {
   it("picks readable text on label chips", () => {
     assert.equal(labelContrastText("#ffffff"), "#0f172a");
     assert.equal(labelContrastText("#0f172a"), "#ffffff");
+    assert.equal(labelContrastText("#fff"), "#ffffff");
   });
 });

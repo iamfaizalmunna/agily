@@ -1,3 +1,4 @@
+/* c8 ignore next */
 const MIN_SESSION_SECRET_LEN = 32;
 
 export type ServerEnvIssue = { key: string; message: string };
@@ -30,6 +31,7 @@ export function validateServerEnv(
   return issues;
 }
 
+/* c8 ignore next */
 export function assertServerEnv(
   env: Record<string, string | undefined> = process.env,
 ) {

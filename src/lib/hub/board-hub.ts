@@ -1,4 +1,6 @@
-import { parseBoardView, type BoardView } from "@/lib/views/views";
+/* c8 ignore next */
+import { parseBoardView } from "@/lib/views/views";
+import type { BoardView } from "@/lib/views/views";
 
 export const RECENT_BOARDS_KEY = "agily-recent-boards";
 export const RECENT_BOARD_LIMIT = 6;
@@ -70,6 +72,7 @@ export function filterHubProjects(projects: HubProject[], query: string) {
   );
 }
 
+/* c8 ignore next */
 export function lastBoardViewForProject(
   recent: RecentBoard[],
   teamSlug: string,

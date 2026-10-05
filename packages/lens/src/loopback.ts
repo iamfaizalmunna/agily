@@ -1,3 +1,4 @@
+/* c8 ignore next */
 const LOOPBACK = new Set(["127.0.0.1", "localhost", "[::1]", "::1"]);
 
 export const DEFAULT_OLLAMA_BASE = "http://127.0.0.1:11434";

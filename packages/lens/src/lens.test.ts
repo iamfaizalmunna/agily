@@ -51,6 +51,12 @@ describe("phase 9 lens", () => {
     );
     assert.ok(retrieveKb([padded], "viewer")[0]?.snippet.startsWith("…"));
     assert.equal(retrieveKb(docs, "   ").length, 0);
+    const titleOnly = parseKbMarkdown(
+      "title-hit.md",
+      "# Viewer\nOnly the title matches viewer.",
+    );
+    const titleHits = retrieveKb([titleOnly], "viewer");
+    assert.equal(titleHits[0]?.path, "title-hit.md");
   });
 
   it("answers locally when Ollama is down", () => {

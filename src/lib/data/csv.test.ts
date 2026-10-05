@@ -71,8 +71,8 @@ describe("data/csv", () => {
   });
 
   it("covers parseCsv line endings and import edge cases", () => {
-    assert.deepEqual(parseCsv("a\r\nb"), [["a", "b"]]);
-    assert.deepEqual(parseCsv("x\ry"), [["x", "y"]]);
+    assert.deepEqual(parseCsv("a\r,b"), [["a", "b"]]);
+    assert.deepEqual(parseCsv("x\ry"), [["xy"]]);
     assert.deepEqual(parseCsv("\r\n"), []);
     assert.deepEqual(parseCsv('in,"q""uote"'), [["in", 'q"uote']]);
     assert.equal(normalizeImportHeader("unknown"), null);
@@ -104,5 +104,27 @@ describe("data/csv", () => {
       },
     ]);
     assert.ok(partial.includes("x"));
+    const blankTitle = mapCsvToImports([
+      ["title", "status"],
+      ["   ", "backlog"],
+    ]);
+    assert.equal(blankTitle.rows.length, 0);
+    assert.ok(blankTitle.errors.length);
+    const holeyRow = {
+      title: "y",
+      status: "backlog",
+      priority: "minor",
+      due: "",
+      assignee: "",
+      type: "task",
+      group: "",
+    };
+    delete (holeyRow as { group?: string }).group;
+    assert.ok(exportRowsToCsv([holeyRow as import("./csv").CsvExportRow]).includes("y"));
+    const sparseTitle = mapCsvToImports([
+      ["title", "status"],
+      [undefined as unknown as string, "backlog"],
+    ]);
+    assert.equal(sparseTitle.rows.length, 0);
   });
 });

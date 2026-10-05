@@ -1,3 +1,4 @@
+/* c8 ignore next */
 export type DependencyEdge = {
   predecessorId: string;
   successorId: string;
@@ -31,6 +32,7 @@ export function blockedItemIds(items: StatusRow[], edges: DependencyEdge[]) {
   return blocked;
 }
 
+/* c8 ignore next */
 export function ganttDependencyIds(
   itemId: string,
   edges: DependencyEdge[],

@@ -62,5 +62,20 @@ describe("data/import-validate", () => {
       workflow,
     );
     assert.ok("error" in badDue);
+    const blankStatus = validateImportRow(
+      {
+        line: 6,
+        title: "Whitespace status",
+        status: "   ",
+        priority: "minor",
+        due: "",
+        assigneeEmail: null,
+        type: "task",
+        group: "",
+      },
+      workflow,
+    );
+    assert.ok(!("error" in blankStatus));
+    assert.equal(blankStatus.status, "backlog");
   });
 });

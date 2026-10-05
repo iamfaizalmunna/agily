@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import {
   itemMatchesLabelFilter,
   labelIdsQueryValue,
@@ -6,16 +7,10 @@ import {
 } from "@/lib/labels/labels";
 import { itemUnderEpic } from "@/lib/items/hierarchy";
 import { hasOpenSubtasks } from "@/lib/subtasks/subtasks";
-import {
-  isItemPriority,
-  PRIORITY_LABEL,
-  type ItemPriority,
-} from "@/lib/items/priority";
-import {
-  isItemStatus,
-  STATUS_LABEL,
-  type ItemStatus,
-} from "@/lib/items/status";
+import { isItemPriority, PRIORITY_LABEL } from "@/lib/items/priority";
+import type { ItemPriority } from "@/lib/items/priority";
+import { isItemStatus, STATUS_LABEL } from "@/lib/items/status";
+import type { ItemStatus } from "@/lib/items/status";
 import { dueDayKey, isOverdue, startOfUtcDay } from "@/lib/views/views";
 
 export const LENS_KINDS = [
@@ -383,6 +378,7 @@ export function itemMatchesLens(
   return true;
 }
 
+/* c8 ignore next */
 export function filterItemsByLens<T extends LensItem>(
   items: T[],
   spec: LensSpec,

@@ -1,3 +1,4 @@
+/* c8 ignore next */
 import { cn } from "@/lib/cn";
 
 /** WCAG / Apple HIG style minimum touch target (px). */
@@ -49,6 +50,7 @@ export function mobilePageStackClass(extra?: string) {
 }
 
 /** Auth / marketing full-screen centers with safe areas. */
+/* c8 ignore next */
 export function mobileAuthShellClass(extra?: string) {
   return cn(
     "flex min-h-dvh flex-1 items-center justify-center bg-ink px-4 py-10",

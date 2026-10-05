@@ -104,4 +104,42 @@ describe("list sort", () => {
     assert.equal(sorted[0]?.id, "b");
     assert.equal(sorted.at(-1)?.id, "c");
   });
+
+  it("covers parse toggles and tie-break sorts", () => {
+    assert.equal(parseListSort("   ", "asc"), null);
+    assert.equal(parseListSort(null, "asc"), null);
+    assert.deepEqual(parseListSort("due", "sideways"), {
+      field: "due",
+      dir: "asc",
+    });
+    assert.deepEqual(parseListSort("priority", "desc"), {
+      field: "priority",
+      dir: "desc",
+    });
+    assert.deepEqual(parseListSort("due", undefined), { field: "due", dir: "asc" });
+    assert.deepEqual(
+      nextListSortToggle({ field: "due", dir: "desc" }, "due"),
+      { field: "due", dir: "asc" },
+    );
+    const tied = sortListItems(
+      [
+        {
+          id: "a",
+          position: 2,
+          priority: "minor",
+          dueOn: new Date("2026-10-01T12:00:00Z"),
+          updatedAt: new Date("2026-10-01T12:00:00Z"),
+        },
+        {
+          id: "b",
+          position: 1,
+          priority: "minor",
+          dueOn: new Date("2026-10-01T12:00:00Z"),
+          updatedAt: new Date("2026-10-01T12:00:00Z"),
+        },
+      ],
+      { field: "due", dir: "asc" },
+    );
+    assert.deepEqual(tied.map((row) => row.id), ["b", "a"]);
+  });
 });

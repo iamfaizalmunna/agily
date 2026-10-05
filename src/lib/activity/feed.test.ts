@@ -46,6 +46,24 @@ describe("revamp R5 activity feed", () => {
     assert.equal(feed[0].kind, "reply");
   });
 
+  it("labels system events without an actor", () => {
+    const feed = buildActivityFeed(
+      [
+        {
+          id: "e2",
+          kind: "status",
+          fromValue: "backlog",
+          toValue: "doing",
+          createdAt: new Date("2026-09-28T09:00:00Z"),
+          user: null,
+        },
+      ],
+      [],
+    );
+    assert.equal(feed.length, 1);
+    assert.match(feed[0].line, /^System /);
+  });
+
   it("skips unknown event kinds", () => {
     const feed = buildActivityFeed(
       [

@@ -14,6 +14,9 @@ describe("chrome/mobile-nav", () => {
     assert.equal(mobileNavHomeActive("/t/northwind/p/atlas", "northwind"), false);
     assert.equal(mobileNavBoardsActive("/t/northwind/p/atlas", "northwind"), true);
     assert.equal(mobileNavInboxActive("/t/northwind/notices"), true);
+    assert.equal(mobileNavHomeActive("/home", undefined), true);
+    assert.equal(mobileNavHomeActive("/t/northwind", undefined), false);
+    assert.equal(mobileNavBoardsActive("/t/northwind/p/atlas", undefined), false);
   });
 
   it("builds board and create hrefs", () => {
