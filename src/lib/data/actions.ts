@@ -1,5 +1,6 @@
 "use server";
 
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db/prisma";
@@ -20,6 +21,8 @@ export async function importBoardCsvAction(
   _prev: DataFormState,
   formData: FormData,
 ): Promise<DataFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -103,6 +106,7 @@ export async function importBoardCsvAction(
 }
 
 export async function duplicateProjectAction(formData: FormData) {
+  if (await trustedMutationOriginError()) return;
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");

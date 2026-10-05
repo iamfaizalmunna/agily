@@ -15,6 +15,7 @@
     "src/lib/env/server.ts",
     "src/lib/security/headers.ts",
     "src/lib/security/csp.ts",
+    "src/lib/security/origin.ts",
     "src/lib/security/filename.ts",
     "src/lib/auth/session-token.ts",
     "src/lib/rbac/roles.ts",

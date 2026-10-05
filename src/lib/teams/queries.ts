@@ -1,5 +1,6 @@
-import { headers } from "next/headers";
 import { prisma } from "@/lib/db/prisma";
+import { buildOriginFromHeaders } from "@/lib/security/origin";
+import { readMutationOriginInput } from "@/lib/security/mutation-guard";
 import type { TeamRole } from "@/lib/rbac/roles";
 
 export async function listTeamsForUser(userId: string) {
@@ -37,8 +38,5 @@ export async function countOwners(teamId: string) {
 }
 
 export async function appOrigin() {
-  const h = await headers();
-  const host = h.get("x-forwarded-host") ?? h.get("host") ?? "127.0.0.1:43123";
-  const proto = h.get("x-forwarded-proto") ?? "http";
-  return `${proto}://${host}`;
+  return buildOriginFromHeaders(await readMutationOriginInput());
 }

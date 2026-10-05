@@ -33,7 +33,7 @@ This track turns that baseline into a **repeatable, phase-by-phase** program: ea
 |:-----:|-------|--------|--------|
 | S1 | CSP + security headers v2 | **complete** | `security/s1-s2-hardening` |
 | S2 | Session lifecycle & cookie hardening | **complete** | `security/s1-s2-hardening` |
-| S3 | CSRF, origin, and Server Action guards | planned | `security/s3-csrf-actions` |
+| S3 | CSRF, origin, and Server Action guards | **complete** | `security/s3-csrf-actions` |
 | S4 | Auth abuse (throttle v2, lockout UX) | planned | `security/s4-auth-abuse` |
 | S5 | Authorization matrix & IDOR tests | planned | `security/s5-idor-rbac` |
 | S6 | Input validation & output encoding | planned | `security/s6-validation-xss` |

@@ -1,6 +1,6 @@
 # S3 — CSRF, origin, and Server Actions
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s3-csrf-actions`
 
 ## Goal

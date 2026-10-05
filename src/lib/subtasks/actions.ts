@@ -1,5 +1,6 @@
 "use server";
 
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db/prisma";
 import { requireUser } from "@/lib/auth/session";
@@ -33,6 +34,8 @@ export async function createSubtaskAction(
   _prev: SubtaskFormState,
   formData: FormData,
 ): Promise<SubtaskFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -57,6 +60,7 @@ export async function createSubtaskAction(
 }
 
 export async function toggleSubtaskAction(formData: FormData) {
+  if (await trustedMutationOriginError()) return;
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -76,6 +80,7 @@ export async function toggleSubtaskAction(formData: FormData) {
 }
 
 export async function deleteSubtaskAction(formData: FormData) {
+  if (await trustedMutationOriginError()) return;
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");

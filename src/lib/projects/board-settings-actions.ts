@@ -1,5 +1,6 @@
 "use server";
 
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 import { revalidatePath } from "next/cache";
 import { prisma } from "@/lib/db/prisma";
 import { requireUser } from "@/lib/auth/session";
@@ -24,6 +25,8 @@ export async function saveProjectWorkflowAction(
   _prev: ProjectSettingsFormState,
   formData: FormData,
 ): Promise<ProjectSettingsFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -53,6 +56,8 @@ export async function addCustomFieldAction(
   _prev: ProjectSettingsFormState,
   formData: FormData,
 ): Promise<ProjectSettingsFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -89,6 +94,8 @@ export async function removeCustomFieldAction(
   _prev: ProjectSettingsFormState,
   formData: FormData,
 ): Promise<ProjectSettingsFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");

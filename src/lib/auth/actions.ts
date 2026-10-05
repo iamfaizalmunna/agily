@@ -19,6 +19,7 @@ import {
   isSignInLocked,
   recordSignInFailure,
 } from "@/lib/auth/sign-in-throttle";
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 
 export type AuthFormState = {
   error?: string;
@@ -42,6 +43,9 @@ export async function signUpAction(
   _prev: AuthFormState,
   formData: FormData,
 ): Promise<AuthFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
+
   const parsed = signUpSchema.safeParse({
     name: formData.get("name"),
     email: formData.get("email"),
@@ -105,6 +109,9 @@ export async function signInAction(
   _prev: AuthFormState,
   formData: FormData,
 ): Promise<AuthFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
+
   const parsed = signInSchema.safeParse({
     email: formData.get("email"),
     password: formData.get("password"),
@@ -136,6 +143,7 @@ export async function signInAction(
 }
 
 export async function signOutAction() {
+  if (await trustedMutationOriginError()) return;
   await destroySession();
   redirect("/signin");
 }
