@@ -1,5 +1,6 @@
 "use server";
 
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db/prisma";
@@ -17,6 +18,8 @@ export async function createLabelAction(
   _prev: LabelFormState,
   formData: FormData,
 ): Promise<LabelFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const parsed = parseLabelName(String(formData.get("name") ?? ""));
@@ -40,6 +43,8 @@ export async function updateLabelAction(
   _prev: LabelFormState,
   formData: FormData,
 ): Promise<LabelFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const labelId = String(formData.get("labelId") ?? "");
@@ -59,6 +64,7 @@ export async function updateLabelAction(
 }
 
 export async function deleteLabelAction(formData: FormData) {
+  if (await trustedMutationOriginError()) return;
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const labelId = String(formData.get("labelId") ?? "");

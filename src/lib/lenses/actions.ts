@@ -1,5 +1,6 @@
 "use server";
 
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 import { redirect } from "next/navigation";
 import { requireUser } from "@/lib/auth/session";
 import {
@@ -21,6 +22,8 @@ export async function saveLensAction(
   _prev: LensFormState,
   formData: FormData,
 ): Promise<LensFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const named = parseLensName(String(formData.get("name") ?? ""));
@@ -49,6 +52,7 @@ export async function saveLensAction(
 }
 
 export async function deleteLensAction(formData: FormData) {
+  if (await trustedMutationOriginError()) return;
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const lensId = String(formData.get("lensId") ?? "");

@@ -55,6 +55,7 @@ import { formatDueOn } from "@/lib/items/validate";
 import { teamSlugFromPath } from "@/lib/nav/studio";
 import { canRemoveMember } from "@/lib/rbac/roles";
 import { contentDispositionAttachment } from "@/lib/security/filename";
+import { checkMutationOrigin } from "@/lib/security/origin";
 import { securityResponseHeaders } from "@/lib/security/headers";
 import { resolveSettingsSection } from "@/lib/settings/section-nav";
 import { mobileAuthShellClass } from "@/lib/ui/mobile";
@@ -262,5 +263,15 @@ describe("branch coverage pack", () => {
       [""],
     ]);
     assert.equal(sparseTitle.rows.length, 0);
+    assert.equal(
+      checkMutationOrigin(
+        {
+          origin: "https://agily.example.com",
+          host: "localhost:43123",
+        },
+        { APP_URL: "https://agily.example.com" },
+      ).ok,
+      true,
+    );
   });
 });

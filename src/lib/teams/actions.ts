@@ -19,6 +19,7 @@ import {
 import { createTeamForUser } from "@/lib/teams/create";
 import { countOwners, getMembership } from "@/lib/teams/queries";
 import { inviteExpiry, newInviteToken } from "@/lib/teams/tokens";
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 
 export type TeamFormState = {
   error?: string;
@@ -34,6 +35,9 @@ export async function createTeamAction(
   _prev: TeamFormState,
   formData: FormData,
 ): Promise<TeamFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
+
   const user = await requireUser();
   const parsed = createTeamSchema.safeParse({ name: formData.get("name") });
   if (!parsed.success) {
@@ -53,6 +57,9 @@ export async function createInviteAction(
   _prev: TeamFormState,
   formData: FormData,
 ): Promise<TeamFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
+
   const user = await requireUser();
   const parsed = inviteSchema.safeParse({
     slug: formData.get("slug"),
@@ -109,6 +116,7 @@ export async function createInviteAction(
 }
 
 export async function changeMemberRoleAction(formData: FormData) {
+  if (await trustedMutationOriginError()) redirect("/home");
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const memberId = String(formData.get("memberId") ?? "");
@@ -136,6 +144,7 @@ export async function changeMemberRoleAction(formData: FormData) {
 }
 
 export async function removeMemberAction(formData: FormData) {
+  if (await trustedMutationOriginError()) redirect("/home");
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const memberId = String(formData.get("memberId") ?? "");
@@ -159,6 +168,9 @@ export async function updateTeamSettingsAction(
   _prev: TeamFormState,
   formData: FormData,
 ): Promise<TeamFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
+
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const ctx = await getMembership(user.id, slug);
@@ -181,6 +193,7 @@ export async function updateTeamSettingsAction(
 }
 
 export async function revokeInviteAction(formData: FormData) {
+  if (await trustedMutationOriginError()) redirect("/home");
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const inviteId = String(formData.get("inviteId") ?? "");

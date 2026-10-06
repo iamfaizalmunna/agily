@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { prisma } from "@/lib/db/prisma";
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 import { requireUser } from "@/lib/auth/session";
 import { getMembership } from "@/lib/teams/queries";
 import { parseTeamSettings } from "@/lib/rbac/roles";
@@ -134,6 +135,10 @@ function boardNext(slug: string, projectSlug: string, formData: FormData) {
 
 export type BoardFormState = { error?: string; projectSlug?: string };
 
+async function guardItemMutation(): Promise<void> {
+  if (await trustedMutationOriginError()) redirect("/home");
+}
+
 const projectSchema = z.object({
   slug: z.string().min(1),
   name: z.string().trim().min(1, "Board needs a name").max(80),
@@ -143,6 +148,7 @@ export async function createProjectAction(
   _prev: BoardFormState,
   formData: FormData,
 ): Promise<BoardFormState> {
+  await guardItemMutation();
   const user = await requireUser();
   const parsed = projectSchema.safeParse({
     slug: formData.get("slug"),
@@ -162,6 +168,7 @@ export async function createProjectAction(
 }
 
 export async function archiveProjectAction(formData: FormData) {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -179,6 +186,7 @@ export async function createGroupAction(
   _prev: BoardFormState,
   formData: FormData,
 ): Promise<BoardFormState> {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -209,6 +217,7 @@ export async function createItemAction(
   _prev: BoardFormState,
   formData: FormData,
 ): Promise<BoardFormState> {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -264,6 +273,7 @@ export async function quickCreateItemAction(
   _prev: BoardFormState,
   formData: FormData,
 ): Promise<BoardFormState> {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -304,6 +314,7 @@ export async function updateItemAction(
   _prev: BoardFormState,
   formData: FormData,
 ): Promise<BoardFormState> {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -398,6 +409,7 @@ export async function updateItemAction(
 }
 
 export async function assignToMeAction(formData: FormData) {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -457,6 +469,7 @@ export async function moveItemStatusQuickAction(
   itemId: string,
   status: string,
 ): Promise<{ error?: string }> {
+  await guardItemMutation();
   const user = await requireUser();
   const ctx = await getMembership(user.id, slug);
   if (!ctx) return { error: "Studio not found" };
@@ -512,6 +525,7 @@ export async function reorderKanbanColumnAction(
   status: string,
   orderedIds: string[],
 ): Promise<{ error?: string }> {
+  await guardItemMutation();
   if (!orderedIds.length) return {};
   const user = await requireUser();
   const ctx = await getMembership(user.id, slug);
@@ -547,6 +561,7 @@ export async function reorderKanbanColumnAction(
 }
 
 export async function moveItemStatusAction(formData: FormData) {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -598,6 +613,7 @@ export async function addCommentAction(
   _prev: BoardFormState,
   formData: FormData,
 ): Promise<BoardFormState> {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");
@@ -684,6 +700,7 @@ export async function updateGanttDueAction(
   itemId: string,
   end: Date,
 ): Promise<{ error?: string }> {
+  await guardItemMutation();
   const user = await requireUser();
   const ctx = await getMembership(user.id, slug);
   if (!ctx) return { error: "Studio not found" };
@@ -730,6 +747,7 @@ function redirectWithBulkError(next: string, message: string): never {
 }
 
 export async function bulkUpdateItemsAction(formData: FormData) {
+  await guardItemMutation();
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const projectSlug = String(formData.get("projectSlug") ?? "");

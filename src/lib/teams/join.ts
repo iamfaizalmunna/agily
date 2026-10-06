@@ -10,6 +10,7 @@ import {
   normalizeEmail,
 } from "@/lib/auth/session";
 import { isTeamRole } from "@/lib/rbac/roles";
+import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 
 export type JoinFormState = { error?: string };
 
@@ -23,6 +24,9 @@ export async function acceptInviteAction(
   _prev: JoinFormState,
   formData: FormData,
 ): Promise<JoinFormState> {
+  const originErr = await trustedMutationOriginError();
+  if (originErr) return { error: originErr };
+
   const parsed = joinSchema.safeParse({
     token: formData.get("token"),
     name: formData.get("name") || undefined,

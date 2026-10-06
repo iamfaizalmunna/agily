@@ -10,6 +10,7 @@ Local-first security and reliability defaults.
 | **CSP tuning** | Dev: `Content-Security-Policy-Report-Only` (allows `unsafe-eval` for Next). Prod: enforcing CSP with **sha256** for theme boot script. Force enforce in dev: `SECURITY_CSP_ENFORCE=true` |
 | **Env** | `assertServerEnv()` — `DATABASE_URL`, `SESSION_SECRET` (32+ chars in prod), optional `SESSION_DAYS` ≤ 90 in prod |
 | **Sessions** | httpOnly / `SameSite=Lax` / `Secure` in prod; `maxAge` aligned with DB expiry; **rotate** all user sessions on sign-in; logout deletes DB row + cookie |
+| **Server Actions** | `Origin` / `Host` check on mutations (`src/lib/security/origin.ts`); see [SECURITY_SERVER_ACTIONS.md](SECURITY_SERVER_ACTIONS.md) |
 | **Sign-in** | In-memory throttle: 10 failures / 15 minutes per email (generic errors) |
 | **Downloads** | CSV export filenames sanitized (`safeDownloadFilename`) |
 | **Lens / Ollama** | Loopback-only base URL (see `packages/lens`) |
