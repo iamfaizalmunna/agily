@@ -67,6 +67,11 @@ export function SignInForm() {
       {state.error ? (
         <p className="text-sm text-copper" role="alert">
           {state.error}
+          {state.retryAfterSeconds && state.retryAfterSeconds > 0 ? (
+            <span className="mt-1 block text-paper/50">
+              Retry window: {state.retryAfterSeconds}s
+            </span>
+          ) : null}
         </p>
       ) : null}
       <Button

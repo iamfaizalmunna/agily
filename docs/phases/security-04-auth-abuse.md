@@ -1,6 +1,6 @@
 # S4 — Auth abuse & lockout UX
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s4-auth-abuse`
 
 ## Goal

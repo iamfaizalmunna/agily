@@ -1,6 +1,6 @@
 # S12 — Ship: smoke tests & runbook
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s12-ship`
 
 ## Goal

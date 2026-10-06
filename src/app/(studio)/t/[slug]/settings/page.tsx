@@ -11,6 +11,8 @@ import {
   type TeamRole,
 } from "@/lib/rbac/roles";
 import { getMembership } from "@/lib/teams/queries";
+import { listRecentSecurityEvents } from "@/lib/security/audit-log";
+import { SecurityEventsPanel } from "@/components/settings/security-events-panel";
 
 export default async function SettingsPage({
   params,
@@ -25,12 +27,19 @@ export default async function SettingsPage({
   const settings = parseTeamSettings(ctx.team.settings);
   const editable = canEditSettings(ctx.role);
   const labels = await listTeamLabels(ctx.team.id);
+  const isOwner = ctx.role === "owner";
+  const securityEvents = isOwner
+    ? await listRecentSecurityEvents(ctx.team.id, 50)
+    : [];
   const base = `/t/${slug}/settings`;
 
   const nav = [
     { id: "general", label: "General", href: `${base}#general` },
     { id: "labels", label: "Labels", href: `${base}#labels` },
     { id: "templates", label: "Templates", href: `${base}#templates` },
+    ...(isOwner
+      ? [{ id: "security", label: "Security", href: `${base}#security` }]
+      : []),
   ];
 
   return (
@@ -51,6 +60,14 @@ export default async function SettingsPage({
           <section id="templates" className="scroll-mt-6">
             <TicketTemplatesInfo settingsJson={ctx.team.settings} />
           </section>
+          {isOwner ? (
+            <section id="security" className="scroll-mt-6">
+              <h2 className="mb-3 text-lg font-medium text-foreground">
+                Recent security activity
+              </h2>
+              <SecurityEventsPanel events={securityEvents} />
+            </section>
+          ) : null}
         </>
       ) : (
         <div className="rounded-lg border border-border bg-muted/30 p-6 text-sm text-muted-foreground">

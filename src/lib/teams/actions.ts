@@ -18,8 +18,10 @@ import {
 } from "@/lib/rbac/roles";
 import { createTeamForUser } from "@/lib/teams/create";
 import { countOwners, getMembership } from "@/lib/teams/queries";
+import { requireTeamMember } from "@/lib/teams/require-membership";
 import { inviteExpiry, newInviteToken } from "@/lib/teams/tokens";
 import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
+import { writeSecurityEvent } from "@/lib/security/audit-log";
 
 export type TeamFormState = {
   error?: string;
@@ -112,6 +114,13 @@ export async function createInviteAction(
     });
   }
 
+  await writeSecurityEvent({
+    kind: "invite_created",
+    actorUserId: user.id,
+    teamId: ctx.team.id,
+    meta: { email, role: parsed.data.role },
+  });
+
   return { inviteUrl: `/join/${token}` };
 }
 
@@ -123,8 +132,9 @@ export async function changeMemberRoleAction(formData: FormData) {
   const next = String(formData.get("role") ?? "");
   if (!isTeamRole(next)) return;
 
-  const ctx = await getMembership(user.id, slug);
-  if (!ctx) redirect("/home");
+  const gate = await requireTeamMember(user.id, slug, "admin");
+  if ("error" in gate) redirect("/home");
+  const { ctx } = gate;
 
   const target = ctx.team.members.find((m) => m.id === memberId);
   if (!target) return;
@@ -140,6 +150,16 @@ export async function changeMemberRoleAction(formData: FormData) {
     where: { id: target.id },
     data: { role: next },
   });
+  await writeSecurityEvent({
+    kind: "role_change",
+    actorUserId: user.id,
+    teamId: ctx.team.id,
+    meta: {
+      targetUserId: target.userId,
+      previousRole: targetRole,
+      targetRole: next,
+    },
+  });
   redirect(`/t/${slug}/people`);
 }
 
@@ -148,8 +168,9 @@ export async function removeMemberAction(formData: FormData) {
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
   const memberId = String(formData.get("memberId") ?? "");
-  const ctx = await getMembership(user.id, slug);
-  if (!ctx) redirect("/home");
+  const gate = await requireTeamMember(user.id, slug, "admin");
+  if ("error" in gate) redirect("/home");
+  const { ctx } = gate;
 
   const target = ctx.team.members.find((m) => m.id === memberId);
   if (!target) return;
@@ -173,9 +194,9 @@ export async function updateTeamSettingsAction(
 
   const user = await requireUser();
   const slug = String(formData.get("slug") ?? "");
-  const ctx = await getMembership(user.id, slug);
-  if (!ctx) return { error: "Studio not found" };
-  if (!canEditSettings(ctx.role)) return { error: "Read only" };
+  const gate = await requireTeamMember(user.id, slug, "admin");
+  if ("error" in gate) return { error: gate.error };
+  const { ctx } = gate;
 
   const settings: TeamSettings = {
     membersCanCreateProjects: formData.get("membersCanCreateProjects") === "on",

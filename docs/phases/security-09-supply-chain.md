@@ -1,6 +1,6 @@
 # S9 — Dependency & CI supply chain
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s9-supply-chain`
 
 ## Goal

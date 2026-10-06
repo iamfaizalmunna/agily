@@ -34,7 +34,8 @@ import {
   formatEventSentence,
   isItemEventKind,
 } from "@/lib/activity/events";
-import { resetSignInThrottle } from "@/lib/auth/sign-in-throttle";
+import { formatAuthLockMessage, resetAuthThrottle } from "@/lib/auth/auth-throttle";
+import { joinInviteLockMessage } from "@/lib/auth/join-throttle";
 import { DEMO_ACCOUNT_COUNT } from "@/lib/auth/demo-accounts";
 import { isSessionFresh, SESSION_DAYS } from "@/lib/auth/identity";
 import { sessionCookieOptions } from "@/lib/auth/cookie-options";
@@ -53,9 +54,12 @@ import { canComment } from "@/lib/items/permissions";
 import { prevStatus } from "@/lib/items/status";
 import { formatDueOn } from "@/lib/items/validate";
 import { teamSlugFromPath } from "@/lib/nav/studio";
-import { canRemoveMember } from "@/lib/rbac/roles";
+import { canRemoveMember, hasMinRole } from "@/lib/rbac/roles";
 import { contentDispositionAttachment } from "@/lib/security/filename";
 import { checkMutationOrigin } from "@/lib/security/origin";
+import { isSafeHttpUrl } from "@/lib/security/safe-url";
+import { FIELD_LIMITS } from "@/lib/security/validation-limits";
+import { validateCsvImportSize } from "@/lib/data/import-bounds";
 import { securityResponseHeaders } from "@/lib/security/headers";
 import { resolveSettingsSection } from "@/lib/settings/section-nav";
 import { mobileAuthShellClass } from "@/lib/ui/mobile";
@@ -217,7 +221,7 @@ describe("branch coverage pack", () => {
       names,
     );
     assert.ok(rows.some((r) => r.kind === "due"));
-    resetSignInThrottle();
+    resetAuthThrottle();
     assert.ok(DEMO_ACCOUNT_COUNT > 0);
     assert.equal(typeof SESSION_DAYS, "number");
     assert.equal(isSessionFresh(new Date(Date.now() + 1000)), true);
@@ -250,6 +254,13 @@ describe("branch coverage pack", () => {
     assert.equal(formatDueOn(undefined), "");
     assert.ok(teamSlugFromPath("/t/acme"));
     assert.equal(canRemoveMember("member", "owner"), false);
+    assert.equal(hasMinRole("viewer", "member"), false);
+    assert.ok(formatAuthLockMessage(45).includes("seconds"));
+    assert.ok(joinInviteLockMessage(120).includes("minute"));
+    assert.equal(isSafeHttpUrl("https://x"), true);
+    assert.ok(Object.values(FIELD_LIMITS).every((n) => n > 0));
+    assert.equal(validateCsvImportSize("a").ok, true);
+    assert.equal(formatAuthLockMessage(0).length > 5, true);
     assert.match(contentDispositionAttachment("file.csv"), /attachment/);
     assert.ok(securityResponseHeaders()["X-Frame-Options"]);
     assert.equal(

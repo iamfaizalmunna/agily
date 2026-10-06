@@ -15,8 +15,15 @@ export function uniqueSlug(name: string) {
   return `${slugifyTeamName(name)}-${randomBytes(3).toString("hex")}`;
 }
 
+export const INVITE_TOKEN_BYTES = 18;
+export const INVITE_TOKEN_HEX_LEN = INVITE_TOKEN_BYTES * 2;
+
 export function newInviteToken() {
-  return randomBytes(18).toString("hex");
+  return randomBytes(INVITE_TOKEN_BYTES).toString("hex");
+}
+
+export function isValidInviteTokenFormat(token: string) {
+  return new RegExp(`^[a-f0-9]{${INVITE_TOKEN_HEX_LEN}}$`).test(token);
 }
 
 export function parseJoinToken(raw: string) {

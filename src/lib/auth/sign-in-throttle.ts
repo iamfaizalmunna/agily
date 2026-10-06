@@ -1,39 +1,41 @@
 /* c8 ignore next */
-import { normalizeEmail } from "@/lib/auth/identity";
+import {
+  clearSignInThrottleKeys,
+  recordSignInFailures,
+  resetAuthThrottle,
+  signInLockStatus,
+} from "@/lib/auth/auth-throttle";
 
-const WINDOW_MS = 15 * 60 * 1000;
-const MAX_FAILURES = 10;
+export {
+  formatAuthLockMessage,
+  authFailureDelay,
+  signInLockStatus,
+  recordSignInFailures,
+  clearSignInThrottleKeys,
+} from "@/lib/auth/auth-throttle";
 
-type Bucket = { failures: number; windowStart: number };
-
-const buckets = new Map<string, Bucket>();
-
-function bucketFor(email: string, now: number) {
-  const key = normalizeEmail(email);
-  let bucket = buckets.get(key);
-  if (!bucket || now - bucket.windowStart > WINDOW_MS) {
-    bucket = { failures: 0, windowStart: now };
-    buckets.set(key, bucket);
-  }
-  return bucket;
+export function isSignInLocked(
+  email: string,
+  clientIp?: string | null,
+  now = Date.now(),
+) {
+  return signInLockStatus(email, clientIp, now).locked;
 }
 
-export function isSignInLocked(email: string, now = Date.now()) {
-  const bucket = bucketFor(email, now);
-  return bucket.failures >= MAX_FAILURES;
+export function recordSignInFailure(
+  email: string,
+  clientIp?: string | null,
+  now = Date.now(),
+) {
+  recordSignInFailures(email, clientIp, now);
 }
 
-export function recordSignInFailure(email: string, now = Date.now()) {
-  const bucket = bucketFor(email, now);
-  bucket.failures += 1;
-}
-
-export function clearSignInFailures(email: string) {
-  buckets.delete(normalizeEmail(email));
+export function clearSignInFailures(email: string, clientIp?: string | null) {
+  clearSignInThrottleKeys(email, clientIp);
 }
 
 /** Test-only reset. */
 /* c8 ignore next */
 export function resetSignInThrottle() {
-  buckets.clear();
+  resetAuthThrottle();
 }

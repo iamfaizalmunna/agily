@@ -47,6 +47,22 @@ describe("env/server", () => {
     assert.equal(issues.some((row) => row.key === "SESSION_DAYS"), true);
   });
 
+  it("rejects demo mode and placeholder secrets in production", () => {
+    const demo = validateServerEnv({
+      NODE_ENV: "production",
+      DATABASE_URL: "file:./x.db",
+      SESSION_SECRET: "x".repeat(32),
+      NEXT_PUBLIC_DEMO_MODE: "true",
+    });
+    assert.equal(demo.some((row) => row.key === "DEMO_MODE"), true);
+    const weak = validateServerEnv({
+      NODE_ENV: "production",
+      DATABASE_URL: "file:./x.db",
+      SESSION_SECRET: "replace-with-a-long-random-string",
+    });
+    assert.equal(weak.some((row) => row.key === "SESSION_SECRET"), true);
+  });
+
   it("passes when env is valid", () => {
     assert.deepEqual(
       validateServerEnv({

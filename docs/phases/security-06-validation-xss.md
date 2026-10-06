@@ -1,6 +1,6 @@
 # S6 — Input validation & output encoding
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s6-validation-xss`
 
 ## Goal

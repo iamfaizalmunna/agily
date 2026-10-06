@@ -18,8 +18,9 @@ model User {
   assignments  ItemAssignee[]
   lenses       FilterLens[]
   updates      ItemUpdate[]
-  itemEvents   ItemEvent[]
-  notices      Notification[]
+  itemEvents     ItemEvent[]
+  notices        Notification[]
+  securityEvents SecurityEvent[]
 }
 
 model Session {
@@ -41,7 +42,8 @@ model Team {
   projects  Project[]
   lenses    FilterLens[]
   notices   Notification[]
-  labels    Label[]
+  labels         Label[]
+  securityEvents SecurityEvent[]
 }
 
 model TeamMember {
@@ -217,6 +219,20 @@ model ItemEvent {
   user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
 
   @@index([itemId, createdAt])
+}
+
+model SecurityEvent {
+  id          String   @id @default(cuid())
+  kind        String
+  actorUserId String?
+  teamId      String?
+  meta        String   @default("{}")
+  createdAt   DateTime @default(now())
+  actor       User?    @relation(fields: [actorUserId], references: [id], onDelete: SetNull)
+  team        Team?    @relation(fields: [teamId], references: [id], onDelete: SetNull)
+
+  @@index([teamId, createdAt])
+  @@index([createdAt])
 }
 
 model Notification {

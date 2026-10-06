@@ -1,6 +1,6 @@
 # S8 — Secrets, env templates, production checklist
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s8-secrets-env`
 
 ## Goal

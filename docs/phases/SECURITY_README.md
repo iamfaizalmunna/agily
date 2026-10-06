@@ -34,15 +34,15 @@ This track turns that baseline into a **repeatable, phase-by-phase** program: ea
 | S1 | CSP + security headers v2 | **complete** | `security/s1-s2-hardening` |
 | S2 | Session lifecycle & cookie hardening | **complete** | `security/s1-s2-hardening` |
 | S3 | CSRF, origin, and Server Action guards | **complete** | `security/s3-csrf-actions` |
-| S4 | Auth abuse (throttle v2, lockout UX) | planned | `security/s4-auth-abuse` |
-| S5 | Authorization matrix & IDOR tests | planned | `security/s5-idor-rbac` |
-| S6 | Input validation & output encoding | planned | `security/s6-validation-xss` |
-| S7 | Lens API & proxy hardening | planned | `security/s7-lens-api` |
-| S8 | Secrets, env templates, prod checklist | planned | `security/s8-secrets-env` |
-| S9 | Dependency & CI supply chain | planned | `security/s9-supply-chain` |
-| S10 | Security audit log (minimal) | planned | `security/s10-audit-log` |
-| S11 | Data at rest & invites/tokens | planned | `security/s11-data-invites` |
-| S12 | Ship: smoke tests + runbook | planned | `security/s12-ship` |
+| S4 | Auth abuse (throttle v2, lockout UX) | **complete** | `security/s4-s6-hardening` |
+| S5 | Authorization matrix & IDOR tests | **complete** | `security/s4-s6-hardening` |
+| S6 | Input validation & output encoding | **complete** | `security/s4-s6-hardening` |
+| S7 | Lens API & proxy hardening | **complete** | `security/s7-s9-hardening` |
+| S8 | Secrets, env templates, prod checklist | **complete** | `security/s7-s9-hardening` |
+| S9 | Dependency & CI supply chain | **complete** | `security/s7-s9-hardening` |
+| S10 | Security audit log (minimal) | **complete** | `security/s10-s12-ship` |
+| S11 | Data at rest & invites/tokens | **complete** | `security/s10-s12-ship` |
+| S12 | Ship: smoke tests + runbook | **complete** | `security/s10-s12-ship` |
 
 **Stories:** one file per phase under `docs/phases/security-*.md`.
 
@@ -63,7 +63,7 @@ Urgent fixes between phases: small `chore/security-*` PRs are fine; fold recurri
 ## How to run the track
 
 1. Say **“S1”** (or **“next security phase”**) — we implement that phase only, then stop for review.
-2. After **S12**, update [HARDENING.md](../HARDENING.md) and close the track (or open **S13+** for new findings).
+2. **S1–S12** are complete on the roadmap; open **S13+** only for new findings.
 
 ## Out of scope (unless product rules change)
 

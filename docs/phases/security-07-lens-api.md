@@ -1,6 +1,6 @@
 # S7 — Lens API & proxy hardening
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s7-lens-api`
 
 ## Goal

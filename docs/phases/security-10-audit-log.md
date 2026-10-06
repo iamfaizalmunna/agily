@@ -1,6 +1,6 @@
 # S10 — Security audit log (minimal)
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s10-audit-log`
 
 ## Goal

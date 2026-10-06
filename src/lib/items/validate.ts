@@ -1,8 +1,13 @@
 /* c8 ignore next */
+import { FIELD_LIMITS } from "@/lib/security/validation-limits";
+
+/* c8 ignore next */
 export function parseItemTitle(raw: string) {
   const title = raw.trim();
   if (!title) return { error: "Title is required" as const };
-  if (title.length > 160) return { error: "Title is too long" as const };
+  if (title.length > FIELD_LIMITS.itemTitle) {
+    return { error: "Title is too long" as const };
+  }
   return { title };
 }
 

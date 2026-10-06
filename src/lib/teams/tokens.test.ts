@@ -2,6 +2,7 @@ import assert from "node:assert/strict";
 import { describe, it } from "node:test";
 import {
   inviteExpiry,
+  isValidInviteTokenFormat,
   newInviteToken,
   parseJoinToken,
   slugifyTeamName,
@@ -26,7 +27,10 @@ describe("phase 2 tokens", () => {
   });
 
   it("mints a 36-char invite token", () => {
-    assert.match(newInviteToken(), /^[0-9a-f]{36}$/);
+    const token = newInviteToken();
+    assert.match(token, /^[0-9a-f]{36}$/);
+    assert.equal(isValidInviteTokenFormat(token), true);
+    assert.equal(isValidInviteTokenFormat("short"), false);
   });
 
   it("pulls a token from a full join URL or a raw value", () => {
