@@ -2,6 +2,7 @@ import { test, expect } from "@playwright/test";
 import { E2E, signIn } from "./helpers";
 
 test.describe("security smoke", () => {
+  test.use({ storageState: { cookies: [], origins: [] } });
   test("redirects unauthenticated users to sign-in", async ({ page }) => {
     await page.goto(`/t/${E2E.teamSlug}/p/${E2E.projectSlug}`);
     await expect(page).toHaveURL(/\/signin/);
