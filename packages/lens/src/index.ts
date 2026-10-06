@@ -24,3 +24,17 @@ export {
   parseOllamaChat,
   type BoardFact,
 } from "./extract";
+export {
+  LENS_ASK_BODY_BYTES,
+  LENS_ASK_BODY_LIMIT,
+  LENS_QUESTION_MAX_LEN,
+  applyLensCors,
+  clientIpFromRequest,
+  isLensKbHttpEnabled,
+  lensAskThrottleStatus,
+  lensCorsAllowlist,
+  publicLensHealthPayload,
+  recordLensAsk,
+  resetLensAskThrottle,
+  safeKbBasename,
+} from "./api-security";

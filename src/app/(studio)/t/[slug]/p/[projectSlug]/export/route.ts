@@ -20,6 +20,7 @@ import {
   contentDispositionAttachment,
   safeDownloadFilename,
 } from "@/lib/security/filename";
+import { writeSecurityEvent } from "@/lib/security/audit-log";
 
 export async function GET(
   request: NextRequest,
@@ -94,6 +95,12 @@ export async function GET(
     })),
   );
   const csv = exportRowsToCsv(rows);
+  await writeSecurityEvent({
+    kind: "csv_export",
+    actorUserId: user.id,
+    teamId: ctx.team.id,
+    meta: { projectSlug, rowCount: rows.length },
+  });
   const filename = safeDownloadFilename(projectSlug);
   return new NextResponse(csv, {
     headers: {

@@ -1,6 +1,6 @@
 # S11 — Data at rest & invite tokens
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s11-data-invites`
 
 ## Goal

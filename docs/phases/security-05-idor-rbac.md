@@ -1,6 +1,6 @@
 # S5 — Authorization matrix & IDOR tests
 
-**Status:** planned  
+**Status:** complete  
 **Branch:** `security/s5-idor-rbac`
 
 ## Goal

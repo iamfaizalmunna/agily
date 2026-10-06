@@ -21,6 +21,10 @@ export function isTeamRole(value: string): value is TeamRole {
   return (TEAM_ROLES as readonly string[]).includes(value);
 }
 
+export function hasMinRole(role: TeamRole, min: TeamRole) {
+  return ROLE_RANK[role] >= ROLE_RANK[min];
+}
+
 export type TeamSettings = {
   membersCanCreateProjects: boolean;
   membersCanInvite: boolean;

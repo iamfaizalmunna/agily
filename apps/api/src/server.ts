@@ -8,14 +8,22 @@ import express from "express";
 import { PrismaClient } from "@prisma/client";
 import { z } from "zod";
 import {
+  applyLensCors,
   boardCounts,
   buildLensPrompt,
+  clientIpFromRequest,
   extractiveAnswer,
+  isLensKbHttpEnabled,
+  lensAskThrottleStatus,
+  lensCorsAllowlist,
   parseKbMarkdown,
   parseOllamaChat,
+  publicLensHealthPayload,
+  recordLensAsk,
   resolveOllamaBase,
   resolveOllamaModel,
   retrieveKb,
+  safeKbBasename,
   type KbDoc,
 } from "@agily/lens";
 
@@ -93,8 +101,22 @@ async function ollamaChat(base: string, model: string, prompt: string) {
 
 export function createApp() {
   const app = express();
+  const corsAllowlist = lensCorsAllowlist(process.env);
+
   app.use(express.json({ limit: "32kb" }));
   app.use(cookieParser());
+  app.use((req, res, next) => {
+    const allowed = applyLensCors(req.headers.origin, corsAllowlist);
+    if (allowed) {
+      res.setHeader("Access-Control-Allow-Origin", allowed);
+      res.setHeader("Vary", "Origin");
+    }
+    if (req.method === "OPTIONS") {
+      res.status(allowed ? 204 : 403).end();
+      return;
+    }
+    next();
+  });
 
   app.get("/v1/health", (_req, res) => {
     res.json({ ok: true, service: "agily-api" });
@@ -103,21 +125,34 @@ export function createApp() {
   app.get("/v1/lens/health", async (_req, res) => {
     const resolved = resolveOllamaBase(process.env.OLLAMA_BASE_URL);
     if ("error" in resolved) {
-      res.status(400).json({ ok: false, ollama: false, error: resolved.error });
+      res
+        .status(400)
+        .json(
+          publicLensHealthPayload(process.env, {
+            ollama: false,
+            model: resolveOllamaModel(process.env.OLLAMA_MODEL),
+            error: resolved.error,
+          }),
+        );
       return;
     }
     const live = await ollamaHealth(resolved.base);
-    res.json({
-      ok: true,
-      ollama: live,
-      base: resolved.base,
-      model: resolveOllamaModel(process.env.OLLAMA_MODEL),
-    });
+    res.json(
+      publicLensHealthPayload(process.env, {
+        ollama: live,
+        model: resolveOllamaModel(process.env.OLLAMA_MODEL),
+        base: resolved.base,
+      }),
+    );
   });
 
   app.get("/v1/lens/kb/:name", async (req, res) => {
-    const name = path.basename(req.params.name ?? "");
-    if (!name.endsWith(".md")) {
+    if (!isLensKbHttpEnabled(process.env)) {
+      res.status(404).end();
+      return;
+    }
+    const name = safeKbBasename(req.params.name ?? "");
+    if (!name) {
       res.status(404).end();
       return;
     }
@@ -133,6 +168,22 @@ export function createApp() {
       res.status(401).json({ error: "Sign in first" });
       return;
     }
+    const clientIp = clientIpFromRequest({
+      get: (key) => {
+        const value = req.headers[key.toLowerCase()];
+        if (Array.isArray(value)) return value[0] ?? null;
+        return value ?? null;
+      },
+    });
+    const throttle = lensAskThrottleStatus(user.id, clientIp);
+    if (throttle.throttled) {
+      res.status(429).json({
+        error: "Too many Lens questions. Wait and try again.",
+        retryAfterSeconds: throttle.retryAfterSeconds,
+      });
+      return;
+    }
+    recordLensAsk(user.id, clientIp);
     const parsed = askSchema.safeParse(req.body);
     if (!parsed.success) {
       res.status(400).json({ error: parsed.error.issues[0]?.message ?? "Bad ask" });

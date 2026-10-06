@@ -2,6 +2,13 @@
 const MIN_SESSION_SECRET_LEN = 32;
 const MAX_SESSION_DAYS = 90;
 
+const WEAK_SESSION_SECRETS = new Set([
+  "replace-with-a-long-random-string",
+  "dev-secret",
+  "changeme",
+  "secret",
+]);
+
 export type ServerEnvIssue = { key: string; message: string };
 
 export function validateServerEnv(
@@ -20,6 +27,17 @@ export function validateServerEnv(
       issues.push({
         key: "SESSION_SECRET",
         message: `SESSION_SECRET must be at least ${MIN_SESSION_SECRET_LEN} characters in production`,
+      });
+    } else if (WEAK_SESSION_SECRETS.has(secret.toLowerCase())) {
+      issues.push({
+        key: "SESSION_SECRET",
+        message: "SESSION_SECRET must not use a default or placeholder value in production",
+      });
+    }
+    if (env.NEXT_PUBLIC_DEMO_MODE === "true" || env.DEMO_MODE === "true") {
+      issues.push({
+        key: "DEMO_MODE",
+        message: "Demo mode must be disabled in production",
       });
     }
   } else if (!secret) {

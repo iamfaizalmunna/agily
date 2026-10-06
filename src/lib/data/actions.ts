@@ -10,6 +10,10 @@ import { canWriteBoard, canCreateProject } from "@/lib/items/permissions";
 import { parseTeamSettings } from "@/lib/rbac/roles";
 import { uniqueSlug } from "@/lib/teams/tokens";
 import { mapCsvToImports, parseCsv } from "@/lib/data/csv";
+import {
+  validateCsvImportSize,
+  validateCsvTableBounds,
+} from "@/lib/data/import-bounds";
 import { validateImportRow } from "@/lib/data/import-validate";
 import { suggestDuplicateProjectName } from "@/lib/data/duplicate";
 import { resolveWorkflow } from "@/lib/workflow/workflow";
@@ -28,6 +32,8 @@ export async function importBoardCsvAction(
   const projectSlug = String(formData.get("projectSlug") ?? "");
   const csvText = String(formData.get("csv") ?? "");
   if (!csvText.trim()) return { error: "Paste CSV content" };
+  const sizeGate = validateCsvImportSize(csvText);
+  if ("error" in sizeGate) return { error: sizeGate.error };
   const ctx = await getMembership(user.id, slug);
   if (!ctx) return { error: "Studio not found" };
   if (!canWriteBoard(ctx.role)) return { error: "Read only" };
@@ -38,6 +44,8 @@ export async function importBoardCsvAction(
   if (!project) return { error: "Board not found" };
   const workflow = resolveWorkflow(project.workflow);
   const table = parseCsv(csvText);
+  const boundsGate = validateCsvTableBounds(table);
+  if ("error" in boundsGate) return { error: boundsGate.error };
   const { rows, errors: parseErrors } = mapCsvToImports(table);
   if (parseErrors.length && !rows.length) {
     return { error: parseErrors[0] };

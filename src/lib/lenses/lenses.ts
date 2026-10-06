@@ -12,6 +12,7 @@ import type { ItemPriority } from "@/lib/items/priority";
 import { isItemStatus, STATUS_LABEL } from "@/lib/items/status";
 import type { ItemStatus } from "@/lib/items/status";
 import { dueDayKey, isOverdue, startOfUtcDay } from "@/lib/views/views";
+import { FIELD_LIMITS } from "@/lib/security/validation-limits";
 
 export const LENS_KINDS = [
   "mine",
@@ -217,7 +218,9 @@ export function sameLensSpec(a: LensSpec, b: LensSpec) {
 export function parseLensName(raw: string) {
   const name = raw.trim();
   if (!name) return { error: "Lens needs a name" as const };
-  if (name.length > 40) return { error: "Name is too long" as const };
+  if (name.length > FIELD_LIMITS.lensName) {
+    return { error: "Name is too long" as const };
+  }
   return { name };
 }
 

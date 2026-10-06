@@ -15,14 +15,21 @@ import { parseJoinToken } from "@/lib/teams/tokens";
 import { acceptInviteAction } from "@/lib/teams/join";
 import { isTeamRole, type TeamRole } from "@/lib/rbac/roles";
 import {
+  authFailureDelay,
   clearSignInFailures,
-  isSignInLocked,
+  formatAuthLockMessage,
   recordSignInFailure,
+  signInLockStatus,
 } from "@/lib/auth/sign-in-throttle";
 import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
+import { readClientIp } from "@/lib/security/client-ip";
+import { writeSecurityEvent } from "@/lib/security/audit-log";
+
+const INVALID_CREDENTIALS = "Email or password is wrong";
 
 export type AuthFormState = {
   error?: string;
+  retryAfterSeconds?: number;
 };
 
 const signUpSchema = z.object({
@@ -121,30 +128,56 @@ export async function signInAction(
   }
 
   const email = normalizeEmail(parsed.data.email);
-  if (isSignInLocked(email)) {
-    return { error: "Too many attempts. Wait a few minutes and try again." };
+  const clientIp = await readClientIp();
+  const lock = signInLockStatus(email, clientIp);
+  if (lock.locked) {
+    return {
+      error: formatAuthLockMessage(lock.retryAfterSeconds),
+      retryAfterSeconds: lock.retryAfterSeconds,
+    };
   }
 
   const user = await prisma.user.findUnique({ where: { email } });
-  if (!user) {
-    recordSignInFailure(email);
-    return { error: "Email or password is wrong" };
+  const ok = user
+    ? await verifyPassword(parsed.data.password, user.passwordHash)
+    : false;
+  if (!user || !ok) {
+    await authFailureDelay();
+    recordSignInFailure(email, clientIp);
+    const after = signInLockStatus(email, clientIp);
+    if (after.locked) {
+      return {
+        error: formatAuthLockMessage(after.retryAfterSeconds),
+        retryAfterSeconds: after.retryAfterSeconds,
+      };
+    }
+    await writeSecurityEvent({
+      kind: "sign_in_failure",
+      meta: { email },
+    });
+    return { error: INVALID_CREDENTIALS };
   }
 
-  const ok = await verifyPassword(parsed.data.password, user.passwordHash);
-  if (!ok) {
-    recordSignInFailure(email);
-    return { error: "Email or password is wrong" };
-  }
-
-  clearSignInFailures(email);
+  clearSignInFailures(email, clientIp);
   await createSession(user.id, { replaceExistingForUser: true });
+  await writeSecurityEvent({
+    kind: "sign_in_success",
+    actorUserId: user.id,
+    meta: { email },
+  });
   redirect("/home");
 }
 
 export async function signOutAction() {
   if (await trustedMutationOriginError()) return;
+  const user = await getCurrentUser();
   await destroySession();
+  if (user) {
+    await writeSecurityEvent({
+      kind: "sign_out",
+      actorUserId: user.id,
+    });
+  }
   redirect("/signin");
 }
 

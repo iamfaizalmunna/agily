@@ -1,4 +1,7 @@
 /* c8 ignore next */
+import { FIELD_LIMITS } from "@/lib/security/validation-limits";
+
+/* c8 ignore next */
 export function parseFocusId(raw: string | undefined | null) {
   const id = raw?.trim() ?? "";
   if (!id || id.length > 40) return null;
@@ -24,7 +27,9 @@ export function withFocus(
 export function parseCommentBody(raw: string) {
   const body = raw.trim();
   if (!body) return { error: "Write a note" as const };
-  if (body.length > 2000) return { error: "Note is too long" as const };
+  if (body.length > FIELD_LIMITS.commentBody) {
+    return { error: "Note is too long" as const };
+  }
   return { body };
 }
 

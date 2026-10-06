@@ -6,7 +6,10 @@ import {
   writeSessionCookie,
 } from "@/lib/auth/cookies";
 import { isSessionFresh, sessionExpiry } from "@/lib/auth/identity";
-import { mintSessionToken } from "@/lib/auth/session-token";
+import {
+  isValidSessionTokenFormat,
+  mintSessionToken,
+} from "@/lib/auth/session-token";
 
 export { normalizeEmail, sessionExpiry } from "@/lib/auth/identity";
 
@@ -34,6 +37,9 @@ export async function createSession(
   }
 
   const token = mintSessionToken();
+  if (!isValidSessionTokenFormat(token)) {
+    throw new Error("Session token generation failed");
+  }
   const expiresAt = sessionExpiry();
   await prisma.session.create({
     data: { userId, token, expiresAt },
