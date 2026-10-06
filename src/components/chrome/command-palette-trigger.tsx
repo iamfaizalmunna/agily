@@ -1,6 +1,6 @@
 "use client";
 
-import { Search } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { Button } from "@/components/ui/button";
 import { useCommandPaletteStore } from "@/lib/search/palette-store";
 
@@ -16,7 +16,7 @@ export function CommandPaletteTrigger({ compact }: { compact?: boolean }) {
       onClick={() => toggle()}
       aria-keyshortcuts="Meta+K Control+K"
     >
-      <Search className="size-4 shrink-0" aria-hidden />
+      <AppIcon name="action.search" className="size-4 shrink-0" />
       {compact ? (
         <span className="sr-only">Search</span>
       ) : (

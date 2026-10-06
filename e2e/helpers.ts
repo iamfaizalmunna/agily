@@ -7,26 +7,32 @@ export const E2E = {
   projectSlug: "atlas",
 } as const;
 
+async function waitForSignedIn(page: Page) {
+  await page.waitForURL(
+    (url) => !url.pathname.startsWith("/signin"),
+    { timeout: 30_000 },
+  );
+}
+
 export async function signIn(page: Page) {
   await page.goto("/signin");
   const demoOwner = page.getByTestId("demo-owner");
-  if (await demoOwner.isVisible().catch(() => false)) {
-    await Promise.all([
-      page.waitForURL((url) => !url.pathname.startsWith("/signin"), {
-        timeout: 30_000,
-        waitUntil: "commit",
-      }),
-      demoOwner.click(),
-    ]);
+  const demoVisible = await demoOwner
+    .waitFor({ state: "visible", timeout: 8_000 })
+    .then(() => true)
+    .catch(() => false);
+  if (demoVisible) {
+    await Promise.all([waitForSignedIn(page), demoOwner.click()]);
     return;
   }
-  await page.getByTestId("signin-email").fill(E2E.email);
-  await page.getByTestId("signin-password").fill(E2E.password);
+  const email = page.getByTestId("signin-email");
+  const password = page.getByTestId("signin-password");
+  await email.click();
+  await email.fill(E2E.email);
+  await password.click();
+  await password.fill(E2E.password);
   await Promise.all([
-    page.waitForURL((url) => !url.pathname.startsWith("/signin"), {
-      timeout: 30_000,
-      waitUntil: "commit",
-    }),
+    waitForSignedIn(page),
     page.getByTestId("signin-submit").click(),
   ]);
 }

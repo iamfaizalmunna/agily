@@ -1,5 +1,5 @@
+import { FilterBarDesktop } from "@/components/lenses/filter-bar-desktop";
 import { FilterBarMobile } from "@/components/lenses/filter-bar-mobile";
-import { FilterBarPanels } from "@/components/lenses/filter-bar-panels";
 import type { LensSpec } from "@/lib/lenses/lenses";
 import type { LabelChip } from "@/lib/labels/labels";
 import type { BoardView } from "@/lib/views/views";
@@ -44,11 +44,9 @@ export function FilterBar({
   };
 
   return (
-    <>
+    <div className="w-full min-w-0">
       <FilterBarMobile {...props} />
-      <div className="hidden rounded-lg border border-border bg-card p-4 md:block">
-        <FilterBarPanels {...props} />
-      </div>
-    </>
+      <FilterBarDesktop {...props} />
+    </div>
   );
 }

@@ -1,0 +1,69 @@
+/* Theme presets: html.light|dark + data-theme="<preset>" */
+
+html[data-theme="jira"].light {
+  /* Default studio palette — matches base html.light in globals.css */
+}
+
+html[data-theme="editorial"].light {
+  --ink: #f0ebe3;
+  --paper: #1c1916;
+  --copper: #b87333;
+  --copper-bright: #d4894a;
+  --primary: #b87333;
+  --sidebar: #2a2420;
+  --background: #f0ebe3;
+  --foreground: #1c1916;
+}
+
+html[data-theme="editorial"].dark {
+  --ink: #12100e;
+  --paper: #f4efe6;
+  --copper: #c9844a;
+  --copper-bright: #e09a5c;
+  --primary: #c9844a;
+  --sidebar: #1a1614;
+}
+
+html[data-theme="graphite"].light {
+  --ink: #f4f4f8;
+  --paper: #1e1b2e;
+  --copper: #6d5bd0;
+  --copper-bright: #7c6ce0;
+  --primary: #6d5bd0;
+  --primary-foreground: #ffffff;
+  --sidebar: #3d3566;
+  --background: #f4f4f8;
+  --foreground: #1e1b2e;
+}
+
+html[data-theme="graphite"].dark {
+  --ink: #14121f;
+  --paper: #eceaf8;
+  --copper: #9d8df1;
+  --copper-bright: #b3a6ff;
+  --primary: #9d8df1;
+  --primary-foreground: #14121f;
+  --sidebar: #252038;
+}
+
+html[data-theme="forest"].light {
+  --ink: #eef4f0;
+  --paper: #1a2e24;
+  --copper: #2f855a;
+  --copper-bright: #38a169;
+  --primary: #2f855a;
+  --primary-foreground: #ffffff;
+  --sidebar: #1e4d3a;
+  --background: #eef4f0;
+  --foreground: #1a2e24;
+}
+
+html[data-theme="forest"].dark {
+  --ink: #0f1612;
+  --paper: #e8f0eb;
+  --copper: #48bb78;
+  --copper-bright: #68d391;
+  --primary: #48bb78;
+  --primary-foreground: #0f1612;
+  --sidebar: #1a2f23;
+}

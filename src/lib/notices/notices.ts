@@ -1,6 +1,16 @@
 /* c8 ignore next */
-export const NOTICE_KINDS = ["assigned", "note", "mention", "reply"] as const;
+export const NOTICE_KINDS = [
+  "assigned",
+  "note",
+  "mention",
+  "reply",
+  "status_changed",
+  "ticket_created",
+] as const;
 export type NoticeKind = (typeof NOTICE_KINDS)[number];
+
+/** Poll interval for live notices (ms). */
+export const NOTICE_LIVE_POLL_MS = 12_000;
 
 export function isNoticeKind(value: string | undefined | null): value is NoticeKind {
   return (NOTICE_KINDS as readonly string[]).includes(value ?? "");
@@ -38,10 +48,30 @@ export function noticeCopy(
       body: snippet?.trim() || itemTitle,
     };
   }
+  if (kind === "status_changed") {
+    return {
+      title: `${actorName} updated the board`,
+      body: snippet?.trim()
+        ? `${itemTitle} — ${snippet.trim()}`
+        : itemTitle,
+    };
+  }
+  if (kind === "ticket_created") {
+    return {
+      title: `${actorName} added a ticket`,
+      body: snippet?.trim()
+        ? `${itemTitle} on ${snippet.trim()}`
+        : itemTitle,
+    };
+  }
   return {
     title: `${actorName} left a note`,
     body: itemTitle,
   };
+}
+
+export function teamMemberUserIds(members: { userId: string }[]) {
+  return members.map((member) => member.userId);
 }
 
 export function isUnread(readAt: Date | null | undefined) {

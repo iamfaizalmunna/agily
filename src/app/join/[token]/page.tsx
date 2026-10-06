@@ -2,6 +2,10 @@ import Link from "next/link";
 import { prisma } from "@/lib/db/prisma";
 import { getCurrentUser, normalizeEmail } from "@/lib/auth/session";
 import { JoinForm } from "@/components/teams/join-form";
+import {
+  publicContentWidthClass,
+  publicViewportPageClass,
+} from "@/lib/ui/layout-contract";
 
 export default async function JoinPage({
   params,
@@ -17,8 +21,8 @@ export default async function JoinPage({
 
   if (!invite || invite.expiresAt < new Date()) {
     return (
-      <main className="flex min-h-dvh flex-col px-4 pt-10">
-        <div className="mx-auto w-full max-w-sm">
+      <main className={publicViewportPageClass()}>
+        <div className={publicContentWidthClass()}>
           <h1 className="font-display text-3xl text-paper">Link expired</h1>
           <p className="mt-3 text-sm text-paper/50">
             Ask an owner or admin for a new copy-link invite.
@@ -38,8 +42,8 @@ export default async function JoinPage({
     session && session.email !== normalizeEmail(invite.email);
 
   return (
-    <main className="flex min-h-dvh flex-col px-4 pb-10 pt-8">
-      <div className="mx-auto w-full max-w-sm">
+    <main className={publicViewportPageClass()}>
+      <div className={publicContentWidthClass()}>
         <p className="font-display text-xs tracking-[0.22em] text-copper uppercase">
           Join
         </p>

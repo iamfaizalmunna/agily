@@ -25,6 +25,12 @@ import {
   LENS_KIND_LABEL,
   titleMatchesFind,
 } from "@/lib/lenses/lenses";
+import {
+  APPEARANCE_VERSION,
+  ICON_SETS,
+  avatarPublicUrl,
+} from "@/lib/appearance/appearance";
+import { avatarContentType } from "@/lib/appearance/avatar";
 import { NOTICE_KINDS } from "@/lib/notices/notices";
 import { RECENT_TICKETS_KEY } from "@/lib/search/recent";
 import { normalizeSearchQuery } from "@/lib/search/search";
@@ -71,6 +77,12 @@ describe("pack export smoke", () => {
     assert.ok(LENS_KIND_LABEL.mine);
     assert.ok(titleMatchesFind("Fix login", "login"));
     assert.ok(NOTICE_KINDS.length);
+    assert.equal(APPEARANCE_VERSION, 1);
+    assert.ok(ICON_SETS.length);
+    assert.equal(avatarContentType("jpeg"), "image/jpeg");
+    assert.equal(avatarContentType("png"), "image/png");
+    assert.equal(avatarContentType("webp"), "image/webp");
+    assert.match(avatarPublicUrl("demo"), /\/api\/profile\/avatar\//);
     assert.ok(RECENT_TICKETS_KEY);
     assert.equal(normalizeSearchQuery("  hi "), "hi");
     assert.ok(MOBILE_MAIN_SCROLL_PADDING_PX > 0);

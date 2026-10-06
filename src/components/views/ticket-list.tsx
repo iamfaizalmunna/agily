@@ -38,7 +38,7 @@ export function TicketList({
   return (
     <>
       <TicketListMobileFeed items={items} selectedId={selectedId} />
-      <div className="hidden md:block">
+      <div className="hidden w-full min-w-0 md:block">
         {bulk ? (
           <TicketListBulkTable
             items={items}

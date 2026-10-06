@@ -1,9 +1,8 @@
 import { defineConfig, devices } from "@playwright/test";
 
 const baseURL = process.env.PLAYWRIGHT_BASE_URL ?? "http://127.0.0.1:43123";
-/** Next.js resolves this from repo root → `prisma/e2e.db` (Prisma CLI uses `file:./e2e.db` in `db:e2e`). */
-const e2eDatabaseUrl =
-  process.env.DATABASE_URL ?? "file:./prisma/e2e.db";
+/** SQLite paths are relative to `prisma/schema.prisma` → `file:./e2e.db` is `prisma/e2e.db`. */
+const e2eDatabaseUrl = process.env.DATABASE_URL ?? "file:./e2e.db";
 
 export default defineConfig({
   testDir: "./e2e",
@@ -32,7 +31,7 @@ export default defineConfig({
       name: "mobile-chromium",
       dependencies: ["setup"],
       use: {
-        ...devices["iPhone 14"],
+        ...devices["Pixel 7"],
         storageState: "e2e/.auth/owner.json",
       },
     },

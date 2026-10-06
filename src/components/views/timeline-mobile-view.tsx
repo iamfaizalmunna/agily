@@ -25,12 +25,14 @@ export function TimelineMobileView({
 
   if (!isMobile) {
     return (
-      <ProjectGantt
-        slug={slug}
-        projectSlug={projectSlug}
-        items={items}
-        canWrite={canWrite}
-      />
+      <div className="min-w-0 w-full">
+        <ProjectGantt
+          slug={slug}
+          projectSlug={projectSlug}
+          items={items}
+          canWrite={canWrite}
+        />
+      </div>
     );
   }
 

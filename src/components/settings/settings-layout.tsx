@@ -41,9 +41,9 @@ export function SettingsLayout({
   }, [defaultSection, validIds]);
 
   return (
-    <div className="mx-auto flex w-full max-w-5xl flex-col gap-6 lg:flex-row lg:gap-10">
+    <div className="mx-auto flex w-full min-w-0 max-w-6xl flex-col gap-6 lg:flex-row lg:gap-10">
       <aside className="shrink-0 lg:w-52">
-        <div className="lg:sticky lg:top-6">
+        <div className="lg:sticky lg:top-0 lg:z-10 lg:bg-background/95 lg:pb-4 lg:backdrop-blur-sm">
           <h1 className="text-2xl font-semibold tracking-tight">{title}</h1>
           {description ? (
             <p className="mt-1 text-sm text-muted-foreground">{description}</p>

@@ -1,19 +1,20 @@
 import Link from "next/link";
-import type { LucideIcon } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
+import type { IconName } from "@/lib/appearance/icon-names";
 import { cn } from "@/lib/cn";
 import { mobileTouchTargetClass } from "@/lib/ui/mobile";
 
 export function MobileNavItem({
   href,
   label,
-  icon: Icon,
+  icon,
   active,
   badge,
   onClick,
 }: {
   href?: string;
   label: string;
-  icon: LucideIcon;
+  icon: IconName;
   active?: boolean;
   badge?: string | null;
   onClick?: () => void;
@@ -26,7 +27,7 @@ export function MobileNavItem({
   const inner = (
     <>
       <span className={cn(mobileTouchTargetClass("relative h-9 w-9"), "shrink-0")}>
-        <Icon className="size-5" aria-hidden />
+        <AppIcon name={icon} size="lg" className="mx-auto" />
         {badge ? (
           <span
             className="absolute -right-0.5 -top-0.5 min-w-4 rounded-full bg-destructive px-1 text-center text-[0.6rem] leading-4 text-destructive-foreground"

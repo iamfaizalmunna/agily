@@ -13,6 +13,7 @@ import {
 import { getMembership } from "@/lib/teams/queries";
 import { listRecentSecurityEvents } from "@/lib/security/audit-log";
 import { SecurityEventsPanel } from "@/components/settings/security-events-panel";
+import { NotificationPrefsPanel } from "@/components/notices/notification-prefs-panel";
 
 export default async function SettingsPage({
   params,
@@ -35,6 +36,7 @@ export default async function SettingsPage({
 
   const nav = [
     { id: "general", label: "General", href: `${base}#general` },
+    { id: "notifications", label: "Notifications", href: `${base}#notifications` },
     { id: "labels", label: "Labels", href: `${base}#labels` },
     { id: "templates", label: "Templates", href: `${base}#templates` },
     ...(isOwner
@@ -49,6 +51,11 @@ export default async function SettingsPage({
       items={nav}
       defaultSection="general"
     >
+      <section id="notifications" className="scroll-mt-6">
+        <h2 className="mb-3 text-lg font-medium text-foreground">Notifications</h2>
+        <NotificationPrefsPanel />
+      </section>
+
       {editable ? (
         <>
           <section id="general" className="scroll-mt-6">

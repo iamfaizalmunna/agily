@@ -28,6 +28,7 @@ import {
 import {
   isWorkflowStatus,
   resolveWorkflow,
+  workflowStatusLabel,
 } from "@/lib/workflow/workflow";
 import { parseDueOn, parseItemTitle } from "@/lib/items/validate";
 import {
@@ -38,7 +39,8 @@ import {
 import { collectLabelIds } from "@/lib/labels/labels";
 import { parseMentionUserIds, type MentionMember } from "@/lib/activity/mentions";
 import { writeItemEvents } from "@/lib/activity/write-events";
-import { writeNotices } from "@/lib/notices/write";
+import { teamMemberUserIds } from "@/lib/notices/notices";
+import { writeNotices, writeTeamBoardNotices } from "@/lib/notices/write";
 import { safeStudioNext } from "@/lib/views/views";
 import {
   parseBulkItemIds,
@@ -61,6 +63,32 @@ function mentionMembers(
     name: row.user.name,
     email: row.user.email,
   }));
+}
+
+async function notifyTeamBoardActivity(
+  ctx: { team: { id: string; members: { userId: string }[] } },
+  user: { id: string; name: string },
+  input: {
+    slug: string;
+    projectSlug: string;
+    itemId: string;
+    itemTitle: string;
+    kind: "status_changed" | "ticket_created";
+    detail?: string;
+  },
+) {
+  await writeTeamBoardNotices({
+    teamId: ctx.team.id,
+    slug: input.slug,
+    projectSlug: input.projectSlug,
+    itemId: input.itemId,
+    itemTitle: input.itemTitle,
+    actorId: user.id,
+    actorName: user.name,
+    kind: input.kind,
+    memberUserIds: teamMemberUserIds(ctx.team.members),
+    detail: input.detail,
+  });
 }
 
 async function resolveParentId(
@@ -231,6 +259,7 @@ export async function createItemAction(
   if (!canWriteBoard(ctx.role)) return { error: "Read only" };
   const group = await prisma.group.findFirst({
     where: { id: groupId, project: { teamId: ctx.team.id, slug: projectSlug } },
+    include: { project: { select: { name: true } } },
   });
   if (!group) return { error: "Section not found" };
   const last = await prisma.item.aggregate({
@@ -266,6 +295,14 @@ export async function createItemAction(
     },
   });
   await replaceItemLabels(item.id, ctx.team.id, collectLabelIds(formData));
+  await notifyTeamBoardActivity(ctx, user, {
+    slug,
+    projectSlug,
+    itemId: item.id,
+    itemTitle: titleParsed.title,
+    kind: "ticket_created",
+    detail: group.project.name,
+  });
   redirect(boardNext(slug, projectSlug, formData));
 }
 
@@ -285,6 +322,7 @@ export async function quickCreateItemAction(
   if (!canWriteBoard(ctx.role)) return { error: "Read only" };
   const group = await prisma.group.findFirst({
     where: { id: groupId, project: { teamId: ctx.team.id, slug: projectSlug } },
+    include: { project: { select: { name: true } } },
   });
   if (!group) return { error: "Section not found" };
   const last = await prisma.item.aggregate({
@@ -306,6 +344,14 @@ export async function quickCreateItemAction(
         ? { create: { userId: user.id } }
         : undefined,
     },
+  });
+  await notifyTeamBoardActivity(ctx, user, {
+    slug,
+    projectSlug,
+    itemId: item.id,
+    itemTitle: titleParsed.title,
+    kind: "ticket_created",
+    detail: group.project.name,
   });
   redirect(quickCreateFocusHref(slug, projectSlug, item.id));
 }
@@ -405,6 +451,16 @@ export async function updateItemAction(
     kind: "assigned",
     userIds: added,
   });
+  if (before.status !== status) {
+    await notifyTeamBoardActivity(ctx, user, {
+      slug,
+      projectSlug,
+      itemId: item.id,
+      itemTitle: titleParsed.title,
+      kind: "status_changed",
+      detail: workflowStatusLabel(workflow, status),
+    });
+  }
   redirect(boardNext(slug, projectSlug, formData));
 }
 
@@ -481,6 +537,7 @@ export async function moveItemStatusQuickAction(
     },
     select: {
       id: true,
+      title: true,
       projectId: true,
       status: true,
       priority: true,
@@ -516,6 +573,16 @@ export async function moveItemStatusQuickAction(
     },
     names,
   );
+  if (item.status !== status) {
+    await notifyTeamBoardActivity(ctx, user, {
+      slug,
+      projectSlug,
+      itemId: item.id,
+      itemTitle: item.title,
+      kind: "status_changed",
+      detail: workflowStatusLabel(workflow, status),
+    });
+  }
   return {};
 }
 
@@ -585,6 +652,7 @@ export async function moveItemStatusAction(formData: FormData) {
   if (!isWorkflowStatus(workflow, status)) return;
   const names = memberNameMap(ctx.team.members);
   const assigneeIds = item.assignees.map((row) => row.userId);
+  const previousStatus = item.status;
   await prisma.item.update({
     where: { id: item.id },
     data: { status },
@@ -606,6 +674,16 @@ export async function moveItemStatusAction(formData: FormData) {
     },
     names,
   );
+  if (previousStatus !== status) {
+    await notifyTeamBoardActivity(ctx, user, {
+      slug,
+      projectSlug,
+      itemId: item.id,
+      itemTitle: item.title,
+      kind: "status_changed",
+      detail: workflowStatusLabel(workflow, status),
+    });
+  }
   redirect(boardNext(slug, projectSlug, formData));
 }
 
@@ -851,6 +929,16 @@ export async function bulkUpdateItemsAction(formData: FormData) {
         actorName: user.name,
         kind: "assigned",
         userIds: added,
+      });
+    }
+    if (patch.status && patch.status !== before.status) {
+      await notifyTeamBoardActivity(ctx, user, {
+        slug,
+        projectSlug,
+        itemId: item.id,
+        itemTitle: item.title,
+        kind: "status_changed",
+        detail: workflowStatusLabel(workflow, patch.status),
       });
     }
   }

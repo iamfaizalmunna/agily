@@ -1,6 +1,6 @@
 "use client";
 
-import { MessageSquare, Save, Workflow } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { mobileTouchTargetClass } from "@/lib/ui/mobile";
 import { cn } from "@/lib/cn";
 
@@ -28,7 +28,7 @@ export function FocusMobileFooter({
           )}
           onClick={onStatus}
         >
-          <Workflow className="size-4" aria-hidden />
+          <AppIcon name="action.workflow" className="size-4" />
           Status
         </button>
         <button
@@ -38,7 +38,7 @@ export function FocusMobileFooter({
           )}
           onClick={onComment}
         >
-          <MessageSquare className="size-4" aria-hidden />
+          <AppIcon name="action.comment" className="size-4" />
           Comment
         </button>
         {canSave ? (
@@ -49,7 +49,7 @@ export function FocusMobileFooter({
               "flex flex-col items-center justify-center gap-0.5 text-xs font-medium text-primary",
             )}
           >
-            <Save className="size-4" aria-hidden />
+            <AppIcon name="action.save" className="size-4" />
             Save
           </button>
         ) : (

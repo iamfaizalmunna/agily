@@ -24,6 +24,7 @@ import {
 } from "@/lib/views/summary";
 import { storyPointTotals } from "@/lib/items/story-points";
 import { cn } from "@/lib/cn";
+import { dataSurfaceScrollClass } from "@/lib/ui/layout-contract";
 
 const STATUS_BADGE: Record<ItemStatus, "default" | "secondary" | "outline" | "destructive"> = {
   backlog: "secondary",
@@ -60,8 +61,8 @@ export function SummaryDashboard({
   }));
 
   return (
-    <div className="flex flex-col gap-4">
-      <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-5">
+    <div className="flex min-w-0 w-full flex-col gap-4">
+      <div className="grid min-w-0 gap-3 sm:grid-cols-2 lg:grid-cols-5">
         <StatCard label="Total tickets" value={stats.total} />
         <StatCard label="Open" value={stats.open} />
         <StatCard label="Overdue" value={stats.overdue} tone="destructive" />
@@ -79,8 +80,8 @@ export function SummaryDashboard({
 
       <SummaryEpics items={hierarchyItems} focusHref={focusHref} />
 
-      <div className="grid grid-cols-1 gap-4 lg:grid-cols-2">
-        <Card className="min-h-[12rem] overflow-x-auto p-4">
+      <div className="grid min-w-0 grid-cols-1 gap-4 lg:grid-cols-2">
+        <Card className={cn("min-h-[12rem] min-w-0 p-4", dataSurfaceScrollClass())}>
           <p className="mb-1 text-sm font-medium">Burndown (14 days)</p>
           <p className="mb-3 text-xs text-muted-foreground">
             Scope {burndown.scope} · velocity {velocity}/day
@@ -88,7 +89,7 @@ export function SummaryDashboard({
           <BurndownChart points={burndown.points} scope={burndown.scope} />
         </Card>
 
-        <Card className="min-h-[10rem] overflow-x-auto p-4">
+        <Card className={cn("min-h-[10rem] min-w-0 p-4", dataSurfaceScrollClass())}>
           <p className="mb-1 text-sm font-medium">Completed this week</p>
           <p className="mb-3 text-xs text-muted-foreground">
             {completed} done since Sunday UTC
@@ -99,12 +100,12 @@ export function SummaryDashboard({
           />
         </Card>
 
-        <Card className="min-h-[12rem] overflow-x-auto p-4">
+        <Card className={cn("min-h-[12rem] min-w-0 p-4", dataSurfaceScrollClass())}>
           <p className="mb-3 text-sm font-medium">Status distribution</p>
           <StatusDonut segments={donut} />
         </Card>
 
-        <Card className="p-4">
+        <Card className="min-w-0 p-4">
           <p className="mb-3 text-sm font-medium">Priority mix</p>
           <ul className="space-y-2.5">
             {priorities.map((row) => {

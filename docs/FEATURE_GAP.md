@@ -176,6 +176,8 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 | — | Keyboard shortcuts (g p, views 1–5) | **Have** |
 | — | Local AI lens (Ollama) | **Have** |
 | — | Light/dark theme | **Have** |
+| — | Per-user theme presets + icon set (global account) | **Have** — [THEME_APPEARANCE_README.md](./phases/THEME_APPEARANCE_README.md) |
+| — | Profile photo (per user, DB + disk) | **Have** — `/home/profile` |
 
 ---
 

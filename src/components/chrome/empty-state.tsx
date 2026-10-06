@@ -48,7 +48,9 @@ export function ErrorPanel({
   children?: ReactNode;
 }) {
   return (
-    <main className="mx-auto flex min-h-dvh w-full max-w-md flex-col justify-center gap-4 px-4 py-10">
+    <main
+      className="mx-auto flex min-h-dvh w-full min-w-0 max-w-md flex-col justify-center gap-4 overflow-x-hidden px-4 py-10 pb-[max(2.5rem,env(safe-area-inset-bottom,0px))] pt-[max(2.5rem,env(safe-area-inset-top,0px))]"
+    >
       <p className="text-xs font-semibold uppercase tracking-wide text-primary">
         Agily
       </p>

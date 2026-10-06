@@ -1,13 +1,12 @@
 "use client";
 
 import Link from "next/link";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
 import { LabelBadges } from "@/components/labels/label-badges";
 import { TicketListChecklist } from "@/components/views/ticket-list-checklist";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Select } from "@/components/ui/select";
 import { bulkUpdateItemsAction } from "@/lib/items/actions";
 import { PRIORITY_LABEL, type ItemPriority } from "@/lib/items/priority";
@@ -17,6 +16,7 @@ import { formatDueOn } from "@/lib/items/validate";
 import { storyPointsLabel } from "@/lib/items/story-points";
 import { priorityTone } from "@/lib/ui/priority-tone";
 import { cn } from "@/lib/cn";
+import { listTableScrollClass } from "@/lib/ui/layout-contract";
 import type { TicketListItem } from "@/components/views/ticket-list";
 
 type StatusOption = { id: string; label: string };
@@ -40,6 +40,11 @@ export function TicketListBulkTable({
 }) {
   const allIds = useMemo(() => items.map((item) => item.id), [items]);
   const [selected, setSelected] = useState<Set<string>>(() => new Set());
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    scrollRef.current?.scrollTo({ left: 0, top: 0 });
+  }, [items]);
 
   const allOn = selected.size > 0 && selected.size === allIds.length;
   const someOn = selected.size > 0 && selected.size < allIds.length;
@@ -58,7 +63,7 @@ export function TicketListBulkTable({
   }
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className="flex w-full min-w-0 flex-col gap-3">
       {selected.size ? (
         <form
           action={bulkUpdateItemsAction}
@@ -125,8 +130,13 @@ export function TicketListBulkTable({
         </form>
       ) : null}
 
-      <ScrollArea className="h-[min(70vh,720px)] rounded-lg border border-border bg-card">
-        <table className="w-full min-w-[720px] text-sm">
+      <div
+        ref={scrollRef}
+        className={listTableScrollClass()}
+        tabIndex={0}
+        aria-label="Ticket list"
+      >
+        <table className="w-full min-w-full border-collapse text-sm">
           <thead className="sticky top-0 z-10 bg-muted/80 backdrop-blur">
             <tr className="border-b border-border text-left text-xs text-muted-foreground">
               <th className="w-10 px-2 py-2.5">
@@ -142,11 +152,19 @@ export function TicketListBulkTable({
                 />
               </th>
               <th className="px-4 py-2.5 font-medium">Ticket</th>
-              <th className="px-4 py-2.5 font-medium">Priority</th>
-              <th className="px-4 py-2.5 font-medium">Pts</th>
-              <th className="px-4 py-2.5 font-medium">Status</th>
-              <th className="px-4 py-2.5 font-medium">Due</th>
-              <th className="px-4 py-2.5 font-medium">Assignee</th>
+              <th className="hidden whitespace-nowrap px-4 py-2.5 font-medium sm:table-cell">
+                Priority
+              </th>
+              <th className="hidden whitespace-nowrap px-4 py-2.5 font-medium lg:table-cell">
+                Pts
+              </th>
+              <th className="whitespace-nowrap px-4 py-2.5 font-medium">Status</th>
+              <th className="hidden whitespace-nowrap px-4 py-2.5 font-medium md:table-cell">
+                Due
+              </th>
+              <th className="whitespace-nowrap px-4 py-2.5 font-medium text-right">
+                Assignee
+              </th>
             </tr>
           </thead>
           <tbody>
@@ -172,13 +190,17 @@ export function TicketListBulkTable({
                       />
                     </td>
                     <td className="px-4 py-3">
-                      <p className="text-[0.65rem] font-medium uppercase tracking-wide text-muted-foreground">
+                      <p className="truncate text-[0.65rem] font-medium uppercase tracking-wide text-muted-foreground">
                         {formatIssueKey(
                           item.projectSlug ?? "board",
                           item.position ?? 0,
                         )}
                       </p>
-                      <Link href={item.href} className="font-medium hover:text-primary">
+                      <Link
+                        href={item.href}
+                        className="block truncate font-medium hover:text-primary"
+                        title={item.title}
+                      >
                         {item.title}
                       </Link>
                       {item.groupName ? (
@@ -193,8 +215,8 @@ export function TicketListBulkTable({
                         <TicketListChecklist subtasks={item.subtasks} />
                       ) : null}
                     </td>
-                    <td className="px-4 py-3">
-                      <span className="inline-flex items-center gap-1.5 text-muted-foreground">
+                    <td className="hidden px-4 py-3 sm:table-cell">
+                      <span className="inline-flex max-w-full items-center gap-1.5 truncate text-muted-foreground">
                         <span
                           className={cn(
                             "h-2 w-2 rounded-full",
@@ -205,7 +227,7 @@ export function TicketListBulkTable({
                           item.priority}
                       </span>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="hidden px-4 py-3 text-muted-foreground lg:table-cell">
                       {storyPointsLabel(item.storyPoints)}
                     </td>
                     <td className="px-4 py-3">
@@ -213,10 +235,10 @@ export function TicketListBulkTable({
                         {STATUS_LABEL[item.status as ItemStatus] ?? item.status}
                       </Badge>
                     </td>
-                    <td className="px-4 py-3 text-muted-foreground">
+                    <td className="hidden px-4 py-3 text-muted-foreground md:table-cell">
                       {item.dueOn ? formatDueOn(item.dueOn) : "—"}
                     </td>
-                    <td className="px-4 py-3">
+                    <td className="px-4 py-3 text-right">
                       <AssigneeMarks people={item.people} />
                     </td>
                   </tr>
@@ -234,7 +256,7 @@ export function TicketListBulkTable({
             )}
           </tbody>
         </table>
-      </ScrollArea>
+      </div>
     </div>
   );
 }

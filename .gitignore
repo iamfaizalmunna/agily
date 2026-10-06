@@ -43,6 +43,9 @@ yarn-error.log*
 .env*.local
 !.env.example
 
+# user uploads (avatars)
+/data/
+
 # local databases and model weights (never GitHub)
 *.db
 *.db-journal

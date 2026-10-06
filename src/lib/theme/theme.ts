@@ -98,6 +98,24 @@ export const THEME_BOOT_SCRIPT = `(function(){
     var auth = path === '/signin' || path === '/signup' || path.indexOf('/join/') === 0;
     var root = document.documentElement;
     root.classList.remove('light', 'dark');
+    var preset = 'jira';
+    var iconSet = 'lucide';
+    try {
+      var ap = localStorage.getItem('agily-appearance');
+      if (ap) {
+        var parsed = JSON.parse(ap);
+        if (parsed && parsed.themePreset) preset = parsed.themePreset;
+        if (parsed && parsed.iconSet) iconSet = parsed.iconSet;
+      }
+    } catch (eAp) {}
+    if (preset !== 'jira' && preset !== 'editorial' && preset !== 'graphite' && preset !== 'forest') {
+      preset = 'jira';
+    }
+    if (iconSet !== 'lucide' && iconSet !== 'tabler' && iconSet !== 'phosphor' && iconSet !== 'heroicons') {
+      iconSet = 'lucide';
+    }
+    root.setAttribute('data-theme', preset);
+    root.setAttribute('data-icon-set', iconSet);
     if (auth) {
       root.classList.add('light');
       root.style.colorScheme = 'light';

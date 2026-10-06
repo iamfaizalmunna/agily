@@ -2,7 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/chrome/empty-state";
 import { Input } from "@/components/ui/input";
@@ -71,9 +71,9 @@ export function MobileBoardHub({
       {projects.length > 0 ? (
         <label className="relative block">
           <span className="sr-only">Search boards</span>
-          <Search
+          <AppIcon
+            name="action.search"
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden
           />
           <Input
             type="search"

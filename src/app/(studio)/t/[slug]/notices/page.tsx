@@ -10,6 +10,7 @@ import {
 import { isUnread } from "@/lib/notices/notices";
 import { listNotices } from "@/lib/notices/queries";
 import { getMembership } from "@/lib/teams/queries";
+import { studioPageSectionClass } from "@/lib/ui/layout-contract";
 
 export default async function NoticesPage({
   params,
@@ -23,7 +24,7 @@ export default async function NoticesPage({
   const rows = await listNotices(user.id, ctx.team.id);
 
   return (
-    <section className="flex flex-col gap-6">
+    <section className={studioPageSectionClass()}>
       <div className="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div>
           <p className="font-display text-xs tracking-[0.22em] text-copper uppercase">
@@ -31,7 +32,8 @@ export default async function NoticesPage({
           </p>
           <h1 className="mt-3 font-display text-3xl text-paper">Notices</h1>
           <p className="mt-3 max-w-md text-sm text-paper/50">
-            Assign and notes on this studio. Nothing is mailed.
+            Assignments, comments, and board moves across this studio. Pop-ups and
+            sound are in Settings → Notifications. Nothing is mailed.
           </p>
         </div>
         {rows.some((row) => isUnread(row.readAt)) ? (

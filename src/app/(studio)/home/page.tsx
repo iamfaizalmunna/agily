@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { UserAvatar } from "@/components/profile/user-avatar";
 import { CreateTeamForm } from "@/components/teams/create-team-form";
 import { Badge } from "@/components/ui/badge";
 import { Card } from "@/components/ui/card";
@@ -18,10 +19,24 @@ export default async function HomePage() {
         <h1 className="mt-2 text-2xl font-semibold sm:text-3xl">
           {teams.length ? "Your studios" : "Start your first studio"}
         </h1>
-        <p className="mt-2 text-sm text-muted-foreground">
-          Signed in as {user.name}. Owners create studios; members join via
-          copied invite links.
-        </p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <UserAvatar
+            userId={user.id}
+            name={user.name}
+            hasAvatar={Boolean(user.avatarPath)}
+          />
+          <div>
+            <p className="text-sm text-muted-foreground">
+              Signed in as {user.name}
+            </p>
+            <Link
+              href="/home/profile"
+              className="text-sm font-medium text-primary hover:underline"
+            >
+              Profile & appearance
+            </Link>
+          </div>
+        </div>
       </div>
 
       {teams.length ? (

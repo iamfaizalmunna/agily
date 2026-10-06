@@ -56,6 +56,15 @@ export function MobileMoreSheet({
         ) : null}
         <li>
           <Link
+            href="/home/profile"
+            className="flex min-h-11 items-center rounded-md px-3 hover:bg-muted"
+            onClick={onClose}
+          >
+            Profile & appearance
+          </Link>
+        </li>
+        <li>
+          <Link
             href="/home"
             className="flex min-h-11 items-center rounded-md px-3 hover:bg-muted"
             onClick={onClose}

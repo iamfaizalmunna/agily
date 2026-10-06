@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { SlidersHorizontal } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { MobileBottomSheet } from "@/components/chrome/mobile-bottom-sheet";
 import { ChipButton } from "@/components/ui/chip";
 import { type BoardDisplayPrefs, type SwimlaneMode } from "@/lib/board/kanban";
@@ -49,7 +49,7 @@ export function BoardOptionsSheet({
         )}`}
         onClick={() => setOpen(true)}
       >
-        <SlidersHorizontal className="size-4" aria-hidden />
+        <AppIcon name="action.filter" className="size-4" />
         Board options
       </button>
       <MobileBottomSheet

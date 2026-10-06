@@ -40,7 +40,12 @@ export default function RootLayout({
   children,
 }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={cn("h-full light", "font-sans", geist.variable)} suppressHydrationWarning>
+    <html
+      lang="en"
+      className={cn("h-full light", "font-sans", geist.variable)}
+      data-theme="jira"
+      suppressHydrationWarning
+    >
       <body className="flex min-h-dvh flex-col bg-ink text-paper antialiased">
         <Script
           id="agily-theme-boot"

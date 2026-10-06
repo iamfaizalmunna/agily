@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { SlidersHorizontal } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { MobileBottomSheet } from "@/components/chrome/mobile-bottom-sheet";
 import { FilterBarPanels } from "@/components/lenses/filter-bar-panels";
 import {
@@ -73,7 +73,7 @@ export function FilterBarMobile({
           )}
           onClick={() => setOpen(true)}
         >
-          <SlidersHorizontal className="size-4" aria-hidden />
+          <AppIcon name="action.filter" className="size-4" />
           Filter{active ? ` · ${active} active` : ""}
         </button>
         {active ? (
@@ -86,12 +86,15 @@ export function FilterBarMobile({
         ) : null}
       </div>
       {pills.length ? (
-        <div className="flex max-h-[3.25rem] flex-wrap gap-1.5 overflow-hidden">
+        <div
+          className="flex gap-1.5 overflow-x-auto pb-0.5 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          aria-label="Active filters"
+        >
           {pills.map((pill) => (
             <Link
               key={`${pill.label}-${pill.href}`}
               href={pill.href}
-              className="rounded-full border border-border bg-muted/50 px-2.5 py-1 text-xs font-medium"
+              className="shrink-0 rounded-full border border-border bg-muted/50 px-2.5 py-1 text-xs font-medium"
             >
               {pill.label} ×
             </Link>

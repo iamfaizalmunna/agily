@@ -1,13 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import {
-  Home,
-  LayoutGrid,
-  Plus,
-  Inbox,
-  MoreHorizontal,
-} from "lucide-react";
 import { mobileBottomNavClass } from "@/lib/ui/mobile";
 import { unreadBadge } from "@/lib/notices/notices";
 import {
@@ -60,34 +53,34 @@ export function MobileBottomNav({
         <MobileNavItem
           href={homeHref}
           label="Home"
-          icon={Home}
+          icon="nav.home"
           active={mobileNavHomeActive(path, slug)}
         />
         {slug ? (
           <MobileNavItem
             href={boardsHref}
             label="Boards"
-            icon={LayoutGrid}
+            icon="nav.board"
             active={mobileNavBoardsActive(path, slug)}
           />
         ) : null}
         {slug ? (
           <MobileNavItem
             label="Create"
-            icon={Plus}
+            icon="action.plus"
             onClick={() => setCreateOpen(true)}
           />
         ) : null}
         <MobileNavItem
           href={noticesHref}
           label="Inbox"
-          icon={Inbox}
+          icon="nav.inbox"
           active={mobileNavInboxActive(path)}
           badge={badge}
         />
         <MobileNavItem
           label="More"
-          icon={MoreHorizontal}
+          icon="nav.more"
           onClick={() => setMoreOpen(true)}
         />
       </nav>

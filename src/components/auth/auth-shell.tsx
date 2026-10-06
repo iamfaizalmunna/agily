@@ -13,7 +13,7 @@ export function AuthShell({
   return (
     <main className={mobileAuthShellClass()}>
       <div
-        className="grid w-full max-w-4xl overflow-hidden rounded-lg border border-[var(--border)] bg-surface shadow-[var(--shadow-card-hover)] md:grid-cols-[1.1fr_0.9fr]"
+        className="grid w-full min-w-0 max-w-4xl overflow-hidden rounded-lg border border-[var(--border)] bg-surface shadow-[var(--shadow-card-hover)] md:grid-cols-[1.1fr_0.9fr]"
       >
         <div className="px-6 py-8 sm:px-10 sm:py-10">
           <p className="text-xs font-semibold uppercase tracking-wide text-copper">

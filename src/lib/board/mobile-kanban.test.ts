@@ -18,6 +18,8 @@ describe("board/mobile-kanban", () => {
 
   it("builds mobile column layout classes", () => {
     assert.match(kanbanColumnStripClass(), /snap-x/);
+    assert.match(kanbanColumnStripClass(), /overflow-x-auto/);
+    assert.doesNotMatch(kanbanColumnStripClass(), /overflow-visible/);
     assert.match(kanbanColumnClass(), /snap-center/);
     assert.match(kanbanColumnStripClass("extra"), /extra/);
   });

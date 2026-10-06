@@ -30,8 +30,16 @@ import { listTeamLabels } from "@/lib/labels/queries";
 import { OrbitMonth } from "@/components/views/orbit-month";
 import { ProjectTabs } from "@/components/views/project-tabs";
 import { SummaryDashboard } from "@/components/views/summary-dashboard";
+import { ListFocusDrawer } from "@/components/views/list-focus-drawer";
 import { ListSortBar } from "@/components/views/list-sort-bar";
+import { ListTicketDetail } from "@/components/views/list-ticket-detail";
 import { TicketList } from "@/components/views/ticket-list";
+import {
+  boardSettingsBarStickyClass,
+  listDetailStackedPanelClass,
+  listViewCanvasClass,
+  studioProjectCanvasClass,
+} from "@/lib/ui/layout-contract";
 import { TimelineChart } from "@/components/views/timeline-chart";
 import { requireUser } from "@/lib/auth/session";
 import { parseFocusId, withFocus } from "@/lib/focus/focus";
@@ -292,9 +300,35 @@ export default async function ProjectBoardPage({
   }));
 
   const showFilters = view !== "summary";
+  const listTicketDetail = focused
+    ? (
+        <ListTicketDetail
+          slug={slug}
+          projectSlug={projectSlug}
+          currentUserId={user.id}
+          people={people}
+          teamLabels={teamLabels}
+          itemLabels={focusedLabels}
+          subtasks={focusedSubtasks}
+          epics={projectEpics}
+          parent={focused.parent}
+          workflow={workflow}
+          fieldSchema={fieldSchema}
+          customFields={parseCustomFields(focused.customFields)}
+          item={focused}
+          readOnly={!writable}
+          next={focusHref}
+          focusHref={focusHref}
+          mayNote={mayNote}
+          studioMembers={studioMembers}
+          feed={focusFeed}
+          comments={focused.updates}
+        />
+      )
+    : null;
 
   return (
-    <MobilePage className="gap-4">
+    <MobilePage className={studioProjectCanvasClass()}>
       <RecentBoardTracker
         teamSlug={slug}
         projectSlug={projectSlug}
@@ -332,7 +366,7 @@ export default async function ProjectBoardPage({
       />
 
       {showFilters ? (
-        <div className="flex flex-col gap-2">
+        <div className="flex w-full min-w-0 flex-col gap-2">
           <FilterBar
             slug={slug}
             projectSlug={projectSlug}
@@ -385,16 +419,16 @@ export default async function ProjectBoardPage({
       ) : null}
 
       {view === "list" && items.length ? (
-        <div className="grid gap-4 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.1fr)]">
+        <div className={listViewCanvasClass()}>
           {query.bulkError ? (
             <p
-              className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive lg:col-span-2"
+              className="rounded-lg border border-destructive/40 bg-destructive/10 px-4 py-3 text-sm text-destructive"
               role="alert"
             >
               {query.bulkError}
             </p>
           ) : null}
-          <div className="flex min-w-0 flex-col gap-3">
+          <div className="flex min-h-0 min-w-0 flex-col gap-3">
             <ListSortBar
               slug={slug}
               projectSlug={projectSlug}
@@ -446,57 +480,28 @@ export default async function ProjectBoardPage({
             selectedId={focusId ?? undefined}
           />
           </div>
-          <div className="hidden rounded-lg border border-border bg-card lg:block">
-            {focused ? (
-              <div className="flex flex-col gap-4 p-4">
-                <ul>
-                  <ItemRow
-                    slug={slug}
-                    projectSlug={projectSlug}
-                    currentUserId={user.id}
-                    people={people}
-                    teamLabels={teamLabels}
-                    itemLabels={focusedLabels}
-                    subtasks={focusedSubtasks}
-                    epics={projectEpics}
-                    parent={focused.parent}
-                    workflow={workflow}
-                    fieldSchema={fieldSchema}
-                    customFields={parseCustomFields(focused.customFields)}
-                    item={focused}
-                    readOnly={!writable}
-                    next={focusHref}
-                  />
-                </ul>
-                <FocusDiscussion
-                  slug={slug}
-                  projectSlug={projectSlug}
-                  itemId={focused.id}
-                  next={focusHref}
-                  canWrite={mayNote}
-                  members={studioMembers}
-                  feed={focusFeed}
-                  comments={focused.updates}
-                />
-              </div>
-            ) : (
-              <p className="p-6 text-sm text-muted-foreground">
-                Pick a ticket from the list to open details on the right.
-              </p>
-            )}
-          </div>
         </div>
       ) : null}
 
+      {view === "list" && listTicketDetail ? (
+        <div className={listDetailStackedPanelClass()}>{listTicketDetail}</div>
+      ) : null}
+
+      {view === "list" && listTicketDetail ? (
+        <ListFocusDrawer closeHref={closeHref}>{listTicketDetail}</ListFocusDrawer>
+      ) : null}
+
       {view === "flow" ? (
-        <div className="flex flex-col gap-3">
-          <BoardSettingsBar
-            slug={slug}
-            projectSlug={projectSlug}
-            prefs={boardPrefs}
-            lensExtra={lensExtra}
-            compactQuery={query.compact}
-          />
+        <div className="flex min-w-0 flex-col gap-3">
+          <div className={boardSettingsBarStickyClass()}>
+            <BoardSettingsBar
+              slug={slug}
+              projectSlug={projectSlug}
+              prefs={boardPrefs}
+              lensExtra={lensExtra}
+              compactQuery={query.compact}
+            />
+          </div>
           {!items.length ? (
             <EmptyState
               title="Board is empty"
@@ -634,39 +639,10 @@ export default async function ProjectBoardPage({
         </FocusStage>
       ) : null}
 
-      {focused && view === "list" ? (
-        <div className="lg:hidden">
+      {focused && view === "list" && listTicketDetail ? (
+        <div className="md:hidden">
           <MobileFocusDetail closeHref={closeHref} canSave={writable}>
-            <ul>
-              <ItemRow
-                slug={slug}
-                projectSlug={projectSlug}
-                currentUserId={user.id}
-                people={people}
-                teamLabels={teamLabels}
-                itemLabels={focusedLabels}
-                subtasks={focusedSubtasks}
-                epics={projectEpics}
-                parent={focused.parent}
-                workflow={workflow}
-                fieldSchema={fieldSchema}
-                customFields={parseCustomFields(focused.customFields)}
-                item={focused}
-                readOnly={!writable}
-                next={focusHref}
-                focusDetail
-              />
-            </ul>
-            <FocusDiscussion
-              slug={slug}
-              projectSlug={projectSlug}
-              itemId={focused.id}
-              next={focusHref}
-              canWrite={mayNote}
-              members={studioMembers}
-              feed={focusFeed}
-              comments={focused.updates}
-            />
+            {listTicketDetail}
           </MobileFocusDetail>
         </div>
       ) : null}

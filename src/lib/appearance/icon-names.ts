@@ -1,0 +1,25 @@
+export const ICON_NAMES = [
+  "nav.home",
+  "nav.board",
+  "nav.inbox",
+  "nav.more",
+  "nav.pulse",
+  "nav.people",
+  "nav.notices",
+  "nav.settings",
+  "nav.project",
+  "nav.studios",
+  "action.close",
+  "action.filter",
+  "action.chevron-down",
+  "action.chevron-left",
+  "action.plus",
+  "action.search",
+  "action.grip",
+  "action.move-column",
+  "action.comment",
+  "action.save",
+  "action.workflow",
+] as const;
+
+export type IconName = (typeof ICON_NAMES)[number];

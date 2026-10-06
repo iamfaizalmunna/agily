@@ -2,7 +2,7 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { ChevronDown } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { CommandPaletteTrigger } from "@/components/chrome/command-palette-trigger";
 import { NoticeBell } from "@/components/chrome/notice-bell";
 import { MobileBottomSheet } from "@/components/chrome/mobile-bottom-sheet";
@@ -48,7 +48,7 @@ export function MobileShellHeader({
         >
           <span className="truncate text-sm font-medium">{title}</span>
           {teams.length > 1 ? (
-            <ChevronDown className="size-4 shrink-0 text-muted-foreground" aria-hidden />
+            <AppIcon name="action.chevron-down" className="size-4 shrink-0 text-muted-foreground" />
           ) : null}
         </button>
         <CommandPaletteTrigger compact />

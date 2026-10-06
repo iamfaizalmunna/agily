@@ -1,6 +1,7 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
 import Link from "next/link";
+import { publicDocumentPageClass } from "@/lib/ui/layout-contract";
 
 async function listKb() {
   const dir = path.join(process.cwd(), "kb");
@@ -23,7 +24,7 @@ export default async function KbIndexPage() {
   const docs = await listKb();
 
   return (
-    <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-10">
+    <main className={publicDocumentPageClass()}>
       <div>
         <p className="font-display text-xs uppercase tracking-[0.22em] text-copper">
           Lens
