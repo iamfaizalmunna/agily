@@ -31,10 +31,13 @@ type UserAppearance = {
   density: "comfortable" | "compact";
   cornerRadius: "sharp" | "default" | "soft";
   highContrast: boolean;
+  sidebarTone: "brand" | "neutral";
+  motion: "default" | "reduced";
+  iconSize: "default" | "large";
 };
 ```
 
-Extended prefs and phases **CU1–CU15**: [CUSTOM_UI_README.md](./CUSTOM_UI_README.md).
+Extended prefs and phases **CU1–CU18** (complete): [CUSTOM_UI_README.md](./CUSTOM_UI_README.md).
 
 Stored as JSON on `User.appearance` (string column, default `{}`). Parsed with the same style as `parseTeamSettings` / `parseNoticePrefs`.
 

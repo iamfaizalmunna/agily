@@ -25,6 +25,8 @@
 | **CU17** | `motion` reduced-motion account override | **complete** |
 | **CU18** | `iconSize` large + auth shell appearance hint | **complete** |
 
+**Track status:** CU1–CU18 shipped on `main` via PR #45 (studio + per-user appearance).
+
 ## Principles
 
 - **One API:** `<AppIcon name="…" />` + semantic names in `icon-names.ts`.
