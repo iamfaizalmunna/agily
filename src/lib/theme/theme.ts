@@ -104,6 +104,9 @@ export const THEME_BOOT_SCRIPT = `(function(){
     var density = 'comfortable';
     var radius = '';
     var highContrast = false;
+    var sidebarTone = '';
+    var motion = '';
+    var iconScale = '';
     try {
       var ap = localStorage.getItem('agily-appearance');
       if (ap) {
@@ -114,6 +117,9 @@ export const THEME_BOOT_SCRIPT = `(function(){
         if (parsed && parsed.density) density = parsed.density;
         if (parsed && parsed.cornerRadius && parsed.cornerRadius !== 'default') radius = parsed.cornerRadius;
         if (parsed && parsed.highContrast === true) highContrast = true;
+        if (parsed && parsed.sidebarTone && parsed.sidebarTone !== 'brand') sidebarTone = parsed.sidebarTone;
+        if (parsed && parsed.motion && parsed.motion !== 'default') motion = parsed.motion;
+        if (parsed && parsed.iconSize && parsed.iconSize !== 'default') iconScale = parsed.iconSize;
       }
     } catch (eAp) {}
     if (preset !== 'jira' && preset !== 'editorial' && preset !== 'graphite' && preset !== 'forest') {
@@ -139,6 +145,12 @@ export const THEME_BOOT_SCRIPT = `(function(){
     else root.removeAttribute('data-radius');
     if (highContrast) root.setAttribute('data-contrast', 'high');
     else root.removeAttribute('data-contrast');
+    if (sidebarTone === 'neutral') root.setAttribute('data-sidebar-tone', 'neutral');
+    else root.removeAttribute('data-sidebar-tone');
+    if (motion === 'reduced') root.setAttribute('data-motion', 'reduced');
+    else root.removeAttribute('data-motion');
+    if (iconScale === 'large') root.setAttribute('data-icon-size', 'large');
+    else root.removeAttribute('data-icon-size');
     if (auth) {
       root.classList.add('light');
       root.style.colorScheme = 'light';

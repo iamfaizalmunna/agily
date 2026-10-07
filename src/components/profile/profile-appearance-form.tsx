@@ -12,16 +12,25 @@ import {
   DENSITIES,
   FONT_FAMILIES,
   ICON_SETS,
+  ICON_SIZES,
+  MOTION_PREFS,
+  SIDEBAR_TONES,
   THEME_PRESETS,
   cornerRadiusLabel,
   densityLabel,
   fontFamilyLabel,
   iconSetLabel,
+  iconSizeLabel,
   isCornerRadiusId,
   isDensityId,
   isFontFamilyId,
   isIconSetId,
+  isIconSizeId,
+  isMotionPrefId,
+  isSidebarToneId,
   isThemePreset,
+  motionPrefLabel,
+  sidebarToneLabel,
   themePresetLabel,
   type UserAppearance,
 } from "@/lib/appearance/appearance";
@@ -54,6 +63,9 @@ export function ProfileAppearanceForm({
       const density = String(data.get("density") ?? "");
       const cornerRadius = String(data.get("cornerRadius") ?? "");
       const highContrast = data.get("highContrast") === "true";
+      const sidebarTone = String(data.get("sidebarTone") ?? "");
+      const motion = String(data.get("motion") ?? "");
+      const iconSize = String(data.get("iconSize") ?? "");
       setMode(colorMode);
       setAppearance({
         ...appearance,
@@ -70,6 +82,11 @@ export function ProfileAppearanceForm({
           ? cornerRadius
           : appearance.cornerRadius,
         highContrast,
+        sidebarTone: isSidebarToneId(sidebarTone)
+          ? sidebarTone
+          : appearance.sidebarTone,
+        motion: isMotionPrefId(motion) ? motion : appearance.motion,
+        iconSize: isIconSizeId(iconSize) ? iconSize : appearance.iconSize,
       });
     },
     [appearance, setAppearance, setMode],
@@ -170,6 +187,48 @@ export function ProfileAppearanceForm({
             {CORNER_RADII.map((r) => (
               <option key={r} value={r}>
                 {cornerRadiusLabel(r)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-medium">Sidebar</span>
+          <select
+            name="sidebarTone"
+            defaultValue={initialAppearance.sidebarTone}
+            className={selectClass}
+          >
+            {SIDEBAR_TONES.map((tone) => (
+              <option key={tone} value={tone}>
+                {sidebarToneLabel(tone)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-medium">Motion</span>
+          <select
+            name="motion"
+            defaultValue={initialAppearance.motion}
+            className={selectClass}
+          >
+            {MOTION_PREFS.map((m) => (
+              <option key={m} value={m}>
+                {motionPrefLabel(m)}
+              </option>
+            ))}
+          </select>
+        </label>
+        <label className="flex flex-col gap-1 text-sm">
+          <span className="font-medium">Icon size</span>
+          <select
+            name="iconSize"
+            defaultValue={initialAppearance.iconSize}
+            className={selectClass}
+          >
+            {ICON_SIZES.map((s) => (
+              <option key={s} value={s}>
+                {iconSizeLabel(s)}
               </option>
             ))}
           </select>

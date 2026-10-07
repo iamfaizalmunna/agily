@@ -11,6 +11,12 @@ const SIZE_CLASS = {
   lg: "size-5",
 } as const;
 
+const SIZE_CLASS_LARGE = {
+  sm: "size-4",
+  md: "size-5",
+  lg: "size-6",
+} as const;
+
 export function AppIcon({
   name,
   className,
@@ -20,7 +26,9 @@ export function AppIcon({
   className?: string;
   size?: keyof typeof SIZE_CLASS;
 }) {
-  const { iconSet } = useAppearance();
+  const { iconSet, appearance } = useAppearance();
   const Icon = ICON_REGISTRY[iconSet][name];
-  return <Icon className={cn(SIZE_CLASS[size], className)} aria-hidden />;
+  const scale =
+    appearance.iconSize === "large" ? SIZE_CLASS_LARGE : SIZE_CLASS;
+  return <Icon className={cn(scale[size], className)} aria-hidden />;
 }

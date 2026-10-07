@@ -2,6 +2,9 @@ import type {
   CornerRadiusId,
   DensityId,
   FontFamilyId,
+  IconSizeId,
+  MotionPrefId,
+  SidebarToneId,
   ThemePreset,
   UserAppearance,
 } from "@/lib/appearance/appearance";
@@ -58,6 +61,36 @@ export function applyUserAppearanceToDocument(appearance: UserAppearance) {
   applyDensityToDocument(appearance.density);
   applyCornerRadiusToDocument(appearance.cornerRadius);
   applyHighContrastToDocument(appearance.highContrast);
+  applySidebarToneToDocument(appearance.sidebarTone);
+  applyMotionToDocument(appearance.motion);
+  applyIconSizeToDocument(appearance.iconSize);
+}
+
+export function applySidebarToneToDocument(sidebarTone: SidebarToneId) {
+  if (typeof document === "undefined") return;
+  if (sidebarTone === "brand") {
+    delete document.documentElement.dataset.sidebarTone;
+    return;
+  }
+  document.documentElement.dataset.sidebarTone = sidebarTone;
+}
+
+export function applyMotionToDocument(motion: MotionPrefId) {
+  if (typeof document === "undefined") return;
+  if (motion === "default") {
+    delete document.documentElement.dataset.motion;
+    return;
+  }
+  document.documentElement.dataset.motion = motion;
+}
+
+export function applyIconSizeToDocument(iconSize: IconSizeId) {
+  if (typeof document === "undefined") return;
+  if (iconSize === "default") {
+    delete document.documentElement.dataset.iconSize;
+    return;
+  }
+  document.documentElement.dataset.iconSize = iconSize;
 }
 
 export function applyHighContrastToDocument(highContrast: boolean) {

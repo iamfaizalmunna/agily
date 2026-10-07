@@ -23,6 +23,10 @@ export function AuthShell({
             {title}
           </h1>
           <p className="mt-2 text-sm text-paper/60">{subtitle}</p>
+          <p className="mt-6 text-xs text-paper/45">
+            After sign-in, open Profile & appearance to sync theme, icons, and
+            accessibility prefs across every studio.
+          </p>
           <div className="mt-8">{children}</div>
         </div>
         <aside

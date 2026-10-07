@@ -22,6 +22,15 @@ export type DensityId = (typeof DENSITIES)[number];
 export const CORNER_RADII = ["sharp", "default", "soft"] as const;
 export type CornerRadiusId = (typeof CORNER_RADII)[number];
 
+export const SIDEBAR_TONES = ["brand", "neutral"] as const;
+export type SidebarToneId = (typeof SIDEBAR_TONES)[number];
+
+export const MOTION_PREFS = ["default", "reduced"] as const;
+export type MotionPrefId = (typeof MOTION_PREFS)[number];
+
+export const ICON_SIZES = ["default", "large"] as const;
+export type IconSizeId = (typeof ICON_SIZES)[number];
+
 export type UserAppearance = {
   version: typeof APPEARANCE_VERSION;
   colorMode: ColorMode;
@@ -31,6 +40,9 @@ export type UserAppearance = {
   density: DensityId;
   cornerRadius: CornerRadiusId;
   highContrast: boolean;
+  sidebarTone: SidebarToneId;
+  motion: MotionPrefId;
+  iconSize: IconSizeId;
 };
 
 export const DEFAULT_USER_APPEARANCE: UserAppearance = {
@@ -42,6 +54,9 @@ export const DEFAULT_USER_APPEARANCE: UserAppearance = {
   density: "comfortable",
   cornerRadius: "default",
   highContrast: false,
+  sidebarTone: "brand",
+  motion: "default",
+  iconSize: "default",
 };
 
 export const APPEARANCE_STORAGE_KEY = "agily-appearance";
@@ -64,6 +79,18 @@ export function isDensityId(value: string): value is DensityId {
 
 export function isCornerRadiusId(value: string): value is CornerRadiusId {
   return (CORNER_RADII as readonly string[]).includes(value);
+}
+
+export function isSidebarToneId(value: string): value is SidebarToneId {
+  return (SIDEBAR_TONES as readonly string[]).includes(value);
+}
+
+export function isMotionPrefId(value: string): value is MotionPrefId {
+  return (MOTION_PREFS as readonly string[]).includes(value);
+}
+
+export function isIconSizeId(value: string): value is IconSizeId {
+  return (ICON_SIZES as readonly string[]).includes(value);
 }
 
 export function parseUserAppearance(raw: string | null | undefined): UserAppearance {
@@ -89,6 +116,15 @@ export function parseUserAppearance(raw: string | null | undefined): UserAppeara
         ? parsed.cornerRadius!
         : DEFAULT_USER_APPEARANCE.cornerRadius,
       highContrast: parsed.highContrast === true,
+      sidebarTone: isSidebarToneId(String(parsed.sidebarTone ?? ""))
+        ? parsed.sidebarTone!
+        : DEFAULT_USER_APPEARANCE.sidebarTone,
+      motion: isMotionPrefId(String(parsed.motion ?? ""))
+        ? parsed.motion!
+        : DEFAULT_USER_APPEARANCE.motion,
+      iconSize: isIconSizeId(String(parsed.iconSize ?? ""))
+        ? parsed.iconSize!
+        : DEFAULT_USER_APPEARANCE.iconSize,
     };
   } catch {
     return DEFAULT_USER_APPEARANCE;
@@ -105,6 +141,9 @@ export function serializeUserAppearance(appearance: UserAppearance): string {
     density: appearance.density,
     cornerRadius: appearance.cornerRadius,
     highContrast: appearance.highContrast,
+    sidebarTone: appearance.sidebarTone,
+    motion: appearance.motion,
+    iconSize: appearance.iconSize,
   });
 }
 
@@ -137,6 +176,18 @@ export function cornerRadiusLabel(radius: CornerRadiusId): string {
   if (radius === "sharp") return "Sharp";
   if (radius === "soft") return "Soft";
   return "Default";
+}
+
+export function sidebarToneLabel(tone: SidebarToneId): string {
+  return tone === "neutral" ? "Neutral" : "Brand color";
+}
+
+export function motionPrefLabel(motion: MotionPrefId): string {
+  return motion === "reduced" ? "Reduced motion" : "Default";
+}
+
+export function iconSizeLabel(size: IconSizeId): string {
+  return size === "large" ? "Large" : "Default";
 }
 
 export function avatarPublicUrl(userId: string): string {

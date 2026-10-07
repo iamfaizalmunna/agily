@@ -21,6 +21,9 @@
 | **CU13** | Lens panel + trigger icons | **complete** |
 | **CU14** | Board hub list icons + empty state | **complete** |
 | **CU15** | `highContrast` account pref + notification prefs chrome | **complete** |
+| **CU16** | `sidebarTone` brand vs neutral sidebar tokens | **complete** |
+| **CU17** | `motion` reduced-motion account override | **complete** |
+| **CU18** | `iconSize` large + auth shell appearance hint | **complete** |
 
 ## Principles
 

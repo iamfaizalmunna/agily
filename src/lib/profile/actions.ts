@@ -12,6 +12,9 @@ import {
   isDensityId,
   isFontFamilyId,
   isIconSetId,
+  isIconSizeId,
+  isMotionPrefId,
+  isSidebarToneId,
   isThemePreset,
   parseUserAppearance,
   serializeUserAppearance,
@@ -57,6 +60,9 @@ export async function updateAppearanceAction(formData: FormData) {
   const density = String(formData.get("density") ?? "");
   const cornerRadius = String(formData.get("cornerRadius") ?? "");
   const highContrast = formData.get("highContrast") === "true";
+  const sidebarTone = String(formData.get("sidebarTone") ?? "");
+  const motion = String(formData.get("motion") ?? "");
+  const iconSize = String(formData.get("iconSize") ?? "");
   const current = parseUserAppearance(
     (
       await prisma.user.findUnique({
@@ -76,6 +82,9 @@ export async function updateAppearanceAction(formData: FormData) {
       ? cornerRadius
       : current.cornerRadius,
     highContrast,
+    sidebarTone: isSidebarToneId(sidebarTone) ? sidebarTone : current.sidebarTone,
+    motion: isMotionPrefId(motion) ? motion : current.motion,
+    iconSize: isIconSizeId(iconSize) ? iconSize : current.iconSize,
   };
   await prisma.user.update({
     where: { id: user.id },

@@ -8,6 +8,9 @@ import {
   densityLabel,
   fontFamilyLabel,
   iconSetLabel,
+  iconSizeLabel,
+  motionPrefLabel,
+  sidebarToneLabel,
   themePresetLabel,
 } from "@/lib/appearance/appearance";
 
@@ -40,6 +43,9 @@ export function AppearancePreview() {
         <li>Density: {densityLabel(appearance.density)}</li>
         <li>Corners: {cornerRadiusLabel(appearance.cornerRadius)}</li>
         <li>Contrast: {appearance.highContrast ? "High" : "Default"}</li>
+        <li>Sidebar: {sidebarToneLabel(appearance.sidebarTone)}</li>
+        <li>Motion: {motionPrefLabel(appearance.motion)}</li>
+        <li>Icon size: {iconSizeLabel(appearance.iconSize)}</li>
       </ul>
     </div>
   );

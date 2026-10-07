@@ -53,6 +53,9 @@ describe("user appearance", () => {
       density: "compact" as const,
       cornerRadius: "soft" as const,
       highContrast: true,
+      sidebarTone: "neutral" as const,
+      motion: "reduced" as const,
+      iconSize: "large" as const,
     };
     assert.deepEqual(
       parseUserAppearance(serializeUserAppearance(value)),
@@ -100,6 +103,9 @@ describe("user appearance", () => {
         density: "comfortable",
         cornerRadius: "default",
         highContrast: false,
+        sidebarTone: "brand",
+        motion: "default",
+        iconSize: "default",
       },
     );
   });
@@ -123,6 +129,9 @@ describe("user appearance", () => {
         density: "comfortable",
         cornerRadius: "default",
         highContrast: false,
+        sidebarTone: "brand",
+        motion: "default",
+        iconSize: "default",
       },
     );
   });
