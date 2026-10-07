@@ -2,7 +2,10 @@ import { notFound } from "next/navigation";
 import { LabelsSettings } from "@/components/labels/labels-settings";
 import { TicketTemplatesInfo } from "@/components/teams/ticket-templates-info";
 import { SettingsForm } from "@/components/teams/settings-form";
-import { SettingsLayout } from "@/components/settings/settings-layout";
+import {
+  SettingsLayout,
+  type SettingsNavItem,
+} from "@/components/settings/settings-layout";
 import { listTeamLabels } from "@/lib/labels/queries";
 import { requireUser } from "@/lib/auth/session";
 import {
@@ -13,6 +16,7 @@ import {
 import { getMembership } from "@/lib/teams/queries";
 import { listRecentSecurityEvents } from "@/lib/security/audit-log";
 import { SecurityEventsPanel } from "@/components/settings/security-events-panel";
+import { NotificationPrefsPanel } from "@/components/notices/notification-prefs-panel";
 
 export default async function SettingsPage({
   params,
@@ -33,12 +37,40 @@ export default async function SettingsPage({
     : [];
   const base = `/t/${slug}/settings`;
 
-  const nav = [
-    { id: "general", label: "General", href: `${base}#general` },
-    { id: "labels", label: "Labels", href: `${base}#labels` },
-    { id: "templates", label: "Templates", href: `${base}#templates` },
+  const nav: SettingsNavItem[] = [
+    {
+      id: "general",
+      label: "General",
+      href: `${base}#general`,
+      icon: "nav.settings",
+    },
+    {
+      id: "notifications",
+      label: "Notifications",
+      href: `${base}#notifications`,
+      icon: "nav.notices",
+    },
+    {
+      id: "labels",
+      label: "Labels",
+      href: `${base}#labels`,
+      icon: "action.tag",
+    },
+    {
+      id: "templates",
+      label: "Templates",
+      href: `${base}#templates`,
+      icon: "action.workflow",
+    },
     ...(isOwner
-      ? [{ id: "security", label: "Security", href: `${base}#security` }]
+      ? ([
+          {
+            id: "security",
+            label: "Security",
+            href: `${base}#security`,
+            icon: "action.shield" as const,
+          },
+        ] satisfies SettingsNavItem[])
       : []),
   ];
 
@@ -49,6 +81,11 @@ export default async function SettingsPage({
       items={nav}
       defaultSection="general"
     >
+      <section id="notifications" className="scroll-mt-6">
+        <h2 className="mb-3 text-lg font-medium text-foreground">Notifications</h2>
+        <NotificationPrefsPanel />
+      </section>
+
       {editable ? (
         <>
           <section id="general" className="scroll-mt-6">

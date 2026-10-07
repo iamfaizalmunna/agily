@@ -12,6 +12,8 @@ model User {
   email        String       @unique
   passwordHash String
   name         String
+  appearance   String       @default("{}")
+  avatarPath   String?
   createdAt    DateTime     @default(now())
   sessions     Session[]
   memberships  TeamMember[]

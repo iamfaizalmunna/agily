@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
+import { NavIconRow } from "@/components/appearance/nav-icon-row";
 import { CommandPaletteTrigger } from "@/components/chrome/command-palette-trigger";
 import { StudioCreateMenu } from "@/components/chrome/studio-create-menu";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
@@ -62,6 +63,12 @@ export function StudioTopbar({
             projectSlug={projectSlug}
             canCreateBoard={canCreateBoard}
           />
+          <Link
+            href="/home/profile"
+            className="hidden items-center text-sm text-muted-foreground hover:text-foreground sm:inline-flex"
+          >
+            <NavIconRow icon="nav.profile">Profile</NavIconRow>
+          </Link>
           <ThemeToggle compact />
           <SignOutButton />
         </div>

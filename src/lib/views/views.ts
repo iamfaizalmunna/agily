@@ -1,4 +1,5 @@
 /* c8 ignore next */
+import type { IconName } from "@/lib/appearance/icon-names";
 import { ITEM_STATUSES, isItemStatus } from "@/lib/items/status";
 import type { ItemStatus } from "@/lib/items/status";
 
@@ -17,6 +18,14 @@ export const BOARD_VIEW_LABEL: Record<BoardView, string> = {
   flow: "Board",
   orbit: "Calendar",
   timeline: "Timeline",
+};
+
+export const BOARD_VIEW_ICON: Record<BoardView, IconName> = {
+  summary: "view.summary",
+  list: "view.list",
+  flow: "view.board",
+  orbit: "view.calendar",
+  timeline: "view.timeline",
 };
 
 export function safeStudioNext(

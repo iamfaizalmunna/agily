@@ -20,6 +20,7 @@ import {
 } from "@/lib/teams/actions";
 import { assignmentCounts } from "@/lib/items/queries";
 import { appOrigin, getMembership } from "@/lib/teams/queries";
+import { studioPageSectionClass } from "@/lib/ui/layout-contract";
 
 export default async function PeoplePage({
   params,
@@ -38,7 +39,7 @@ export default async function PeoplePage({
   const counts = await assignmentCounts(ctx.team.id);
 
   return (
-    <section className="flex flex-col gap-10">
+    <section className={studioPageSectionClass("gap-10")}>
       <div>
         <p className="font-display text-xs tracking-[0.22em] text-copper uppercase">
           People

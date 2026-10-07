@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ArrowRightLeft } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { MobileBottomSheet } from "@/components/chrome/mobile-bottom-sheet";
 import type { MoveStatusChoice } from "@/lib/board/mobile-kanban";
 import { mobileTouchTargetClass } from "@/lib/ui/mobile";
@@ -32,7 +32,7 @@ export function KanbanMoveMenu({
         onClick={() => setOpen(true)}
       >
         <span className="flex items-center gap-1">
-          <ArrowRightLeft className="size-3.5" aria-hidden />
+          <AppIcon name="action.move-column" size="sm" />
           Move
         </span>
       </button>

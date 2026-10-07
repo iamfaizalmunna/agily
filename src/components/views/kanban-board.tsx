@@ -26,7 +26,7 @@ import {
 } from "@dnd-kit/sortable";
 import { restrictToWindowEdges } from "@dnd-kit/modifiers";
 import { TicketCard, type TicketCardData } from "@/components/views/ticket-card";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { boardKanbanOuterClass } from "@/lib/ui/layout-contract";
 import {
   moveItemStatusQuickAction,
   reorderKanbanColumnAction,
@@ -208,7 +208,7 @@ function KanbanRow({
           {label}
         </h3>
       ) : null}
-      <div className={kanbanColumnStripClass()}>
+      <div className={kanbanColumnStripClass()} data-testid="kanban-column-strip">
         {statuses.map((status) => {
           const items = columns[status] ?? [];
           const limit = wipLimitFor(status);
@@ -466,30 +466,29 @@ export function KanbanBoard({
       onDragEnd={onDragEnd}
       onDragCancel={onDragCancel}
     >
-      <ScrollArea className="w-full">
-        <div
-          className={cn(
-            "flex flex-col gap-6 pb-2",
-            prefs.swimlane !== "none" && "md:gap-8",
-          )}
-        >
-          {lanes.map((lane) => (
-            <KanbanRow
-              key={lane.key || "flat"}
-              label={lane.label}
-              localItems={lane.items}
-              statuses={statuses}
-              workflow={workflow}
-              writable={writable}
-              pending={pending}
-              activeId={activeId}
-              compact={compact}
-              touchDrag={touchDrag}
-              onMoveStatus={(itemId, status) => moveToColumn(itemId, status, true)}
-            />
-          ))}
-        </div>
-      </ScrollArea>
+      <div
+        className={cn(
+          boardKanbanOuterClass(),
+          "flex flex-col gap-6 pb-2",
+          prefs.swimlane !== "none" && "md:gap-8",
+        )}
+      >
+        {lanes.map((lane) => (
+          <KanbanRow
+            key={lane.key || "flat"}
+            label={lane.label}
+            localItems={lane.items}
+            statuses={statuses}
+            workflow={workflow}
+            writable={writable}
+            pending={pending}
+            activeId={activeId}
+            compact={compact}
+            touchDrag={touchDrag}
+            onMoveStatus={(itemId, status) => moveToColumn(itemId, status, true)}
+          />
+        ))}
+      </div>
 
       <DragOverlay dropAnimation={dropAnimation} modifiers={[restrictToWindowEdges]}>
         {activeItem ? (

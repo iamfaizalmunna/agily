@@ -2,6 +2,8 @@
 
 import Link from "next/link";
 import { signOutAction } from "@/lib/auth/actions";
+import { NavIconRow } from "@/components/appearance/nav-icon-row";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { MobileBottomSheet } from "@/components/chrome/mobile-bottom-sheet";
 import { ThemeToggle } from "@/components/theme/theme-toggle";
 import { Button } from "@/components/ui/button";
@@ -40,7 +42,7 @@ export function MobileMoreSheet({
                 className="flex min-h-11 items-center rounded-md px-3 hover:bg-muted"
                 onClick={onClose}
               >
-                Studio settings
+                <NavIconRow icon="nav.settings">Studio settings</NavIconRow>
               </Link>
             </li>
             <li>
@@ -49,18 +51,27 @@ export function MobileMoreSheet({
                 className="flex min-h-11 items-center rounded-md px-3 hover:bg-muted"
                 onClick={onClose}
               >
-                People
+                <NavIconRow icon="nav.people">People</NavIconRow>
               </Link>
             </li>
           </>
         ) : null}
         <li>
           <Link
+            href="/home/profile"
+            className="flex min-h-11 items-center rounded-md px-3 hover:bg-muted"
+            onClick={onClose}
+          >
+            <NavIconRow icon="nav.profile">Profile & appearance</NavIconRow>
+          </Link>
+        </li>
+        <li>
+          <Link
             href="/home"
             className="flex min-h-11 items-center rounded-md px-3 hover:bg-muted"
             onClick={onClose}
           >
-            All studios
+            <NavIconRow icon="nav.studios">All studios</NavIconRow>
           </Link>
         </li>
         {teams.length > 1 ? (
@@ -93,12 +104,13 @@ export function MobileMoreSheet({
               onOpenLens();
             }}
           >
-            Open Lens
+            <NavIconRow icon="action.lens">Open Lens</NavIconRow>
           </button>
         </li>
         <li className="border-t border-border pt-2 mt-2">
           <form action={signOutAction}>
-            <Button type="submit" variant="quiet" className="min-h-11 w-full justify-start px-3">
+            <Button type="submit" variant="quiet" className="min-h-11 w-full justify-start gap-3 px-3">
+              <AppIcon name="action.sign-out" className="size-4 shrink-0" />
               Sign out
             </Button>
           </form>

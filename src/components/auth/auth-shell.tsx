@@ -13,7 +13,7 @@ export function AuthShell({
   return (
     <main className={mobileAuthShellClass()}>
       <div
-        className="grid w-full max-w-4xl overflow-hidden rounded-lg border border-[var(--border)] bg-surface shadow-[var(--shadow-card-hover)] md:grid-cols-[1.1fr_0.9fr]"
+        className="grid w-full min-w-0 max-w-4xl overflow-hidden rounded-lg border border-[var(--border)] bg-surface shadow-[var(--shadow-card-hover)] md:grid-cols-[1.1fr_0.9fr]"
       >
         <div className="px-6 py-8 sm:px-10 sm:py-10">
           <p className="text-xs font-semibold uppercase tracking-wide text-copper">
@@ -23,6 +23,10 @@ export function AuthShell({
             {title}
           </h1>
           <p className="mt-2 text-sm text-paper/60">{subtitle}</p>
+          <p className="mt-6 text-xs text-paper/45">
+            After sign-in, open Profile & appearance to sync theme, icons, and
+            accessibility prefs across every studio.
+          </p>
           <div className="mt-8">{children}</div>
         </div>
         <aside

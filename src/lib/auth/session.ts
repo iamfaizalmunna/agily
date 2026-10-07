@@ -17,6 +17,7 @@ export type SessionUser = {
   id: string;
   email: string;
   name: string;
+  avatarPath: string | null;
 };
 
 export type CreateSessionOptions = {
@@ -75,6 +76,7 @@ export async function getCurrentUser(): Promise<SessionUser | null> {
     id: session.user.id,
     email: session.user.email,
     name: session.user.name,
+    avatarPath: session.user.avatarPath,
   };
 }
 

@@ -6,6 +6,8 @@ import { Gantt, ViewMode, type Task } from "gantt-task-react";
 import { updateGanttDueAction } from "@/lib/items/actions";
 import { itemsToGanttTasks, type GanttSourceRow } from "@/lib/views/gantt";
 import "gantt-task-react/dist/index.css";
+import { dataSurfaceScrollClass } from "@/lib/ui/layout-contract";
+import { cn } from "@/lib/cn";
 
 export function ProjectGantt({
   slug,
@@ -36,9 +38,13 @@ export function ProjectGantt({
 
   return (
     <div
-      className="overflow-hidden rounded-lg border border-border bg-card [&_.bar]:!rounded-md [&_.calendar]:!fill-muted-foreground [&_.gridRow]:!fill-card [&_.today]:!stroke-destructive"
+      className={cn(
+        dataSurfaceScrollClass(),
+        "rounded-lg border border-border bg-card [&_.bar]:!rounded-md [&_.calendar]:!fill-muted-foreground [&_.gridRow]:!fill-card [&_.today]:!stroke-destructive",
+      )}
       aria-busy={pending}
     >
+      <div className="min-w-[36rem]">
       <Gantt
         tasks={tasks}
         viewMode={ViewMode.Week}
@@ -70,6 +76,7 @@ export function ProjectGantt({
             : undefined
         }
       />
+      </div>
     </div>
   );
 }

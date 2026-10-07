@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
-import { ChevronDown, Plus } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { Button } from "@/components/ui/button";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/cn";
@@ -48,12 +48,12 @@ export function StudioCreateMenu({
               "rounded-r-none",
             )}
           >
-            <Plus className="size-4" aria-hidden />
+            <AppIcon name="action.plus" className="size-4" />
             Create
           </Link>
         ) : (
           <Button type="button" size="sm" className="rounded-r-none" disabled>
-            <Plus className="size-4" aria-hidden />
+            <AppIcon name="action.plus" className="size-4" />
             Create
           </Button>
         )}
@@ -66,7 +66,7 @@ export function StudioCreateMenu({
           aria-haspopup="menu"
           onClick={() => setOpen((value) => !value)}
         >
-          <ChevronDown className="size-4" aria-hidden />
+          <AppIcon name="action.chevron-down" className="size-4" />
           <span className="sr-only">More create options</span>
         </Button>
       </div>

@@ -3,15 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import {
-  Activity,
-  Bell,
-  ChevronLeft,
-  FolderKanban,
-  LayoutDashboard,
-  Settings,
-  Users,
-} from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { NoticeBell } from "@/components/chrome/notice-bell";
 import { listProjectsForStudio } from "@/lib/studio/nav";
 import {
@@ -64,7 +56,7 @@ export function StudioSidebar({
   return (
     <aside
       className={cn(
-        "hidden shrink-0 flex-col bg-sidebar text-sidebar-foreground transition-[width] duration-200 md:flex",
+        "hidden h-dvh max-h-dvh shrink-0 flex-col overflow-hidden bg-sidebar text-sidebar-foreground transition-[width] duration-200 md:flex",
         collapsed ? "w-[4.25rem]" : "w-60",
       )}
       aria-label="Studio navigation"
@@ -105,7 +97,7 @@ export function StudioSidebar({
               aria-expanded={true}
               aria-label="Collapse sidebar"
             >
-              <ChevronLeft className="size-4" aria-hidden />
+              <AppIcon name="action.chevron-left" className="size-4" />
             </button>
           </>
         )}
@@ -118,7 +110,7 @@ export function StudioSidebar({
               href={`/t/${activeSlug}`}
               on={path === `/t/${activeSlug}`}
               collapsed={collapsed}
-              icon={<LayoutDashboard className="size-4" aria-hidden />}
+              icon={<AppIcon name="nav.pulse" className="size-4" />}
             >
               Pulse
             </NavLink>
@@ -126,7 +118,7 @@ export function StudioSidebar({
               href={`/t/${activeSlug}/people`}
               on={path.endsWith("/people")}
               collapsed={collapsed}
-              icon={<Users className="size-4" aria-hidden />}
+              icon={<AppIcon name="nav.people" className="size-4" />}
             >
               People
             </NavLink>
@@ -134,7 +126,7 @@ export function StudioSidebar({
               href={noticesHref}
               on={path.endsWith("/notices")}
               collapsed={collapsed}
-              icon={<Bell className="size-4" aria-hidden />}
+              icon={<AppIcon name="nav.notices" className="size-4" />}
             >
               Notices
             </NavLink>
@@ -142,7 +134,7 @@ export function StudioSidebar({
               href={`/t/${activeSlug}/settings`}
               on={path.endsWith("/settings") && !path.includes("/p/")}
               collapsed={collapsed}
-              icon={<Settings className="size-4" aria-hidden />}
+              icon={<AppIcon name="nav.settings" className="size-4" />}
             >
               Settings
             </NavLink>
@@ -161,7 +153,7 @@ export function StudioSidebar({
                 on={activeProject === project.slug}
                 collapsed={collapsed}
                 sub
-                icon={<FolderKanban className="size-4" aria-hidden />}
+                icon={<AppIcon name="nav.project" className="size-4" />}
               >
                 {!collapsed ? (
                   <>
@@ -179,7 +171,7 @@ export function StudioSidebar({
             href="/home"
             on={path === "/home"}
             collapsed={collapsed}
-            icon={<Activity className="size-4" aria-hidden />}
+            icon={<AppIcon name="nav.studios" className="size-4" />}
           >
             Your studios
           </NavLink>

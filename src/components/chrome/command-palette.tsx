@@ -14,16 +14,25 @@ import {
   RECENT_TICKETS_KEY,
   type RecentTicket,
 } from "@/lib/search/recent";
+import { AppIcon } from "@/components/appearance/app-icon";
+import type { IconName } from "@/lib/appearance/icon-names";
+import { useAppearance } from "@/components/appearance/appearance-provider";
 import { useCommandPaletteStore } from "@/lib/search/palette-store";
-import { nextColorMode } from "@/lib/theme/theme";
+import { persistColorModeAction } from "@/lib/profile/actions";
+import { colorModeLabel, nextColorMode } from "@/lib/theme/theme";
 import { useTheme } from "@/components/theme/theme-provider";
-import { boardViewHref, type BoardView } from "@/lib/views/views";
+import {
+  BOARD_VIEW_ICON,
+  boardViewHref,
+  type BoardView,
+} from "@/lib/views/views";
 import { cn } from "@/lib/cn";
 
 type PaletteAction = {
   id: string;
   label: string;
   hint?: string;
+  icon?: IconName;
   run: () => void;
 };
 
@@ -46,6 +55,7 @@ export function CommandPalette({
   const setOpen = useCommandPaletteStore((state) => state.setOpen);
   const router = useRouter();
   const { mode, setMode } = useTheme();
+  const { appearance, setAppearance } = useAppearance();
   const [query, setQuery] = useState("");
   const [hits, setHits] = useState<StudioSearchHit[]>([]);
   const [recent, setRecent] = useState<RecentTicket[]>([]);
@@ -82,11 +92,13 @@ export function CommandPalette({
       rows.push({
         id: "pulse",
         label: "Go to Pulse",
+        icon: "nav.pulse",
         run: () => router.push(`/t/${slug}`),
       });
       rows.push({
         id: "people",
         label: "Go to People",
+        icon: "nav.people",
         run: () => router.push(`/t/${slug}/people`),
       });
     }
@@ -94,6 +106,7 @@ export function CommandPalette({
       rows.push({
         id: "new-ticket",
         label: "New ticket on this board",
+        icon: "action.plus",
         run: () =>
           router.push(`/t/${slug}/p/${projectSlug}?view=list`),
       });
@@ -101,19 +114,31 @@ export function CommandPalette({
         rows.push({
           id: `view-${entry.view}`,
           label: entry.label,
+          icon: BOARD_VIEW_ICON[entry.view],
           run: () =>
             router.push(boardViewHref(slug, projectSlug, entry.view)),
         });
       }
     }
+    const nextMode = nextColorMode(mode);
     rows.push({
       id: "theme",
       label: "Toggle color theme",
-      hint: `Current: ${mode}`,
-      run: () => setMode(nextColorMode(mode)),
+      hint: colorModeLabel(mode),
+      icon:
+        mode === "dark"
+          ? "action.moon"
+          : mode === "light"
+            ? "action.sun"
+            : "action.monitor",
+      run: () => {
+        setMode(nextMode);
+        setAppearance({ ...appearance, colorMode: nextMode });
+        void persistColorModeAction(nextMode);
+      },
     });
     return rows.filter((row) => matchesActionLabel(query, row.label));
-  }, [mode, projectSlug, query, router, setMode, slug]);
+  }, [appearance, mode, projectSlug, query, router, setAppearance, setMode, slug]);
 
   const visit = (entry: {
     id: string;
@@ -241,7 +266,15 @@ export function CommandPalette({
                       setOpen(false);
                     }}
                   >
-                    <span>{row.label}</span>
+                    <span className="flex min-w-0 items-center gap-2">
+                      {row.icon ? (
+                        <AppIcon
+                          name={row.icon}
+                          className="size-4 shrink-0 text-muted-foreground"
+                        />
+                      ) : null}
+                      <span className="truncate">{row.label}</span>
+                    </span>
                     {row.hint ? (
                       <span className="text-xs text-muted-foreground">{row.hint}</span>
                     ) : null}

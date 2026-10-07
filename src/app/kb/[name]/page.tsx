@@ -2,6 +2,7 @@ import { readFile } from "node:fs/promises";
 import path from "node:path";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { publicDocumentPageClass } from "@/lib/ui/layout-contract";
 
 function safeName(raw: string) {
   return /^[a-z0-9-]+$/.test(raw) ? raw : null;
@@ -21,7 +22,7 @@ export default async function KbDocPage({
   if (!raw) notFound();
 
   return (
-    <main className="mx-auto flex w-full max-w-lg flex-col gap-6 px-4 py-10">
+    <main className={publicDocumentPageClass()}>
       <Link href="/kb" className="text-sm text-copper">
         All notes
       </Link>

@@ -21,8 +21,8 @@
     "test:coverage": "c8 tsx --test \"src/**/*.test.ts\" \"packages/lens/src/**/*.test.ts\"",
     "sonar": "npm run test:coverage && sonar-scanner",
     "db:e2e": "DATABASE_URL=file:./e2e.db npx prisma migrate deploy && DATABASE_URL=file:./e2e.db npx prisma db seed",
-    "test:e2e": "lsof -tiTCP:43123 -sTCP:LISTEN | xargs kill -9 2>/dev/null; lsof -tiTCP:43124 -sTCP:LISTEN | xargs kill -9 2>/dev/null; npm run db:e2e && CI=true DATABASE_URL=file:./prisma/e2e.db playwright test",
-    "test:e2e:ui": "npm run db:e2e && DATABASE_URL=file:./prisma/e2e.db playwright test --ui"
+    "test:e2e": "lsof -tiTCP:43123 -sTCP:LISTEN | xargs kill -9 2>/dev/null; lsof -tiTCP:43124 -sTCP:LISTEN | xargs kill -9 2>/dev/null; npm run db:e2e && CI=true DATABASE_URL=file:./e2e.db playwright test",
+    "test:e2e:ui": "npm run db:e2e && DATABASE_URL=file:./e2e.db playwright test --ui"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
@@ -33,7 +33,10 @@
     "@dnd-kit/modifiers": "^9.0.0",
     "@dnd-kit/sortable": "^10.0.0",
     "@dnd-kit/utilities": "^3.2.2",
+    "@heroicons/react": "^2.2.0",
+    "@phosphor-icons/react": "^2.1.10",
     "@prisma/client": "^6.19.3",
+    "@tabler/icons-react": "^3.49.0",
     "bcrypt": "^6.0.0",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",

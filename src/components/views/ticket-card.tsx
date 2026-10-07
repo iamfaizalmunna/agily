@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import { GripVertical } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
 import type { DraggableAttributes } from "@dnd-kit/core";
 import type { SyntheticListenerMap } from "@dnd-kit/core/dist/hooks/utilities";
 import { AssigneeMarks } from "@/components/items/assignee-marks";
@@ -70,7 +70,7 @@ export function TicketCard({
             {...dragAttributes}
             {...dragListeners}
           >
-            <GripVertical className="h-4 w-4" />
+            <AppIcon name="action.grip" className="h-4 w-4" />
           </button>
         ) : null}
         <Link href={ticket.href} className="min-w-0 flex-1">

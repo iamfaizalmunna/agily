@@ -1,17 +1,24 @@
 "use client";
 
-import { Suspense, type ReactNode } from "react";
+import { Suspense, useCallback, useEffect, useState, type ReactNode } from "react";
 import { usePathname } from "next/navigation";
 import { StudioSidebar } from "@/components/chrome/studio-sidebar";
 import { StudioTopbar } from "@/components/chrome/studio-topbar";
 import { CommandPaletteProvider } from "@/components/chrome/command-palette-provider";
 import { KeyboardProvider } from "@/components/chrome/keyboard-provider";
 import { LensPanel } from "@/components/lens/lens-panel";
+import { NotificationLiveProvider } from "@/components/notices/notification-live-provider";
 import { MobileBottomNav } from "@/components/chrome/mobile-bottom-nav";
 import { MobileShellHeader } from "@/components/chrome/mobile-shell-header";
 import { useLensStore } from "@/lib/lens/store";
+import {
+  studioContentColumnClass,
+  studioMainScrollClass,
+  studioShellClass,
+} from "@/lib/ui/layout-contract";
 import { mobileStudioMainClass } from "@/lib/ui/mobile";
 import { projectSlugFromPath, teamSlugFromPath } from "@/lib/nav/studio";
+import { unlockNoticeAudio } from "@/lib/notices/sound";
 
 import type { QuickCreateTarget } from "@/lib/create/quick-create";
 import type { TeamRole } from "@/lib/rbac/roles";
@@ -43,7 +50,23 @@ export function StudioShell({
   const path = usePathname();
   const slug = teamSlugFromPath(path) ?? teams[0]?.slug;
   const current = teams.find((t) => t.slug === slug) ?? teams[0];
-  const unread = current ? (unreadBySlug[current.slug] ?? 0) : 0;
+  const [unreadMap, setUnreadMap] = useState(unreadBySlug);
+  useEffect(() => {
+    setUnreadMap(unreadBySlug);
+  }, [unreadBySlug]);
+  const onLiveUnread = useCallback((teamSlug: string, count: number) => {
+    setUnreadMap((prev) => ({ ...prev, [teamSlug]: count }));
+  }, []);
+  useEffect(() => {
+    const unlock = () => unlockNoticeAudio();
+    document.addEventListener("pointerdown", unlock, { once: true });
+    document.addEventListener("keydown", unlock, { once: true });
+    return () => {
+      document.removeEventListener("pointerdown", unlock);
+      document.removeEventListener("keydown", unlock);
+    };
+  }, []);
+  const unread = current ? (unreadMap[current.slug] ?? 0) : 0;
   const noticesHref = current ? `/t/${current.slug}/notices` : "/home";
   const onBell = path.endsWith("/notices");
   const projectSlug = projectSlugFromPath(path) ?? undefined;
@@ -63,7 +86,7 @@ export function StudioShell({
   const createCtx = slug ? createBySlug[slug] : undefined;
 
   return (
-    <div className="flex min-h-dvh flex-1 flex-col md:flex-row">
+    <div className={studioShellClass()}>
       <MobileShellHeader
         teams={teams}
         current={current}
@@ -79,8 +102,8 @@ export function StudioShell({
         unread={unread}
       />
 
-      <div className="flex min-h-0 min-w-0 flex-1 flex-col bg-background">
-        <div className="hidden md:block">
+      <div className={studioContentColumnClass()}>
+        <div className="hidden shrink-0 md:block">
           <StudioTopbar
             userEmail={userEmail}
             role={current?.role}
@@ -96,7 +119,9 @@ export function StudioShell({
           />
         </div>
 
-        <main className={mobileStudioMainClass()}>{children}</main>
+        <main className={mobileStudioMainClass(studioMainScrollClass())}>
+          {children}
+        </main>
       </div>
 
       <MobileBottomNav
@@ -112,6 +137,8 @@ export function StudioShell({
         quickCreateProjects={createCtx?.projects ?? []}
         canCreateBoard={createCtx?.canCreateBoard ?? false}
       />
+
+      <NotificationLiveProvider onUnread={onLiveUnread} />
 
       <Suspense fallback={null}>
         <KeyboardProvider slug={slug} />

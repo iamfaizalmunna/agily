@@ -37,3 +37,37 @@ export async function writeNotices(input: {
     })),
   });
 }
+
+/** Notify every studio member except the actor (board / kanban activity). */
+export async function writeTeamBoardNotices(input: {
+  teamId: string;
+  slug: string;
+  projectSlug: string;
+  itemId: string;
+  itemTitle: string;
+  actorId: string;
+  actorName: string;
+  kind: "status_changed" | "ticket_created";
+  memberUserIds: string[];
+  detail?: string;
+}) {
+  const people = recipientsExcept(input.memberUserIds, input.actorId);
+  if (!people.length) return;
+  const copy = noticeCopy(
+    input.kind,
+    input.actorName,
+    input.itemTitle,
+    input.detail,
+  );
+  await prisma.notification.createMany({
+    data: people.map((userId) => ({
+      teamId: input.teamId,
+      userId,
+      kind: input.kind,
+      title: copy.title,
+      body: copy.body,
+      href: noticeHref(input.slug, input.projectSlug, input.itemId),
+    })),
+  });
+}
+

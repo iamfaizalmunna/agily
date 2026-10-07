@@ -16,8 +16,8 @@ export function effectiveKanbanCompact(
 
 export function kanbanColumnStripClass(extra?: string) {
   return [
-    "-mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto scroll-px-4 px-4 pb-2",
-    "md:mx-0 md:snap-none md:overflow-visible md:px-0",
+    "-mx-4 flex w-full min-w-0 snap-x snap-mandatory gap-3 overflow-x-auto overscroll-x-contain scroll-px-4 px-4 pb-2",
+    "md:mx-0 md:snap-none md:scroll-px-0 md:px-0",
     extra,
   ]
     .filter(Boolean)

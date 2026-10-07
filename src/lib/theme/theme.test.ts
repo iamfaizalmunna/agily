@@ -77,6 +77,16 @@ describe("theme", () => {
     assert.equal(nextColorMode("dark"), "system");
     assert.equal(nextColorMode("system"), "light");
     assert.match(THEME_BOOT_SCRIPT, /agily-theme/);
+    assert.match(THEME_BOOT_SCRIPT, /data-theme/);
+    assert.match(THEME_BOOT_SCRIPT, /agily-appearance/);
+    assert.match(THEME_BOOT_SCRIPT, /data-icon-set/);
+    assert.match(THEME_BOOT_SCRIPT, /data-font/);
+    assert.match(THEME_BOOT_SCRIPT, /data-density/);
+    assert.match(THEME_BOOT_SCRIPT, /data-radius/);
+    assert.match(THEME_BOOT_SCRIPT, /data-contrast/);
+    assert.match(THEME_BOOT_SCRIPT, /data-sidebar-tone/);
+    assert.match(THEME_BOOT_SCRIPT, /data-motion/);
+    assert.match(THEME_BOOT_SCRIPT, /data-icon-size/);
     assert.match(THEME_BOOT_SCRIPT, /classList.add\('light'\)/);
     assert.match(THEME_BOOT_SCRIPT, /prefers-color-scheme: dark/);
     assert.match(THEME_BOOT_SCRIPT, /catch/);

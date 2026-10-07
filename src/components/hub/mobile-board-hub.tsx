@@ -2,7 +2,8 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { AppIcon } from "@/components/appearance/app-icon";
+import { NavIconRow } from "@/components/appearance/nav-icon-row";
 import { Card } from "@/components/ui/card";
 import { EmptyState } from "@/components/chrome/empty-state";
 import { Input } from "@/components/ui/input";
@@ -71,9 +72,9 @@ export function MobileBoardHub({
       {projects.length > 0 ? (
         <label className="relative block">
           <span className="sr-only">Search boards</span>
-          <Search
+          <AppIcon
+            name="action.search"
             className="pointer-events-none absolute left-3 top-1/2 size-4 -translate-y-1/2 text-muted-foreground"
-            aria-hidden
           />
           <Input
             type="search"
@@ -117,6 +118,7 @@ export function MobileBoardHub({
 
       {projects.length === 0 ? (
         <EmptyState
+          icon={<AppIcon name="nav.board" className="size-8" />}
           title="No boards yet"
           body={
             mayCreate
@@ -130,10 +132,12 @@ export function MobileBoardHub({
             <li key={project.slug}>
               <Link href={projectHref(project.slug)}>
                 <Card
-                  className="flex min-h-[4.5rem] items-center justify-between p-4 transition-colors hover:border-primary/40 hover:bg-muted/30"
+                  className="flex min-h-[4.5rem] items-center justify-between gap-3 p-4 transition-colors hover:border-primary/40 hover:bg-muted/30"
                 >
-                  <span className="font-medium">{project.name}</span>
-                  <span className="text-sm text-muted-foreground">
+                  <NavIconRow icon="nav.project" className="min-w-0 font-medium">
+                    <span className="truncate">{project.name}</span>
+                  </NavIconRow>
+                  <span className="shrink-0 text-sm text-muted-foreground">
                     {project.ticketCount} tickets
                   </span>
                 </Card>

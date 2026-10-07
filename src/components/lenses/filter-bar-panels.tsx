@@ -54,16 +54,28 @@ export function FilterChip({
 function FilterRow({
   label,
   children,
+  compact,
 }: {
   label: string;
   children: ReactNode;
+  compact?: boolean;
 }) {
   return (
-    <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:gap-3">
-      <p className="w-20 shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground">
+    <div
+      className={cn(
+        "flex flex-col gap-1.5 sm:flex-row sm:items-start sm:gap-2",
+        compact && "xl:grid xl:grid-cols-[4.75rem_minmax(0,1fr)] xl:items-start xl:gap-3",
+      )}
+    >
+      <p
+        className={cn(
+          "shrink-0 text-xs font-semibold uppercase tracking-wide text-muted-foreground",
+          compact ? "w-20 pt-1 xl:w-auto" : "w-20",
+        )}
+      >
         {label}
       </p>
-      <div className="flex flex-wrap gap-1.5">{children}</div>
+      <div className="flex min-w-0 flex-wrap gap-1.5">{children}</div>
     </div>
   );
 }
@@ -79,6 +91,7 @@ export function FilterBarPanels({
   people,
   teamLabels,
   epics,
+  compact = false,
 }: {
   slug: string;
   projectSlug: string;
@@ -90,6 +103,7 @@ export function FilterBarPanels({
   people: Person[];
   teamLabels: LabelChip[];
   epics: { id: string; title: string }[];
+  compact?: boolean;
 }) {
   const hrefFor = (next: LensSpec, id?: string) =>
     boardViewHref(slug, projectSlug, view, yearMonth, lensQueryRecord(next, id));
@@ -102,7 +116,7 @@ export function FilterBarPanels({
   );
 
   return (
-    <div className="flex flex-col gap-3">
+    <div className={cn("flex flex-col", compact ? "gap-2.5" : "gap-3")}>
       <FilterSearch
         slug={slug}
         projectSlug={projectSlug}
@@ -112,7 +126,7 @@ export function FilterBarPanels({
         savedId={savedId}
       />
 
-      <FilterRow label="Quick">
+      <FilterRow label="Quick" compact={compact}>
         <FilterChip
           href={hrefFor(pickLensKind(spec))}
           active={!savedId && !spec.kind}
@@ -130,7 +144,7 @@ export function FilterBarPanels({
         ))}
       </FilterRow>
 
-      <FilterRow label="Priority">
+      <FilterRow label="Priority" compact={compact}>
         <FilterChip
           href={hrefFor(pickLensPriority(spec))}
           active={!savedId && !spec.priority}
@@ -148,7 +162,7 @@ export function FilterBarPanels({
         ))}
       </FilterRow>
 
-      <FilterRow label="Status">
+      <FilterRow label="Status" compact={compact}>
         <FilterChip
           href={hrefFor(pickLensStatus(spec))}
           active={!savedId && !spec.status}
@@ -167,7 +181,7 @@ export function FilterBarPanels({
       </FilterRow>
 
       {epics.length ? (
-        <FilterRow label="Epic">
+        <FilterRow label="Epic" compact={compact}>
           <FilterChip
             href={hrefFor(pickEpicFilter(spec))}
             active={!savedId && !spec.parentId}
@@ -187,7 +201,7 @@ export function FilterBarPanels({
       ) : null}
 
       {teamLabels.length ? (
-        <FilterRow label="Labels">
+        <FilterRow label="Labels" compact={compact}>
           {teamLabels.map((label) => {
             const active = spec.labelIds?.includes(label.id) ?? false;
             return (
@@ -210,7 +224,7 @@ export function FilterBarPanels({
       ) : null}
 
       {people.length ? (
-        <FilterRow label="Assignee">
+        <FilterRow label="Assignee" compact={compact}>
           <FilterChip
             href={hrefFor(pickLensPerson(spec))}
             active={!spec.personId && !savedId}
@@ -230,7 +244,7 @@ export function FilterBarPanels({
       ) : null}
 
       {saved.length ? (
-        <FilterRow label="Saved">
+        <FilterRow label="Saved" compact={compact}>
           {saved.map((lens) => (
             <span key={lens.id} className="inline-flex items-center gap-1">
               <FilterChip

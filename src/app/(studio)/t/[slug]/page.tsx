@@ -112,7 +112,7 @@ export default async function TeamHomePage({
         </Card>
       ) : null}
 
-      <div className="grid gap-4 lg:grid-cols-3">
+      <div className="grid min-w-0 gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <PulseCard title="Mine" count={buckets.mine.length}>
           {buckets.mine.length
             ? buckets.mine.map((item) => <div key={item.id}>{chip(item.id)}</div>)

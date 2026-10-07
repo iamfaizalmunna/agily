@@ -7,6 +7,9 @@ import { canCreateProject } from "@/lib/items/permissions";
 import { parseTeamSettings } from "@/lib/rbac/roles";
 import { listTeamsForUser } from "@/lib/teams/queries";
 import { prisma } from "@/lib/db/prisma";
+import { AppearanceProvider } from "@/components/appearance/appearance-provider";
+import { getUserProfile } from "@/lib/profile/queries";
+import { DEFAULT_USER_APPEARANCE } from "@/lib/appearance/appearance";
 
 export default async function StudioLayout({
   children,
@@ -14,6 +17,7 @@ export default async function StudioLayout({
   children: ReactNode;
 }) {
   const user = await requireUser();
+  const profile = await getUserProfile(user.id);
   const teams = await listTeamsForUser(user.id);
   const counts = await unreadCountsByTeam(user.id);
   const unreadBySlug = Object.fromEntries(
@@ -36,14 +40,16 @@ export default async function StudioLayout({
   }
 
   return (
-    <StudioShell
-      userName={user.name}
-      userEmail={user.email}
-      teams={teams}
-      unreadBySlug={unreadBySlug}
-      createBySlug={createBySlug}
-    >
-      {children}
-    </StudioShell>
+    <AppearanceProvider initial={profile?.appearance ?? DEFAULT_USER_APPEARANCE}>
+      <StudioShell
+        userName={user.name}
+        userEmail={user.email}
+        teams={teams}
+        unreadBySlug={unreadBySlug}
+        createBySlug={createBySlug}
+      >
+        {children}
+      </StudioShell>
+    </AppearanceProvider>
   );
 }
