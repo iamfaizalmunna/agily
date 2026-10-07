@@ -53,6 +53,7 @@ export function ProfileAppearanceForm({
       const fontFamily = String(data.get("fontFamily") ?? "");
       const density = String(data.get("density") ?? "");
       const cornerRadius = String(data.get("cornerRadius") ?? "");
+      const highContrast = data.get("highContrast") === "true";
       setMode(colorMode);
       setAppearance({
         ...appearance,
@@ -68,6 +69,7 @@ export function ProfileAppearanceForm({
         cornerRadius: isCornerRadiusId(cornerRadius)
           ? cornerRadius
           : appearance.cornerRadius,
+        highContrast,
       });
     },
     [appearance, setAppearance, setMode],
@@ -172,12 +174,32 @@ export function ProfileAppearanceForm({
             ))}
           </select>
         </label>
+        <label className="flex cursor-pointer items-start gap-3 rounded-md border border-border bg-card px-3 py-3 text-sm">
+          <input
+            type="checkbox"
+            name="highContrast"
+            value="true"
+            defaultChecked={initialAppearance.highContrast}
+            className="mt-0.5 size-4 rounded border-border"
+          />
+          <span>
+            <span className="font-medium">High contrast</span>
+            <span className="mt-0.5 block text-xs text-muted-foreground">
+              Stronger borders and secondary text for readability.
+            </span>
+          </span>
+        </label>
         <div className="flex flex-wrap gap-2">
           <Button type="submit" className="self-start">Save appearance</Button>
         </div>
       </form>
       <form action={resetAppearanceAction}>
-        <Button type="submit" variant="outline" size="sm">
+        <Button
+          type="submit"
+          variant="outline"
+          size="sm"
+          data-testid="restore-appearance-defaults"
+        >
           Restore defaults
         </Button>
       </form>

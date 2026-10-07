@@ -60,7 +60,7 @@ test.describe("profile appearance", () => {
       form.getByRole("button", { name: "Save appearance" }).click(),
     ]);
 
-    await page.getByRole("button", { name: "Restore defaults" }).click();
+    await page.getByTestId("restore-appearance-defaults").click();
     await page.waitForURL(/saved=appearance/, { timeout: 30_000 });
 
     await expect.poll(async () => {

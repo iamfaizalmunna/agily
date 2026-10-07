@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { Button } from "@/components/ui/button";
 import { useLensStore } from "@/lib/lens/store";
 
@@ -63,7 +64,8 @@ export function LensPanel({ slug }: { slug?: string }) {
     <div className="fixed inset-x-0 bottom-16 z-30 mx-auto flex max-h-[70dvh] w-full max-w-lg flex-col border border-paper/15 bg-ink/95 p-4 md:bottom-6 md:right-6 md:left-auto md:mx-0">
       <div className="mb-3 flex items-center justify-between gap-3">
         <div>
-          <p className="font-display text-xs uppercase tracking-[0.18em] text-copper">
+          <p className="flex items-center gap-2 font-display text-xs uppercase tracking-[0.18em] text-copper">
+            <AppIcon name="action.lens" className="size-4" />
             Lens
           </p>
           <p className="text-xs text-paper/45">
@@ -74,10 +76,11 @@ export function LensPanel({ slug }: { slug?: string }) {
         </div>
         <button
           type="button"
-          className="text-sm text-copper"
+          className="flex min-h-10 min-w-10 items-center justify-center text-copper"
+          aria-label="Close Lens"
           onClick={() => setOpen(false)}
         >
-          Close
+          <AppIcon name="action.close" className="size-5" />
         </button>
       </div>
       <div className="flex min-h-0 flex-1 flex-col gap-2 overflow-y-auto">
@@ -131,8 +134,10 @@ export function LensTrigger() {
     <button
       type="button"
       onClick={() => setOpen(!open)}
-      className="text-[0.65rem] uppercase tracking-[0.18em] text-paper/50 hover:text-paper"
+      className="inline-flex items-center gap-1.5 text-[0.65rem] uppercase tracking-[0.18em] text-paper/50 hover:text-paper"
+      aria-pressed={open}
     >
+      <AppIcon name="action.lens" className="size-3.5" />
       Lens
     </button>
   );

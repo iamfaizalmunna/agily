@@ -18,6 +18,9 @@
 | **CU10** | Board view tabs use `BOARD_VIEW_ICON` + `view.*` registry entries | **complete** |
 | **CU11** | Command palette actions show `AppIcon`; theme syncs account prefs | **complete** |
 | **CU12** | E2e restore defaults + `BOARD_VIEW_ICON` pack smoke | **complete** |
+| **CU13** | Lens panel + trigger icons | **complete** |
+| **CU14** | Board hub list icons + empty state | **complete** |
+| **CU15** | `highContrast` account pref + notification prefs chrome | **complete** |
 
 ## Principles
 

@@ -23,13 +23,18 @@
 
 ```ts
 type UserAppearance = {
-  version: 1;
+  version: 2;
   colorMode: "light" | "dark" | "system";
   themePreset: "jira" | "editorial" | "graphite" | "forest";
   iconSet: "lucide" | "tabler" | "phosphor" | "heroicons";
-  density?: "comfortable" | "compact"; // optional phase TH7+
+  fontFamily: "geist" | "outfit" | "fraunces" | "system";
+  density: "comfortable" | "compact";
+  cornerRadius: "sharp" | "default" | "soft";
+  highContrast: boolean;
 };
 ```
+
+Extended prefs and phases **CU1–CU15**: [CUSTOM_UI_README.md](./CUSTOM_UI_README.md).
 
 Stored as JSON on `User.appearance` (string column, default `{}`). Parsed with the same style as `parseTeamSettings` / `parseNoticePrefs`.
 

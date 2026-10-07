@@ -33,6 +33,7 @@ import {
   Tag,
   User,
   Users,
+  Volume2,
   Workflow,
   X,
 } from "lucide-react";
@@ -69,6 +70,7 @@ import {
   IconTag,
   IconUser,
   IconUsers,
+  IconVolume,
   IconX,
 } from "@tabler/icons-react";
 import {
@@ -104,6 +106,7 @@ import {
   Tray as PhTray,
   User as PhUser,
   Users as PhUsers,
+  SpeakerHigh as PhSpeakerHigh,
   X as PhX,
 } from "@phosphor-icons/react";
 import {
@@ -133,6 +136,7 @@ import {
   SparklesIcon,
   SunIcon,
   TagIcon,
+  SpeakerWaveIcon,
   Squares2X2Icon,
   UserIcon,
   UsersIcon,
@@ -189,6 +193,7 @@ const LUCIDE: Record<IconName, IconComponent> = {
   "view.board": LayoutGrid,
   "view.calendar": Calendar,
   "view.timeline": ChartGantt,
+  "action.volume": Volume2,
 };
 
 const TABLER: Record<IconName, IconComponent> = {
@@ -227,6 +232,7 @@ const TABLER: Record<IconName, IconComponent> = {
   "view.board": IconLayoutGrid,
   "view.calendar": IconCalendar,
   "view.timeline": IconChartBar,
+  "action.volume": IconVolume,
 };
 
 const PHOSPHOR: Record<IconName, IconComponent> = {
@@ -265,6 +271,7 @@ const PHOSPHOR: Record<IconName, IconComponent> = {
   "view.board": phosphorIcon(PhSquaresFour),
   "view.calendar": phosphorIcon(PhCalendar),
   "view.timeline": phosphorIcon(PhChartBar),
+  "action.volume": phosphorIcon(PhSpeakerHigh),
 };
 
 const HERO: Record<IconName, IconComponent> = {
@@ -303,6 +310,7 @@ const HERO: Record<IconName, IconComponent> = {
   "view.board": Squares2X2Icon,
   "view.calendar": CalendarDaysIcon,
   "view.timeline": ChartBarSquareIcon,
+  "action.volume": SpeakerWaveIcon,
 };
 
 export const ICON_REGISTRY: Record<IconSetId, Record<IconName, IconComponent>> = {

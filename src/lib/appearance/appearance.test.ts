@@ -52,6 +52,7 @@ describe("user appearance", () => {
       fontFamily: "outfit" as const,
       density: "compact" as const,
       cornerRadius: "soft" as const,
+      highContrast: true,
     };
     assert.deepEqual(
       parseUserAppearance(serializeUserAppearance(value)),
@@ -98,6 +99,7 @@ describe("user appearance", () => {
         fontFamily: "geist",
         density: "comfortable",
         cornerRadius: "default",
+        highContrast: false,
       },
     );
   });
@@ -120,6 +122,7 @@ describe("user appearance", () => {
         fontFamily: "geist",
         density: "comfortable",
         cornerRadius: "default",
+        highContrast: false,
       },
     );
   });

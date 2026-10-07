@@ -30,6 +30,7 @@ export type UserAppearance = {
   fontFamily: FontFamilyId;
   density: DensityId;
   cornerRadius: CornerRadiusId;
+  highContrast: boolean;
 };
 
 export const DEFAULT_USER_APPEARANCE: UserAppearance = {
@@ -40,6 +41,7 @@ export const DEFAULT_USER_APPEARANCE: UserAppearance = {
   fontFamily: "geist",
   density: "comfortable",
   cornerRadius: "default",
+  highContrast: false,
 };
 
 export const APPEARANCE_STORAGE_KEY = "agily-appearance";
@@ -86,6 +88,7 @@ export function parseUserAppearance(raw: string | null | undefined): UserAppeara
       cornerRadius: isCornerRadiusId(String(parsed.cornerRadius ?? ""))
         ? parsed.cornerRadius!
         : DEFAULT_USER_APPEARANCE.cornerRadius,
+      highContrast: parsed.highContrast === true,
     };
   } catch {
     return DEFAULT_USER_APPEARANCE;
@@ -101,6 +104,7 @@ export function serializeUserAppearance(appearance: UserAppearance): string {
     fontFamily: appearance.fontFamily,
     density: appearance.density,
     cornerRadius: appearance.cornerRadius,
+    highContrast: appearance.highContrast,
   });
 }
 

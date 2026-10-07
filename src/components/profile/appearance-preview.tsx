@@ -39,6 +39,7 @@ export function AppearancePreview() {
         <li>Typeface: {fontFamilyLabel(appearance.fontFamily)}</li>
         <li>Density: {densityLabel(appearance.density)}</li>
         <li>Corners: {cornerRadiusLabel(appearance.cornerRadius)}</li>
+        <li>Contrast: {appearance.highContrast ? "High" : "Default"}</li>
       </ul>
     </div>
   );

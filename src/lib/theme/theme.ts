@@ -103,6 +103,7 @@ export const THEME_BOOT_SCRIPT = `(function(){
     var font = 'geist';
     var density = 'comfortable';
     var radius = '';
+    var highContrast = false;
     try {
       var ap = localStorage.getItem('agily-appearance');
       if (ap) {
@@ -112,6 +113,7 @@ export const THEME_BOOT_SCRIPT = `(function(){
         if (parsed && parsed.fontFamily) font = parsed.fontFamily;
         if (parsed && parsed.density) density = parsed.density;
         if (parsed && parsed.cornerRadius && parsed.cornerRadius !== 'default') radius = parsed.cornerRadius;
+        if (parsed && parsed.highContrast === true) highContrast = true;
       }
     } catch (eAp) {}
     if (preset !== 'jira' && preset !== 'editorial' && preset !== 'graphite' && preset !== 'forest') {
@@ -135,6 +137,8 @@ export const THEME_BOOT_SCRIPT = `(function(){
     root.setAttribute('data-density', density);
     if (radius) root.setAttribute('data-radius', radius);
     else root.removeAttribute('data-radius');
+    if (highContrast) root.setAttribute('data-contrast', 'high');
+    else root.removeAttribute('data-contrast');
     if (auth) {
       root.classList.add('light');
       root.style.colorScheme = 'light';

@@ -56,6 +56,7 @@ export async function updateAppearanceAction(formData: FormData) {
   const fontFamily = String(formData.get("fontFamily") ?? "");
   const density = String(formData.get("density") ?? "");
   const cornerRadius = String(formData.get("cornerRadius") ?? "");
+  const highContrast = formData.get("highContrast") === "true";
   const current = parseUserAppearance(
     (
       await prisma.user.findUnique({
@@ -74,6 +75,7 @@ export async function updateAppearanceAction(formData: FormData) {
     cornerRadius: isCornerRadiusId(cornerRadius)
       ? cornerRadius
       : current.cornerRadius,
+    highContrast,
   };
   await prisma.user.update({
     where: { id: user.id },

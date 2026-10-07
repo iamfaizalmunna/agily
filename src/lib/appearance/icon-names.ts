@@ -34,6 +34,7 @@ export const ICON_NAMES = [
   "view.board",
   "view.calendar",
   "view.timeline",
+  "action.volume",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];

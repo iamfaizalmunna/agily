@@ -57,6 +57,16 @@ export function applyUserAppearanceToDocument(appearance: UserAppearance) {
   applyFontFamilyToDocument(appearance.fontFamily);
   applyDensityToDocument(appearance.density);
   applyCornerRadiusToDocument(appearance.cornerRadius);
+  applyHighContrastToDocument(appearance.highContrast);
+}
+
+export function applyHighContrastToDocument(highContrast: boolean) {
+  if (typeof document === "undefined") return;
+  if (highContrast) {
+    document.documentElement.dataset.contrast = "high";
+    return;
+  }
+  delete document.documentElement.dataset.contrast;
 }
 
 export function readAppearanceDatasetsFromDocument(): {

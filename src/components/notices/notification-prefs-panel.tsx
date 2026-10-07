@@ -7,6 +7,8 @@ import {
   writeNoticePrefs,
   type NoticePrefs,
 } from "@/lib/notices/prefs";
+import { AppIcon } from "@/components/appearance/app-icon";
+import { NavIconRow } from "@/components/appearance/nav-icon-row";
 import { playNoticeChime, unlockNoticeAudio } from "@/lib/notices/sound";
 
 function ToggleRow({
@@ -55,6 +57,9 @@ export function NotificationPrefsPanel() {
 
   return (
     <div className="flex flex-col gap-3">
+      <p className="flex items-center gap-2 text-sm font-medium text-foreground">
+        <NavIconRow icon="nav.notices">Notification preferences</NavIconRow>
+      </p>
       <p className="text-sm text-muted-foreground">
         In-app notices appear in the Bell inbox. When teammates move cards or add
         tickets, other members get notified here (this device only for sound and
@@ -80,12 +85,13 @@ export function NotificationPrefsPanel() {
       />
       <button
         type="button"
-        className="self-start text-sm font-medium text-primary hover:underline"
+        className="inline-flex items-center gap-2 self-start text-sm font-medium text-primary hover:underline"
         onClick={() => {
           unlockNoticeAudio();
           playNoticeChime();
         }}
       >
+        <AppIcon name="action.volume" className="size-4" />
         Test sound
       </button>
     </div>
