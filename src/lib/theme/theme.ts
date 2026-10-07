@@ -100,12 +100,18 @@ export const THEME_BOOT_SCRIPT = `(function(){
     root.classList.remove('light', 'dark');
     var preset = 'jira';
     var iconSet = 'lucide';
+    var font = 'geist';
+    var density = 'comfortable';
+    var radius = '';
     try {
       var ap = localStorage.getItem('agily-appearance');
       if (ap) {
         var parsed = JSON.parse(ap);
         if (parsed && parsed.themePreset) preset = parsed.themePreset;
         if (parsed && parsed.iconSet) iconSet = parsed.iconSet;
+        if (parsed && parsed.fontFamily) font = parsed.fontFamily;
+        if (parsed && parsed.density) density = parsed.density;
+        if (parsed && parsed.cornerRadius && parsed.cornerRadius !== 'default') radius = parsed.cornerRadius;
       }
     } catch (eAp) {}
     if (preset !== 'jira' && preset !== 'editorial' && preset !== 'graphite' && preset !== 'forest') {
@@ -114,8 +120,21 @@ export const THEME_BOOT_SCRIPT = `(function(){
     if (iconSet !== 'lucide' && iconSet !== 'tabler' && iconSet !== 'phosphor' && iconSet !== 'heroicons') {
       iconSet = 'lucide';
     }
+    if (font !== 'geist' && font !== 'outfit' && font !== 'fraunces' && font !== 'system') {
+      font = 'geist';
+    }
+    if (density !== 'comfortable' && density !== 'compact') {
+      density = 'comfortable';
+    }
+    if (radius !== 'sharp' && radius !== 'soft') {
+      radius = '';
+    }
     root.setAttribute('data-theme', preset);
     root.setAttribute('data-icon-set', iconSet);
+    root.setAttribute('data-font', font);
+    root.setAttribute('data-density', density);
+    if (radius) root.setAttribute('data-radius', radius);
+    else root.removeAttribute('data-radius');
     if (auth) {
       root.classList.add('light');
       root.style.colorScheme = 'light';

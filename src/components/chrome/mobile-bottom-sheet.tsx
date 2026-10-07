@@ -1,6 +1,7 @@
 "use client";
 
 import type { ReactNode } from "react";
+import { AppIcon } from "@/components/appearance/app-icon";
 
 export function MobileBottomSheet({
   open,
@@ -35,10 +36,11 @@ export function MobileBottomSheet({
           </h2>
           <button
             type="button"
-            className="min-h-11 min-w-11 text-sm text-primary"
+            className="flex min-h-11 min-w-11 items-center justify-center text-primary"
+            aria-label="Close"
             onClick={onClose}
           >
-            Close
+            <AppIcon name="action.close" className="size-5" />
           </button>
         </div>
         {children}

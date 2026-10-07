@@ -1,5 +1,6 @@
 import Link from "next/link";
 import type { ReactNode } from "react";
+import { AppIcon } from "@/components/appearance/app-icon";
 
 export function ListFocusDrawer({
   closeHref,
@@ -23,8 +24,10 @@ export function ListFocusDrawer({
           <p className="text-sm font-semibold text-foreground">Ticket detail</p>
           <Link
             href={closeHref}
-            className="text-sm font-medium text-primary hover:underline"
+            className="flex items-center gap-1.5 text-sm font-medium text-primary hover:underline"
+            aria-label="Close ticket detail"
           >
+            <AppIcon name="action.close" className="size-4" />
             Close
           </Link>
         </div>

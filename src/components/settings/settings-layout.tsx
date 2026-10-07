@@ -3,6 +3,8 @@
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { cn } from "@/lib/cn";
+import { NavIconRow } from "@/components/appearance/nav-icon-row";
+import type { IconName } from "@/lib/appearance/icon-names";
 import { resolveSettingsSection } from "@/lib/settings/section-nav";
 import { Select } from "@/components/ui/select";
 
@@ -11,6 +13,7 @@ export type SettingsNavItem = {
   label: string;
   href: string;
   description?: string;
+  icon?: IconName;
 };
 
 export function SettingsLayout({
@@ -86,7 +89,11 @@ export function SettingsLayout({
                       : "text-muted-foreground hover:bg-muted/60 hover:text-foreground",
                   )}
                 >
-                  {item.label}
+                  {item.icon ? (
+                    <NavIconRow icon={item.icon}>{item.label}</NavIconRow>
+                  ) : (
+                    item.label
+                  )}
                 </Link>
               );
             })}

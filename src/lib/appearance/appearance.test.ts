@@ -45,10 +45,13 @@ describe("user appearance", () => {
 
   it("round-trips serialization", () => {
     const value = {
-      version: 1 as const,
+      version: 2 as const,
       colorMode: "system" as const,
       themePreset: "forest" as const,
       iconSet: "tabler" as const,
+      fontFamily: "outfit" as const,
+      density: "compact" as const,
+      cornerRadius: "soft" as const,
     };
     assert.deepEqual(
       parseUserAppearance(serializeUserAppearance(value)),
@@ -88,10 +91,35 @@ describe("user appearance", () => {
         }),
       ),
       {
-        version: 1,
+        version: 2,
         colorMode: "dark",
         themePreset: "editorial",
         iconSet: "heroicons",
+        fontFamily: "geist",
+        density: "comfortable",
+        cornerRadius: "default",
+      },
+    );
+  });
+
+  it("defaults new v2 fields when parsing legacy v1 JSON", () => {
+    assert.deepEqual(
+      parseUserAppearance(
+        JSON.stringify({
+          version: 1,
+          colorMode: "dark",
+          themePreset: "graphite",
+          iconSet: "tabler",
+        }),
+      ),
+      {
+        version: 2,
+        colorMode: "dark",
+        themePreset: "graphite",
+        iconSet: "tabler",
+        fontFamily: "geist",
+        density: "comfortable",
+        cornerRadius: "default",
       },
     );
   });

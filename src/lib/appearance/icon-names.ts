@@ -20,6 +20,20 @@ export const ICON_NAMES = [
   "action.comment",
   "action.save",
   "action.workflow",
+  "nav.profile",
+  "action.sign-out",
+  "action.lens",
+  "action.tag",
+  "action.shield",
+  "action.sun",
+  "action.moon",
+  "action.monitor",
+  "action.keyboard",
+  "view.summary",
+  "view.list",
+  "view.board",
+  "view.calendar",
+  "view.timeline",
 ] as const;
 
 export type IconName = (typeof ICON_NAMES)[number];

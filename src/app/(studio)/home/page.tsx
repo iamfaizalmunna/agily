@@ -1,4 +1,6 @@
 import Link from "next/link";
+import { AppIcon } from "@/components/appearance/app-icon";
+import { NavIconRow } from "@/components/appearance/nav-icon-row";
 import { UserAvatar } from "@/components/profile/user-avatar";
 import { CreateTeamForm } from "@/components/teams/create-team-form";
 import { Badge } from "@/components/ui/badge";
@@ -31,9 +33,9 @@ export default async function HomePage() {
             </p>
             <Link
               href="/home/profile"
-              className="text-sm font-medium text-primary hover:underline"
+              className="inline-flex text-sm font-medium text-primary hover:underline"
             >
-              Profile & appearance
+              <NavIconRow icon="nav.profile">Profile & appearance</NavIconRow>
             </Link>
           </div>
         </div>
@@ -49,6 +51,10 @@ export default async function HomePage() {
                     <p className="font-medium">{team.name}</p>
                     <p className="text-xs text-muted-foreground">Open pulse</p>
                   </div>
+                  <AppIcon
+                    name="nav.pulse"
+                    className="size-5 shrink-0 text-muted-foreground"
+                  />
                   <Badge variant="outline" className="uppercase">
                     {team.role}
                   </Badge>

@@ -1,7 +1,9 @@
 import Link from "next/link";
+import { AppIcon } from "@/components/appearance/app-icon";
 import { cn } from "@/lib/cn";
 import {
   BOARD_VIEWS,
+  BOARD_VIEW_ICON,
   BOARD_VIEW_LABEL,
   boardViewHref,
   type BoardView,
@@ -32,12 +34,16 @@ export function ProjectTabs({
             key={name}
             href={boardViewHref(slug, projectSlug, name, yearMonth, extra)}
             className={cn(
-              "relative -mb-px shrink-0 px-3 py-2.5 text-sm font-medium transition-colors",
+              "relative -mb-px flex shrink-0 items-center gap-1.5 px-3 py-2.5 text-sm font-medium transition-colors",
               on
                 ? "text-primary after:absolute after:inset-x-0 after:bottom-0 after:h-0.5 after:bg-primary"
                 : "text-muted-foreground hover:text-foreground",
             )}
           >
+            <AppIcon
+              name={BOARD_VIEW_ICON[name]}
+              className="size-4 shrink-0 opacity-80"
+            />
             {BOARD_VIEW_LABEL[name]}
           </Link>
         );

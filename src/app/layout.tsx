@@ -44,6 +44,8 @@ export default function RootLayout({
       lang="en"
       className={cn("h-full light", "font-sans", geist.variable)}
       data-theme="jira"
+      data-font="geist"
+      data-density="comfortable"
       suppressHydrationWarning
     >
       <body className="flex min-h-dvh flex-col bg-ink text-paper antialiased">

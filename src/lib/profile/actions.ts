@@ -7,6 +7,10 @@ import { prisma } from "@/lib/db/prisma";
 import { requireUser } from "@/lib/auth/session";
 import { trustedMutationOriginError } from "@/lib/security/mutation-guard";
 import {
+  DEFAULT_USER_APPEARANCE,
+  isCornerRadiusId,
+  isDensityId,
+  isFontFamilyId,
   isIconSetId,
   isThemePreset,
   parseUserAppearance,
@@ -49,6 +53,9 @@ export async function updateAppearanceAction(formData: FormData) {
   const colorMode = normalizeColorMode(String(formData.get("colorMode") ?? ""));
   const themePreset = String(formData.get("themePreset") ?? "");
   const iconSet = String(formData.get("iconSet") ?? "");
+  const fontFamily = String(formData.get("fontFamily") ?? "");
+  const density = String(formData.get("density") ?? "");
+  const cornerRadius = String(formData.get("cornerRadius") ?? "");
   const current = parseUserAppearance(
     (
       await prisma.user.findUnique({
@@ -62,10 +69,27 @@ export async function updateAppearanceAction(formData: FormData) {
     colorMode,
     themePreset: isThemePreset(themePreset) ? themePreset : current.themePreset,
     iconSet: isIconSetId(iconSet) ? iconSet : current.iconSet,
+    fontFamily: isFontFamilyId(fontFamily) ? fontFamily : current.fontFamily,
+    density: isDensityId(density) ? density : current.density,
+    cornerRadius: isCornerRadiusId(cornerRadius)
+      ? cornerRadius
+      : current.cornerRadius,
   };
   await prisma.user.update({
     where: { id: user.id },
     data: { appearance: serializeUserAppearance(next) },
+  });
+  revalidatePath("/home/profile");
+  revalidatePath("/home");
+  redirect("/home/profile?saved=appearance");
+}
+
+export async function resetAppearanceAction() {
+  await guardProfileMutation();
+  const user = await requireUser();
+  await prisma.user.update({
+    where: { id: user.id },
+    data: { appearance: serializeUserAppearance(DEFAULT_USER_APPEARANCE) },
   });
   revalidatePath("/home/profile");
   revalidatePath("/home");

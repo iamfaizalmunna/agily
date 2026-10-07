@@ -38,14 +38,17 @@ export function studioContentColumnClass(extra?: string) {
 
 /** Full-width project board canvas (list, flow, filters). */
 export function studioProjectCanvasClass(extra?: string) {
-  return ["flex w-full min-w-0 max-w-none flex-col gap-4", extra]
+  return [
+    "flex w-full min-w-0 max-w-none flex-col agily-stack-gap",
+    extra,
+  ]
     .filter(Boolean)
     .join(" ");
 }
 
 /** List + sort + table column (always full width of main). */
 export function listViewCanvasClass(extra?: string) {
-  return ["flex w-full min-w-0 flex-col gap-3", extra]
+  return ["flex w-full min-w-0 flex-col agily-stack-gap", extra]
     .filter(Boolean)
     .join(" ");
 }
@@ -85,7 +88,10 @@ export function boardSettingsBarStickyClass(extra?: string) {
 
 /** Studio page sections (pulse, people, notices). */
 export function studioPageSectionClass(extra?: string) {
-  return ["flex min-w-0 w-full flex-col gap-6", extra]
+  return [
+    "flex min-w-0 w-full flex-col agily-stack-gap agily-stack-gap-loose",
+    extra,
+  ]
     .filter(Boolean)
     .join(" ");
 }

@@ -41,7 +41,11 @@ import {
   LIST_SORT_FIELDS,
   LIST_SORT_LABEL,
 } from "@/lib/views/list-sort";
-import { BOARD_VIEWS, BOARD_VIEW_LABEL } from "@/lib/views/views";
+import {
+  BOARD_VIEWS,
+  BOARD_VIEW_ICON,
+  BOARD_VIEW_LABEL,
+} from "@/lib/views/views";
 
 const packModules = JSON.parse(
   readFileSync(new URL("../../.c8rc.json", import.meta.url), "utf8"),
@@ -77,7 +81,7 @@ describe("pack export smoke", () => {
     assert.ok(LENS_KIND_LABEL.mine);
     assert.ok(titleMatchesFind("Fix login", "login"));
     assert.ok(NOTICE_KINDS.length);
-    assert.equal(APPEARANCE_VERSION, 1);
+    assert.equal(APPEARANCE_VERSION, 2);
     assert.ok(ICON_SETS.length);
     assert.equal(avatarContentType("jpeg"), "image/jpeg");
     assert.equal(avatarContentType("png"), "image/png");
@@ -93,5 +97,6 @@ describe("pack export smoke", () => {
     assert.ok(LIST_SORT_LABEL.due);
     assert.ok(BOARD_VIEWS.length);
     assert.ok(BOARD_VIEW_LABEL.list);
+    assert.equal(BOARD_VIEW_ICON.flow, "view.board");
   });
 });

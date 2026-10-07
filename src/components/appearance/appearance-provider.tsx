@@ -18,7 +18,7 @@ import {
   type UserAppearance,
   APPEARANCE_STORAGE_KEY,
 } from "@/lib/appearance/appearance";
-import { applyThemePresetToDocument } from "@/lib/appearance/apply";
+import { applyUserAppearanceToDocument } from "@/lib/appearance/apply";
 
 type AppearanceContextValue = {
   appearance: UserAppearance;
@@ -37,10 +37,6 @@ function cacheAppearance(appearance: UserAppearance) {
   }
 }
 
-function applyIconSetToDocument(iconSet: IconSetId) {
-  document.documentElement.dataset.iconSet = iconSet;
-}
-
 export function AppearanceProvider({
   initial,
   children,
@@ -53,23 +49,20 @@ export function AppearanceProvider({
   const setAppearance = useCallback((next: UserAppearance) => {
     setAppearanceState(next);
     cacheAppearance(next);
-    applyThemePresetToDocument(next.themePreset);
-    applyIconSetToDocument(next.iconSet);
+    applyUserAppearanceToDocument(next);
   }, []);
 
   useEffect(() => {
     setAppearanceState(initial);
-    applyThemePresetToDocument(initial.themePreset);
-    applyIconSetToDocument(initial.iconSet);
+    applyUserAppearanceToDocument(initial);
     cacheAppearance(initial);
     setMode(initial.colorMode);
   }, [initial, setMode]);
 
   useEffect(() => {
-    applyThemePresetToDocument(appearance.themePreset);
-    applyIconSetToDocument(appearance.iconSet);
+    applyUserAppearanceToDocument(appearance);
     cacheAppearance(appearance);
-  }, [appearance.themePreset, appearance.iconSet, appearance.colorMode]);
+  }, [appearance]);
 
   const value = useMemo(
     () => ({

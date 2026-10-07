@@ -1,5 +1,8 @@
 "use client";
 
+import { AppIcon } from "@/components/appearance/app-icon";
+import { NavIconRow } from "@/components/appearance/nav-icon-row";
+
 const ROWS = [
   { keys: "⌘K / Ctrl+K", action: "Command palette — search & jump" },
   { keys: "?", action: "Show this sheet" },
@@ -31,14 +34,15 @@ export function ShortcutHelp({ open, onClose }: { open: boolean; onClose: () => 
       >
         <div className="mb-4 flex items-center justify-between gap-3">
           <h2 id="shortcut-title" className="text-xl font-semibold text-foreground">
-            Keyboard
+            <NavIconRow icon="action.keyboard">Keyboard</NavIconRow>
           </h2>
           <button
             type="button"
-            className="text-sm text-primary hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="flex min-h-10 min-w-10 items-center justify-center text-primary"
+            aria-label="Close"
             onClick={onClose}
           >
-            Close
+            <AppIcon name="action.close" className="size-5" />
           </button>
         </div>
         <ul className="flex flex-col gap-3">

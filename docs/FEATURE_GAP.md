@@ -177,6 +177,8 @@ Agily is intentionally **local SQLite, no cloud APIs** — some enterprise items
 | — | Local AI lens (Ollama) | **Have** |
 | — | Light/dark theme | **Have** |
 | — | Per-user theme presets + icon set (global account) | **Have** — [THEME_APPEARANCE_README.md](./phases/THEME_APPEARANCE_README.md) |
+| — | Per-user typeface, density, corner radius | **Have** — [CUSTOM_UI_README.md](./phases/CUSTOM_UI_README.md) |
+| — | App-wide semantic icons (`AppIcon`) | **Have** — four icon sets via registry |
 | — | Profile photo (per user, DB + disk) | **Have** — `/home/profile` |
 
 ---

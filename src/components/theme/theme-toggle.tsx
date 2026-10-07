@@ -1,5 +1,7 @@
 "use client";
 
+import { AppIcon } from "@/components/appearance/app-icon";
+import type { IconName } from "@/lib/appearance/icon-names";
 import {
   COLOR_MODES,
   colorModeLabel,
@@ -10,6 +12,12 @@ import { cn } from "@/lib/cn";
 import { useTheme } from "@/components/theme/theme-provider";
 import { useAppearance } from "@/components/appearance/appearance-provider";
 import { persistColorModeAction } from "@/lib/profile/actions";
+
+const MODE_ICON: Record<ColorMode, IconName> = {
+  light: "action.sun",
+  dark: "action.moon",
+  system: "action.monitor",
+};
 
 export function ThemeToggle({ compact = false }: { compact?: boolean }) {
   const { mode, setMode } = useTheme();
@@ -27,9 +35,9 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
         type="button"
         aria-label={`Theme: ${colorModeLabel(mode)}. Tap to change.`}
         onClick={() => applyMode(nextColorMode(mode))}
-        className="flex h-10 min-w-10 items-center justify-center rounded-full border border-paper/12 px-2 text-[0.6rem] font-medium uppercase tracking-[0.12em] text-paper/70"
+        className="flex h-10 min-w-10 items-center justify-center rounded-full border border-paper/12 text-paper/70"
       >
-        {mode === "light" ? "Lt" : mode === "dark" ? "Dk" : "Sys"}
+        <AppIcon name={MODE_ICON[mode]} className="size-4" />
       </button>
     );
   }
@@ -47,15 +55,16 @@ export function ThemeToggle({ compact = false }: { compact?: boolean }) {
             key={option}
             type="button"
             aria-pressed={on}
+            aria-label={colorModeLabel(option)}
             onClick={() => applyMode(option)}
             className={cn(
-              "min-h-8 rounded-full px-2.5 text-[0.65rem] font-medium uppercase tracking-[0.14em] transition-colors",
+              "flex min-h-8 min-w-8 items-center justify-center rounded-full px-2 transition-colors",
               on
                 ? "bg-copper text-on-copper"
                 : "text-paper/55 hover:text-paper",
             )}
           >
-            {colorModeLabel(option)}
+            <AppIcon name={MODE_ICON[option]} className="size-3.5" />
           </button>
         );
       })}
