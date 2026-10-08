@@ -69,6 +69,6 @@
     "tailwindcss": "^4",
     "tsx": "^4.23.15",
     "turbo": "^2.5.8",
-    "typescript": "^5"
+    "typescript": "^7"
   }
 }
