@@ -6,6 +6,7 @@ const e2eDatabaseUrl = process.env.DATABASE_URL ?? "file:./e2e.db";
 
 export default defineConfig({
   testDir: "./e2e",
+  grepInvert: process.env.CI ? /@screenshots/ : undefined,
   fullyParallel: !process.env.CI,
   workers: process.env.CI ? 1 : undefined,
   forbidOnly: !!process.env.CI,

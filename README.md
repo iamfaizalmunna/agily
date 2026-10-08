@@ -2,7 +2,7 @@
 
 <p align="center">
   Local agile planner — teams, boards, filters, and optional on-device AI.<br>
-  <strong>Foundation (1–10)</strong>, <strong>Revamp (R1–R12)</strong>, and <strong>Mobile (MF1–MF12)</strong> are <strong>complete</strong> on <code>main</code>.
+  <strong>Foundation</strong>, <strong>Revamp</strong>, <strong>Mobile</strong>, and <strong>Studio + appearance (CU1–18)</strong> are <strong>complete</strong> on <code>main</code>.
 </p>
 
 <p align="center">
@@ -44,6 +44,7 @@
   <a href="#run-in-cursor-agent">Run in Cursor</a> ·
   <a href="#quick-start">Quick start</a> ·
   <a href="#demo-logins">Logins</a> ·
+  <a href="docs/APP_TOUR.md">Visual tour</a> ·
   <a href="#hard-rules">Rules</a> ·
   <a href="PLAN.md">PLAN.md</a> ·
   <a href="docs/phases/REVAMP_README.md">Revamp R1–R12</a> ·
@@ -63,11 +64,13 @@
 
 **Demo:** [http://127.0.0.1:43123](http://127.0.0.1:43123) after `npm run dev` — studio **northwind**, project **atlas**, logins below.
 
+**Show the app to someone?** See **[docs/APP_TOUR.md](docs/APP_TOUR.md)** — walkthrough, architecture, and **Playwright screenshots** of the full UI (`npm run screenshots` to refresh).
+
 ---
 
 ## Roadmap
 
-**Foundation (phases 1–10)** and **Revamp v2 (R1–R12)** are finished on `main`. **Mobile (MF1–MF12)** is complete. **Current track:** [Growth G1+](docs/phases/GROWTH_README.md) — list bulk edit, story points, and other high-impact gaps.
+**Foundation (1–10)**, **Revamp (R1–R12)**, **Mobile (MF1–MF12)**, and **studio enhancements + per-user UI (CU1–18)** are on `main`. **Next optional track:** [Growth G1+](docs/phases/GROWTH_README.md) — list bulk edit, story points, and other high-impact gaps.
 
 **Charts (browser):** [http://127.0.0.1:43123/qa/phases](http://127.0.0.1:43123/qa/phases) · [docs/phases/index.html](docs/phases/index.html)  
 **Gap matrix:** [docs/FEATURE_GAP.md](docs/FEATURE_GAP.md) · **Git loop:** [docs/phases/REVAMP_GIT_LOOP.md](docs/phases/REVAMP_GIT_LOOP.md)

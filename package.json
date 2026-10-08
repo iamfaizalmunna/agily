@@ -22,7 +22,8 @@
     "sonar": "npm run test:coverage && sonar-scanner",
     "db:e2e": "DATABASE_URL=file:./e2e.db npx prisma migrate deploy && DATABASE_URL=file:./e2e.db npx prisma db seed",
     "test:e2e": "lsof -tiTCP:43123 -sTCP:LISTEN | xargs kill -9 2>/dev/null; lsof -tiTCP:43124 -sTCP:LISTEN | xargs kill -9 2>/dev/null; npm run db:e2e && CI=true DATABASE_URL=file:./e2e.db playwright test",
-    "test:e2e:ui": "npm run db:e2e && DATABASE_URL=file:./e2e.db playwright test --ui"
+    "test:e2e:ui": "npm run db:e2e && DATABASE_URL=file:./e2e.db playwright test --ui",
+    "screenshots": "npm run db:e2e && DATABASE_URL=file:./e2e.db playwright test e2e/app-tour.spec.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
