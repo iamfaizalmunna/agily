@@ -139,5 +139,6 @@ flowchart LR
 ## Related
 
 - [README.md](../README.md) — install, env, demo logins
+- [manual/README.md](./manual/README.md) — **detailed product manual** (every route & access level)
 - [FEATURE_GAP.md](./FEATURE_GAP.md) — Monday / Jira / Notion comparison
 - [qa/phases](http://127.0.0.1:43123/qa/phases) — phase completion gallery (when dev server is running)

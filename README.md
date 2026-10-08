@@ -45,6 +45,7 @@
   <a href="#quick-start">Quick start</a> ·
   <a href="#demo-logins">Logins</a> ·
   <a href="docs/APP_TOUR.md">Visual tour</a> ·
+  <a href="docs/manual/README.md">Product manual</a> ·
   <a href="#hard-rules">Rules</a> ·
   <a href="PLAN.md">PLAN.md</a> ·
   <a href="docs/phases/REVAMP_README.md">Revamp R1–R12</a> ·
@@ -64,7 +65,7 @@
 
 **Demo:** [http://127.0.0.1:43123](http://127.0.0.1:43123) after `npm run dev` — studio **northwind**, project **atlas**, logins below.
 
-**Show the app to someone?** See **[docs/APP_TOUR.md](docs/APP_TOUR.md)** — walkthrough, architecture, and **Playwright screenshots** of the full UI (`npm run screenshots` to refresh).
+**Show the app to someone?** **[docs/APP_TOUR.md](docs/APP_TOUR.md)** (screenshots) · **[docs/manual/README.md](docs/manual/README.md)** (full page-by-page manual). Refresh images with `npm run screenshots`.
 
 ---
 

@@ -5,6 +5,8 @@ Local agile planner. **Foundation (1–10)**, **Revamp (R1–R12)**, and **Mobil
 | Document | Open |
 |----------|------|
 | Product README | [README.md](README.md) |
+| **Product manual (page-by-page)** | [docs/manual/README.md](docs/manual/README.md) |
+| Visual tour (screenshots) | [docs/APP_TOUR.md](docs/APP_TOUR.md) |
 | Foundation (1–10) | [docs/phases](docs/phases/README.md) |
 | **Revamp track (R1–R12)** | [docs/phases/REVAMP_README.md](docs/phases/REVAMP_README.md) |
 | **Mobile track (MF1–MF12)** | [docs/phases/MOBILE_README.md](docs/phases/MOBILE_README.md) |
